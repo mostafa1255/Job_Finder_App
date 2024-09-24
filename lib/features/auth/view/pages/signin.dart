@@ -1,7 +1,15 @@
+// password match add to styled_textField
+// Fix spacings 
+// Fix appBar color tint and remove back arrow
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jop_finder_app/features/auth/view/pages/login.dart';
+import 'package:jop_finder_app/features/auth/view/pages/shared/styled_Button.dart';
 import 'package:jop_finder_app/features/auth/view/pages/shared/styled_textField.dart';
+import 'package:jop_finder_app/features/auth/view/pages/shared/text_Divider.dart';
+import 'package:jop_finder_app/features/auth/view/pages/shared/welcome_text.dart';
 
 void main(){
   runApp(const MyApp());
@@ -14,13 +22,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
+        fontFamily: 'Poppins',
         textSelectionTheme: TextSelectionThemeData(
           cursorColor: Colors.blue, // Change the cursor color to blue
           selectionColor: Colors.blue.withOpacity(0.4), // Text selection color (highlight)
           selectionHandleColor: Colors.blue, // The tear drop color
           ),
         ),
-      home: const Login(),
+      home: const Registeration(),
     );
   }
 }
@@ -34,6 +43,7 @@ class Registeration extends StatefulWidget {
 
 class _RegisterationState extends State<Registeration> {
 
+  //Key for validation
   final _formKey = GlobalKey<FormState>();
 
    // Create controllers for the TextFields
@@ -42,8 +52,26 @@ class _RegisterationState extends State<Registeration> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
 
-  void validation(){
-    
+  //Register button onpressed
+  void registerCheck(){
+    //condition to check the validation of textfields
+    if (_formKey.currentState!.validate()) {
+      //check if password and confirmpassword match
+      if (_confirmPasswordController.text == _passwordController.text) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Registration Successful!')
+            ),
+          );
+        }
+      else{
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Password doesn't match"),
+            ),
+          );
+        }
+      }
    }
 
   @override
@@ -60,35 +88,14 @@ class _RegisterationState extends State<Registeration> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Text(
-                  "Jôbizz", 
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 53, 104, 153),
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-            
-                const SizedBox(height: 3),
-                const Text(
-                  "Registration 👍",
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 13, 13, 38),
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 5),
-                const Text(
-                  "Let’s Register. Apply to jobs!",
-                  style: TextStyle(
-                    color: Color.fromARGB(102, 13, 13, 38),
-                    fontSize: 14,
-                  ),
-                ),
-            
+
+
+                //First three Rows of Text presentation of the title headline and text
+                const WelcomeText(title: "Jôbizz", headline: "Registration 👍", text: "Let’s Register. Apply to jobs!"),
                 const SizedBox(height: 30),
-            
+
+
+                //TextFileds for name email password and confirm pass
                 StyledTextField(hint: "Full Name", icon: Icons.person_outlined, controller: _fullNameController),
                 const SizedBox(height: 16),
                 StyledTextField(hint: "E-mail", icon: Icons.mail_outline_outlined, controller: _emailController),
@@ -97,80 +104,39 @@ class _RegisterationState extends State<Registeration> {
                 const SizedBox(height: 16),
                 StyledTextField(hint: "Confirm Password", icon: Icons.lock_outlined, isPassword: true, controller: _confirmPasswordController),
                 const SizedBox(height: 30),
-            
-                FilledButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      if (_confirmPasswordController.text == _passwordController.text) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Registration Successful!')),
-                          );
-                        }
-                      else{
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                           content: Text("Password doesn't match"),
-                           ),
-                        );
-                      }
-                      }
-                  },
-                  style: const ButtonStyle(
-                    shape: WidgetStatePropertyAll(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                      ),
-                    ),
-                    backgroundColor: WidgetStatePropertyAll(Color.fromARGB(255, 53, 104, 153)),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 15),
-                    child: Text(
-                      "Register",
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ),
-                ),
 
 
+                //Button to Register
+                StyledButton(
+                  onPressed: (){registerCheck();}, 
+                  text: "Register"
+                  ),
                 const SizedBox(height: 30),
 
 
-                
+                //Text between two lines
+                const TextBetweenDivider(text: "Or continue with"),
+                const SizedBox(height: 20),
 
 
-                const Row(
-                  children: [
-                    Expanded(child: Divider(thickness: 1.0)),
-                    Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Text(
-                        "Or continue with",
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 175, 176, 182),
-                          fontSize: 13,
-                        ),
-                      ),
-                    ),
-                    Expanded(child: Divider(thickness: 1.0)),
-                  ],
-                ),
-                const SizedBox(height: 30),
+                //Row for the Google and facebook Login
                  Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(),
+                    const SizedBox(),
                     SvgPicture.asset(
                         'assets/images/google.svg',
                         width: 30,
                         height: 30,
                       ),
                     const Icon(Icons.facebook, color: Colors.blue, size: 38,),
-                    SizedBox(),
+                    const SizedBox(),
                   ],
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 50),
+
+
+                //Row with Text and TextButton for navigation to Login screen
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -181,14 +147,14 @@ class _RegisterationState extends State<Registeration> {
                         style: TextStyle(
                           color: Color.fromARGB(255, 175, 176, 182),
                           fontSize: 13,
+                          fontWeight: FontWeight.w400
                         ),
                       ),
                     ),
                     TextButton(
                       onPressed: () {
                         // Navigate to login screen
-                        Navigator.pop(context, MaterialPageRoute(builder: (context) => const Login()));
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Login()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const Login()));
                       },
                       style: TextButton.styleFrom(
                         padding: EdgeInsets.zero,
@@ -200,6 +166,7 @@ class _RegisterationState extends State<Registeration> {
                         style: TextStyle(
                           color: Color.fromARGB(255, 53, 104, 153),
                           fontSize: 13,
+                          fontWeight: FontWeight.w400
                         ),
                       ),
                     ),

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:jop_finder_app/features/auth/view/pages/forget_password.dart';
+import 'package:jop_finder_app/features/auth/view/pages/shared/styled_Button.dart';
 import 'package:jop_finder_app/features/auth/view/pages/shared/styled_textField.dart';
+import 'package:jop_finder_app/features/auth/view/pages/shared/text_Divider.dart';
+import 'package:jop_finder_app/features/auth/view/pages/shared/welcome_text.dart';
 import 'package:jop_finder_app/features/auth/view/pages/signin.dart';
 
 class Login extends StatefulWidget {
@@ -18,6 +22,24 @@ class _LoginState extends State<Login> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  void validation(){
+    if (_formKey.currentState!.validate()) {
+      if (_passwordController.text == "password") {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Login Successful!')),
+          );
+        }
+      else{
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Password not correct"),
+            ),
+          );
+        }
+      }
+    }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,81 +54,29 @@ class _LoginState extends State<Login> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Text(
-                  "Jôbizz", 
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 53, 104, 153),
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-            
-                const SizedBox(height: 3),
-                const Text(
-                  "Welcome Back 👋",
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 13, 13, 38),
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 5),
-                const Text(
-                  "Let’s log in. Apply to jobs!",
-                  style: TextStyle(
-                    color: Color.fromARGB(102, 13, 13, 38),
-                    fontSize: 14,
-                  ),
-                ),
-            
+
+                //First three Rows of Text presentation of the title headline and text
+                const WelcomeText(title: "Jôbizz", headline: "Welcome Back 👋", text: "Let’s log in. Apply to jobs!"),
                 const SizedBox(height: 50),
             
-                
+                //TextFileds for name email password and confirm pass
                 StyledTextField(hint: "E-mail", icon: Icons.mail_outline_outlined, controller: _emailController),
                 const SizedBox(height: 16),
                 StyledTextField(hint: "Password", icon: Icons.lock_outlined, isPassword: true, controller: _passwordController),
                 const SizedBox(height: 30),
                 
-            
-                FilledButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      if (_passwordController.text == "password") {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Login Successful!')),
-                          );
-                        }
-                      else{
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                           content: Text("Password not correct"),
-                           ),
-                        );
-                      }
-                      }
-                  },
-                  style: const ButtonStyle(
-                    shape: WidgetStatePropertyAll(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                      ),
-                    ),
-                    backgroundColor: WidgetStatePropertyAll(Color.fromARGB(255, 53, 104, 153)),
+                //Button to Login
+                StyledButton( 
+                  onPressed: (){validation();}, 
+                  text: "Login"
                   ),
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 15),
-                    child: Text(
-                      "Login",
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ),
-                ),
                 const SizedBox(height: 30),
 
-
+                //Forgetpassword Text button
                 TextButton(
-                  onPressed: (){}, 
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ForgetPassword()));
+                  }, 
                   child: const Text(
                     "Forgot Password?",
                     style: TextStyle(
@@ -115,28 +85,13 @@ class _LoginState extends State<Login> {
                       ),
                     )
                   ),
-
-                
                 const SizedBox(height: 30,),
 
-
-                const Row(
-                  children: [
-                    Expanded(child: Divider(thickness: 1.0)),
-                    Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Text(
-                        "Or continue with",
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 175, 176, 182),
-                          fontSize: 13,
-                        ),
-                      ),
-                    ),
-                    Expanded(child: Divider(thickness: 1.0)),
-                  ],
-                ),
+                //Text between two lines
+                const TextBetweenDivider(text: "Or continue with"),
                 const SizedBox(height: 70),
+
+                //Row for the Google and facebook Login
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -147,14 +102,12 @@ class _LoginState extends State<Login> {
                         height: 30,
                       ),
                     const Icon(Icons.facebook, color: Colors.blue, size: 38,),
-                    SizedBox(),
+                    const SizedBox(),
                   ],
                 ),
-
-
                 const SizedBox(height: 30),
 
-
+                // Row for Navigating to Sign in Screen contains text and texButton
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
