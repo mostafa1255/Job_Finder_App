@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class SixScreen extends StatelessWidget{
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,6 +14,7 @@ class SixScreen extends StatelessWidget{
         padding: EdgeInsets.all(10) ,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
+
           children: [
             Image.asset('assets/images/Good team-pana 1 (1).png'),
             Container(
