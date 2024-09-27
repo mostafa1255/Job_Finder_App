@@ -30,6 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  smooth_page_indicator: ^1.0.0+2
 
   #ali
   #for colored Icons for google and facebook
