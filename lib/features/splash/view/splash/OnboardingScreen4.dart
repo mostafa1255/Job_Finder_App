@@ -15,7 +15,7 @@ class FourthScreen extends StatelessWidget{
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Image.asset('images/Career progress-amico 1.png'),
+            Image.asset('assets/images/Career progress-amico 1 (1).png'),
             Container(
               child: Text('Make your career',style: TextStyle(fontSize: 35,color: Colors.black,),) ,
             ),

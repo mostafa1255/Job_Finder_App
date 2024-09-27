@@ -14,7 +14,7 @@ class SixScreen extends StatelessWidget{
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Image.asset('images/Good team-pana 1.png'),
+            Image.asset('assets/images/Good team-pana 1 (1).png'),
             Container(
               child: Text('Make your dream career with job',style: TextStyle(fontSize: 35,color: Colors.black,),) ,
             ),

@@ -16,7 +16,7 @@ class ThirdScreen extends StatelessWidget{
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Image.asset('images/page3.png'),
+            Image.asset('assets/images/Resume-amico 1 (2).png'),
             Container(
               child: Text('Apply to best jobs',style: TextStyle(fontSize: 35,color: Colors.black,),) ,
             ),

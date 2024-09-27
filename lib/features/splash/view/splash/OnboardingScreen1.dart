@@ -113,7 +113,7 @@ class _FirstScreenState extends State<FirstScreen> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Image.asset('images/Job hunt-amico 1.png'),
+        Image.asset('assets/images/Job hunt-amico 1.png'),
         Text('Search your job', style: TextStyle(fontSize: 35, color: Colors.black)),
         Container(
           margin: EdgeInsets.all(20),

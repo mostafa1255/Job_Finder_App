@@ -15,7 +15,7 @@ class FifthScreen extends StatelessWidget{
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Image.asset('images/Career progress-pana 1.png'),
+            Image.asset('assets/images/Career progress-pana 1 (1).png'),
             Container(
               child: Text('Search your dream job fast and ease',style: TextStyle(fontSize: 35,color: Colors.black,),) ,
             ),

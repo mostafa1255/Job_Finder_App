@@ -23,7 +23,7 @@ class _splashscreenState extends State<splashscreen> {
             color: Colors.indigo,
             padding: EdgeInsets.all(100),
             child:Center(
-              child:Image.asset('images/Group 218.png',fit: BoxFit.fill,color: Colors.white,) ,
+              child:Image.asset('assets/images/Group 218.png',fit: BoxFit.fill,color: Colors.white,) ,
             )
         )
     );

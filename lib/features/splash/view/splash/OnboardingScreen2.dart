@@ -7,7 +7,7 @@ Widget buildSecondPage() {
     child: Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Image.asset('images/page2.png'),
+        Image.asset('assets/images/Browser stats-amico 1.png'),
         Text('Browse jobs list', style: TextStyle(fontSize: 35, color: Colors.black)),
         Container(
           margin: EdgeInsets.all(20),
