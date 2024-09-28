@@ -4,14 +4,14 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'OnboardingScreen2.dart';
 import 'OnboardingScreen4.dart';
 
+class OnBoardingScreen1 extends StatefulWidget {
+  const OnBoardingScreen1({super.key});
 
-
-class FirstScreen extends StatefulWidget {
   @override
-  State<FirstScreen> createState() => _FirstScreenState();
+  State<OnBoardingScreen1> createState() => _OnBoardingScreen1State();
 }
 
-class _FirstScreenState extends State<FirstScreen> {
+class _OnBoardingScreen1State extends State<OnBoardingScreen1> {
   final PageController _controller = PageController();
   int _currentPage = 0;
 
@@ -38,7 +38,8 @@ class _FirstScreenState extends State<FirstScreen> {
         curve: Curves.easeInOut,
       );
     } else {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => ThirdScreen()));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => ThirdScreen()));
     }
   }
 
@@ -62,11 +63,10 @@ class _FirstScreenState extends State<FirstScreen> {
             right: 0,
             child: Column(
               children: [
-
                 SmoothPageIndicator(
                   controller: _controller,
                   count: 4,
-                  effect: ExpandingDotsEffect(
+                  effect: const ExpandingDotsEffect(
                     spacing: 6,
                     radius: 10,
                     dotWidth: 24,
@@ -77,30 +77,6 @@ class _FirstScreenState extends State<FirstScreen> {
                   ),
                 ),
                 SizedBox(height: 20),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                //   children: [
-                //     ElevatedButton(
-                //       onPressed: () {
-                //         Navigator.push(context, MaterialPageRoute(builder: (context) => SixScreen()));
-                //       },
-                //       child: Text('Skip', style: TextStyle(fontSize: 17, color: Colors.grey)),
-                //     ),
-                //     ElevatedButton(
-                //       style: ElevatedButton.styleFrom(
-                //         backgroundColor: Colors.indigo,
-                //       ),
-                //       onPressed: _goToNextPage,
-                //       child: Container(
-                //         width: 80,
-                //         height: 50,
-                //         child: Center(
-                //           child: Text('Next', style: TextStyle(fontSize: 24, color: Colors.white)),
-                //         ),
-                //       ),
-                //     ),
-                //   ],
-                // ),
               ],
             ),
           ),
@@ -110,21 +86,24 @@ class _FirstScreenState extends State<FirstScreen> {
   }
 
   Widget _buildFirstPage() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Image.asset('assets/images/Job hunt-amico 1.png'),
-        Text('Search your job', style: TextStyle(fontSize: 35, color: Colors.black)),
-        Container(
-          margin: EdgeInsets.all(20),
-          child: Text(
-            'Figure out your top five priorities whether it is company culture, salary.',
-            style: TextStyle(fontSize: 15),
+    return Padding(
+      padding: const EdgeInsets.only(top: 80.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Image.asset('assets/images/Job hunt-amico 1.png'),
+          Text('Search your job',
+              style: TextStyle(fontSize: 35, color: Colors.black)),
+          Container(
+            margin: EdgeInsets.all(20),
+            child: Text(
+              'Figure out your top five priorities whether it is company culture, salary.',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 15),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
-
-
 }
