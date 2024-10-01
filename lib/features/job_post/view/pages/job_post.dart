@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:jop_finder_app/features/auth/model/PostedJob_model.dart';
+import 'package:jop_finder_app/features/auth/data/model/PostedJob_model.dart';
 
 class JobPostScreen extends StatefulWidget {
   const JobPostScreen({super.key});
@@ -97,28 +97,21 @@ class _JobPostScreenState extends State<JobPostScreen> {
         about: _aboutController.text,
         requirements: requirements,
       );
-      final x = FirebaseFirestore.instance.collection('jobs');
 
-      print(x);
       try {
         await FirebaseFirestore.instance
             .collection('jobs')
             .add(postedJob.toMap());
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Job posted successfully!'),
-            backgroundColor: Colors.green,
-          ));
-        }
-
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Job posted successfully!'),
+          backgroundColor: Colors.green,
+        ));
         _clearForm();
       } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Error posting job. Please try again.'),
-            backgroundColor: Colors.red,
-          ));
-        }
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Error posting job. Please try again.'),
+          backgroundColor: Colors.red,
+        ));
       }
     }
   }

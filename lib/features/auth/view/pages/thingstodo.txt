@@ -1,0 +1,6 @@
+change Navigator to AppRouter
+
+add two password check for the in text field
+
+
+

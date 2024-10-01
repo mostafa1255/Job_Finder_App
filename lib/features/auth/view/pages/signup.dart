@@ -1,33 +1,56 @@
+// password match add to styled_textField
+// Fix spacings
+// Fix appBar color tint and remove back arrow
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jop_finder_app/core/utils/app_router.dart';
-import 'package:jop_finder_app/features/auth/view/pages/forget_password.dart';
+import 'package:jop_finder_app/features/auth/view/pages/signin.dart';
 import 'package:jop_finder_app/features/auth/view/pages/shared/styled_Button.dart';
 import 'package:jop_finder_app/features/auth/view/pages/shared/styled_textField.dart';
 import 'package:jop_finder_app/features/auth/view/pages/shared/text_Divider.dart';
 import 'package:jop_finder_app/features/auth/view/pages/shared/welcome_text.dart';
-import 'package:jop_finder_app/features/auth/view/pages/signup.dart';
 import 'package:jop_finder_app/features/auth/viewmodel/cubit/auth_cubit.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
+  //Key for validation
   final _formKey = GlobalKey<FormState>();
 
   // Create controllers for the TextFields
+  final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
-  bool validation() {
+  //Register button onpressed
+  bool registerCheck() {
+    //condition to check the validation of textfields
     if (_formKey.currentState!.validate()) {
-      return true;
+      //check if password and confirmpassword match
+      if (_confirmPasswordController.text == _passwordController.text) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Registration Successful!')),
+        );
+        return true;
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Password doesn't match"),
+          ),
+        );
+        return false;
+      }
     }
     return false;
   }
@@ -62,11 +85,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         //First three Rows of Text presentation of the title headline and text
                         const WelcomeText(
                             title: "Jôbizz",
-                            headline: "Welcome Back 👋",
-                            text: "Let’s log in. Apply to jobs!"),
-                        const SizedBox(height: 50),
+                            headline: "Registration 👍",
+                            text: "Let’s Register. Apply to jobs!"),
+                        const SizedBox(height: 30),
 
                         //TextFileds for name email password and confirm pass
+                        StyledTextField(
+                            hint: "Full Name",
+                            icon: Icons.person_outlined,
+                            controller: _fullNameController),
+                        const SizedBox(height: 16),
                         StyledTextField(
                             hint: "E-mail",
                             icon: Icons.mail_outline_outlined,
@@ -77,44 +105,30 @@ class _LoginScreenState extends State<LoginScreen> {
                             icon: Icons.lock_outlined,
                             isPassword: true,
                             controller: _passwordController),
+                        const SizedBox(height: 16),
+                        StyledTextField(
+                            hint: "Confirm Password",
+                            icon: Icons.lock_outlined,
+                            isPassword: true,
+                            controller: _confirmPasswordController),
                         const SizedBox(height: 30),
 
-                        //Button to Login
+                        //Button to Register
                         StyledButton(
                             onPressed: () {
-                              if (validation()) {
-                                BlocProvider.of<AuthCubit>(context).signIn(
+                              if (registerCheck()) {
+                                BlocProvider.of<AuthCubit>(context).signUp(
                                     email: _emailController.text,
                                     password: _passwordController.text,
                                     context: context);
                               }
                             },
-                            text: "Login"),
+                            text: "Register"),
                         const SizedBox(height: 30),
-
-                        //Forgetpassword Text button
-                        TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          ForgetPasswordScreen()));
-                            },
-                            child: const Text(
-                              "Forgot Password?",
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 53, 104, 153),
-                                fontSize: 13,
-                              ),
-                            )),
-                        const SizedBox(
-                          height: 30,
-                        ),
 
                         //Text between two lines
                         const TextBetweenDivider(text: "Or continue with"),
-                        const SizedBox(height: 70),
+                        const SizedBox(height: 20),
 
                         //Row for the Google and facebook Login
                         Row(
@@ -134,27 +148,27 @@ class _LoginScreenState extends State<LoginScreen> {
                             const SizedBox(),
                           ],
                         ),
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 50),
 
-                        // Row for Navigating to Sign in Screen contains text and texButton
+                        //Row with Text and TextButton for navigation to Login screen
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Padding(
                               padding: EdgeInsets.only(right: 5),
                               child: Text(
-                                "Haven't an account?",
+                                "Have an account?",
                                 style: TextStyle(
-                                  color: Color.fromARGB(255, 175, 176, 182),
-                                  fontSize: 13,
-                                ),
+                                    color: Color.fromARGB(255, 175, 176, 182),
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w400),
                               ),
                             ),
                             TextButton(
                               onPressed: () {
-                                // Navigate to register screen
+                                // Navigate to login screen
                                 GoRouter.of(context)
-                                    .pushReplacementNamed(AppRouter.signUp);
+                                    .pushReplacementNamed(AppRouter.login);
                               },
                               style: TextButton.styleFrom(
                                 padding: EdgeInsets.zero,
@@ -162,11 +176,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               ),
                               child: const Text(
-                                "Register",
+                                "Log in",
                                 style: TextStyle(
-                                  color: Color.fromARGB(255, 53, 104, 153),
-                                  fontSize: 13,
-                                ),
+                                    color: Color.fromARGB(255, 53, 104, 153),
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w400),
                               ),
                             ),
                           ],

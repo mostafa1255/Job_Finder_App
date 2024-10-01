@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jop_finder_app/features/auth/view/pages/forget_password.dart';
-import 'package:jop_finder_app/features/auth/view/pages/login.dart';
 import 'package:jop_finder_app/features/auth/view/pages/signin.dart';
+import 'package:jop_finder_app/features/auth/view/pages/signup.dart';
 import 'package:jop_finder_app/features/home/view/pages/home_screen.dart';
 import 'package:jop_finder_app/features/job_apply/view/pages/job_apply.dart';
 import 'package:jop_finder_app/features/job_post/view/pages/job_post.dart';
@@ -20,7 +20,7 @@ class AppRouter {
   static const jobPostScreen = "/jobPostScreen";
 
   static GoRouter router = GoRouter(
-    initialLocation: jobPostScreen,
+    initialLocation: login,
     errorPageBuilder: (context, state) => MaterialPage(
       key: state.pageKey,
       child: Scaffold(
