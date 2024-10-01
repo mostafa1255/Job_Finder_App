@@ -7,38 +7,35 @@ import 'package:jop_finder_app/features/auth/view/pages/shared/text_Divider.dart
 import 'package:jop_finder_app/features/auth/view/pages/shared/welcome_text.dart';
 import 'package:jop_finder_app/features/auth/view/pages/signin.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginState extends State<Login> {
-
+class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
 
-   // Create controllers for the TextFields
+  // Create controllers for the TextFields
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  void validation(){
+  void validation() {
     if (_formKey.currentState!.validate()) {
       if (_passwordController.text == "password") {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Login Successful!')),
-          );
-        }
-      else{
+          const SnackBar(content: Text('Login Successful!')),
+        );
+      } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Password not correct"),
-            ),
-          );
-        }
+          ),
+        );
       }
     }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,38 +51,52 @@ class _LoginState extends State<Login> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-
                 //First three Rows of Text presentation of the title headline and text
-                const WelcomeText(title: "Jôbizz", headline: "Welcome Back 👋", text: "Let’s log in. Apply to jobs!"),
+                const WelcomeText(
+                    title: "Jôbizz",
+                    headline: "Welcome Back 👋",
+                    text: "Let’s log in. Apply to jobs!"),
                 const SizedBox(height: 50),
-            
+
                 //TextFileds for name email password and confirm pass
-                StyledTextField(hint: "E-mail", icon: Icons.mail_outline_outlined, controller: _emailController),
+                StyledTextField(
+                    hint: "E-mail",
+                    icon: Icons.mail_outline_outlined,
+                    controller: _emailController),
                 const SizedBox(height: 16),
-                StyledTextField(hint: "Password", icon: Icons.lock_outlined, isPassword: true, controller: _passwordController),
+                StyledTextField(
+                    hint: "Password",
+                    icon: Icons.lock_outlined,
+                    isPassword: true,
+                    controller: _passwordController),
                 const SizedBox(height: 30),
-                
+
                 //Button to Login
-                StyledButton( 
-                  onPressed: (){validation();}, 
-                  text: "Login"
-                  ),
+                StyledButton(
+                    onPressed: () {
+                      validation();
+                    },
+                    text: "Login"),
                 const SizedBox(height: 30),
 
                 //Forgetpassword Text button
                 TextButton(
-                  onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ForgetPassword()));
-                  }, 
-                  child: const Text(
-                    "Forgot Password?",
-                    style: TextStyle(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ForgetPasswordScreen()));
+                    },
+                    child: const Text(
+                      "Forgot Password?",
+                      style: TextStyle(
                         color: Color.fromARGB(255, 53, 104, 153),
                         fontSize: 13,
                       ),
-                    )
-                  ),
-                const SizedBox(height: 30,),
+                    )),
+                const SizedBox(
+                  height: 30,
+                ),
 
                 //Text between two lines
                 const TextBetweenDivider(text: "Or continue with"),
@@ -97,11 +108,15 @@ class _LoginState extends State<Login> {
                   children: [
                     const SizedBox(),
                     SvgPicture.asset(
-                        'assets/images/google.svg',
-                        width: 30,
-                        height: 30,
-                      ),
-                    const Icon(Icons.facebook, color: Colors.blue, size: 38,),
+                      'assets/images/google.svg',
+                      width: 30,
+                      height: 30,
+                    ),
+                    const Icon(
+                      Icons.facebook,
+                      color: Colors.blue,
+                      size: 38,
+                    ),
                     const SizedBox(),
                   ],
                 ),
@@ -124,7 +139,10 @@ class _LoginState extends State<Login> {
                     TextButton(
                       onPressed: () {
                         // Navigate to register screen
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const Registeration()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const SignUpScreen()));
                       },
                       style: TextButton.styleFrom(
                         padding: EdgeInsets.zero,

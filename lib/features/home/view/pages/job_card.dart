@@ -30,7 +30,7 @@ class JobCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.only(top: 15.0, left: 15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -59,14 +59,15 @@ class JobCard extends StatelessWidget {
                   return Opacity(
                     opacity: 1.0,
                     child: Card(
-                      color: Colors.white24.withOpacity(0.3), // Semi-transparent background for the tags
+                      color: Colors.white24.withOpacity(
+                          0.3), // Semi-transparent background for the tags
                       child: Padding(
-                        padding: const EdgeInsets.all(4.0),
+                        padding: const EdgeInsets.all(10.0),
                         child: Text(
                           tag,
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 16 ,
+                            fontSize: 13,
                           ),
                         ),
                       ),
@@ -74,7 +75,7 @@ class JobCard extends StatelessWidget {
                   );
                 }).toList(),
               ),
-              SizedBox(height: 2),
+              SizedBox(height: 10),
 
               // Salary
               Text(

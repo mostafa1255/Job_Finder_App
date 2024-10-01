@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:jop_finder_app/features/home/view/pages/home_screen.dart';
 
 class RecommendedJopsCard extends StatelessWidget {
   final String company;
@@ -21,7 +23,7 @@ class RecommendedJopsCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(right: 16.0),
       child: Container(
-        width: 150,
+        width: 250.w,
         height: 200,
         decoration: BoxDecoration(
           // Setting the card background with opacity
@@ -34,7 +36,8 @@ class RecommendedJopsCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               CircleAvatar(
-                backgroundImage: companyLogo.image, // Add your profile image here
+                backgroundImage:
+                    companyLogo.image, // Add your profile image here
                 radius: 30,
               ),
 
@@ -66,8 +69,6 @@ class RecommendedJopsCard extends StatelessWidget {
                 salary,
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
-
-
             ],
           ),
         ),

@@ -1,11 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:jop_finder_app/core/utils/app_router.dart';
 import 'package:jop_finder_app/features/splash/view/splash.dart';
 import 'package:jop_finder_app/firebase_options.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  ScreenUtil.ensureScreenSize();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -23,10 +25,9 @@ class JopFinderApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: false,
       builder: (_, child) {
-        return const MaterialApp(
-          // routerConfig: Approuter.router,
+        return MaterialApp.router(
+          routerConfig: AppRouter.router,
           debugShowCheckedModeBanner: false,
-          home: Splashscreen(),
         );
       },
     );
