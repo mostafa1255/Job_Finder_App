@@ -97,21 +97,28 @@ class _JobPostScreenState extends State<JobPostScreen> {
         about: _aboutController.text,
         requirements: requirements,
       );
+      final x = FirebaseFirestore.instance.collection('jobs');
 
+      print(x);
       try {
         await FirebaseFirestore.instance
             .collection('jobs')
             .add(postedJob.toMap());
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Job posted successfully!'),
-          backgroundColor: Colors.green,
-        ));
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Job posted successfully!'),
+            backgroundColor: Colors.green,
+          ));
+        }
+
         _clearForm();
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Error posting job. Please try again.'),
-          backgroundColor: Colors.red,
-        ));
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Error posting job. Please try again.'),
+            backgroundColor: Colors.red,
+          ));
+        }
       }
     }
   }
