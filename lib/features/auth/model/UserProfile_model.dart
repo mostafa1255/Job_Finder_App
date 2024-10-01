@@ -2,27 +2,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserProfile {
   final String? bio;
-  final List<String> skills;
-  final List<Education> education;
-  // final List<WorkExperience> workExperience;
+  final List<String>? skills;
+  final List<Education>? education;
 
   UserProfile({
     this.bio,
-    this.skills = const [],
-    this.education = const [],
-    // this.workExperience = const [],
+    this.skills,
+    this.education,
   });
 
   factory UserProfile.fromMap(Map<String, dynamic> map) {
     return UserProfile(
-      bio: map['bio'],
+      bio: map['bio'] as String?,
       skills: List<String>.from(map['skills'] ?? []),
       education: (map['education'] as List? ?? [])
           .map((edu) => Education.fromMap(edu))
           .toList(),
-      // workExperience: (map['workExperience'] as List? ?? [])
-      //     .map((exp) => WorkExperience.fromMap(exp))
-      //     .toList(),
     );
   }
 
@@ -30,33 +25,32 @@ class UserProfile {
     return {
       'bio': bio,
       'skills': skills,
-      'education': education.map((edu) => edu.toMap()).toList(),
-      // 'workExperience': workExperience.map((exp) => exp.toMap()).toList(),
+      'education': education?.map((edu) => edu.toMap()).toList(),
     };
   }
 }
 
 class Education {
-  final String institution;
-  final String degree;
-  final String fieldOfStudy;
-  final DateTime startDate;
+  final String? institution;
+  final String? degree;
+  final String? fieldOfStudy;
+  final DateTime? startDate;
   final DateTime? endDate;
 
   Education({
-    required this.institution,
-    required this.degree,
-    required this.fieldOfStudy,
-    required this.startDate,
+    this.institution,
+    this.degree,
+    this.fieldOfStudy,
+    this.startDate,
     this.endDate,
   });
 
   factory Education.fromMap(Map<String, dynamic> map) {
     return Education(
-      institution: map['institution'],
-      degree: map['degree'],
-      fieldOfStudy: map['fieldOfStudy'],
-      startDate: (map['startDate'] as Timestamp).toDate(),
+      institution: map['institution'] as String?,
+      degree: map['degree'] as String?,
+      fieldOfStudy: map['fieldOfStudy'] as String?,
+      startDate: (map['startDate'] as Timestamp?)?.toDate(),
       endDate: map['endDate'] != null
           ? (map['endDate'] as Timestamp).toDate()
           : null,
@@ -68,36 +62,37 @@ class Education {
       'institution': institution,
       'degree': degree,
       'fieldOfStudy': fieldOfStudy,
-      'startDate': Timestamp.fromDate(startDate),
+      'startDate': startDate != null ? Timestamp.fromDate(startDate!) : null,
       'endDate': endDate != null ? Timestamp.fromDate(endDate!) : null,
     };
   }
 }
 
+// Uncomment this section if needed
 // class WorkExperience {
-//   final String company;
-//   final String position;
-//   final DateTime startDate;
+//   final String? company;
+//   final String? position;
+//   final DateTime? startDate;
 //   final DateTime? endDate;
-//   final String description;
+//   final String? description;
 
 //   WorkExperience({
-//     required this.company,
-//     required this.position,
-//     required this.startDate,
+//     this.company,
+//     this.position,
+//     this.startDate,
 //     this.endDate,
-//     required this.description,
+//     this.description,
 //   });
 
 //   factory WorkExperience.fromMap(Map<String, dynamic> map) {
 //     return WorkExperience(
-//       company: map['company'],
-//       position: map['position'],
-//       startDate: (map['startDate'] as Timestamp).toDate(),
+//       company: map['company'] as String?,
+//       position: map['position'] as String?,
+//       startDate: (map['startDate'] as Timestamp?)?.toDate(),
 //       endDate: map['endDate'] != null
 //           ? (map['endDate'] as Timestamp).toDate()
 //           : null,
-//       description: map['description'],
+//       description: map['description'] as String?,
 //     );
 //   }
 
@@ -105,7 +100,7 @@ class Education {
 //     return {
 //       'company': company,
 //       'position': position,
-//       'startDate': Timestamp.fromDate(startDate),
+//       'startDate': startDate != null ? Timestamp.fromDate(startDate!) : null,
 //       'endDate': endDate != null ? Timestamp.fromDate(endDate!) : null,
 //       'description': description,
 //     };

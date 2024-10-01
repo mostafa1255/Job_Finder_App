@@ -9,10 +9,10 @@ class User {
   final String email;
   final String? phoneNumber;
   final String? profileImageUrl;
-  final List<AppliedJob> appliedJobs;
-  final List<PostedJob> postedJobs;
+  final List<AppliedJob>? appliedJobs;
+  final List<PostedJob>? postedJobs;
   final String? cvUrl;
-  final Map<String, dynamic> additionalInfo;
+  final Map<String, dynamic>? additionalInfo;
   final UserProfile? profile;
 
   User({
@@ -21,29 +21,29 @@ class User {
     required this.email,
     this.phoneNumber,
     this.profileImageUrl,
-    this.appliedJobs = const [],
-    this.postedJobs = const [],
+    this.appliedJobs,
+    this.postedJobs,
     this.cvUrl,
-    this.additionalInfo = const {},
+    this.additionalInfo,
     this.profile,
   });
 
   factory User.fromFirestore(DocumentSnapshot doc) {
-    Map data = doc.data() as Map<String, dynamic>;
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return User(
       id: doc.id,
       name: data['name'] ?? '',
       email: data['email'] ?? '',
-      phoneNumber: data['phoneNumber'],
-      profileImageUrl: data['profileImageUrl'],
+      phoneNumber: data['phoneNumber'] as String?,
+      profileImageUrl: data['profileImageUrl'] as String?,
       appliedJobs: (data['appliedJobs'] as List? ?? [])
           .map((job) => AppliedJob.fromMap(job))
           .toList(),
       postedJobs: (data['postedJobs'] as List? ?? [])
           .map((job) => PostedJob.fromMap(job))
           .toList(),
-      cvUrl: data['cvUrl'],
-      additionalInfo: data['additionalInfo'] ?? {},
+      cvUrl: data['cvUrl'] as String?,
+      additionalInfo: data['additionalInfo'] as Map<String, dynamic>? ?? {},
       profile:
           data['profile'] != null ? UserProfile.fromMap(data['profile']) : null,
     );
@@ -55,10 +55,10 @@ class User {
       'email': email,
       'phoneNumber': phoneNumber,
       'profileImageUrl': profileImageUrl,
-      'appliedJobs': appliedJobs.map((job) => job.toMap()).toList(),
-      'postedJobs': postedJobs.map((job) => job.toMap()).toList(),
+      'appliedJobs': appliedJobs?.map((job) => job.toMap()).toList() ?? [],
+      'postedJobs': postedJobs?.map((job) => job.toMap()).toList() ?? [],
       'cvUrl': cvUrl,
-      'additionalInfo': additionalInfo,
+      'additionalInfo': additionalInfo ?? {},
       'profile': profile?.toMap(),
     };
   }

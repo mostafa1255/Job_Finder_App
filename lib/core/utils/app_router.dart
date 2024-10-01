@@ -4,6 +4,8 @@ import 'package:jop_finder_app/features/auth/view/pages/forget_password.dart';
 import 'package:jop_finder_app/features/auth/view/pages/login.dart';
 import 'package:jop_finder_app/features/auth/view/pages/signin.dart';
 import 'package:jop_finder_app/features/home/view/pages/home_screen.dart';
+import 'package:jop_finder_app/features/job_apply/view/pages/job_apply.dart';
+import 'package:jop_finder_app/features/job_post/view/pages/job_post.dart';
 import 'package:jop_finder_app/features/splash/view/splash.dart';
 import 'package:jop_finder_app/features/splash/view/splash/OnboardingScreen1.dart';
 
@@ -14,9 +16,11 @@ class AppRouter {
   static const login = "/login";
   static const forgetPassword = "/forgetPassword";
   static const homeScreen = "/homeScreen";
+  static const jobApplyScreen = "/jobApplyScreen";
+  static const jobPostScreen = "/jobPostScreen";
 
   static GoRouter router = GoRouter(
-    initialLocation: homeScreen,
+    initialLocation: jobPostScreen,
     errorPageBuilder: (context, state) => MaterialPage(
       key: state.pageKey,
       child: Scaffold(
@@ -55,6 +59,16 @@ class AppRouter {
         path: homeScreen,
         name: homeScreen,
         builder: (context, state) => HomeScreen(),
+      ),
+      GoRoute(
+        path: jobApplyScreen,
+        name: jobApplyScreen,
+        builder: (context, state) => JobApplyScreen(),
+      ),
+      GoRoute(
+        path: jobPostScreen,
+        name: jobPostScreen,
+        builder: (context, state) => JobPostScreen(),
       ),
     ],
   );
