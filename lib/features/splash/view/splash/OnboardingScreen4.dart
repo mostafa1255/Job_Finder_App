@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jop_finder_app/features/auth/view/pages/signin.dart';
+import 'package:jop_finder_app/main.dart';
 
 class FourthScreen extends StatelessWidget {
   const FourthScreen({super.key});
@@ -31,30 +33,29 @@ class FourthScreen extends StatelessWidget {
           const SizedBox(
             height: 30,
           ),
-          ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.indigo,
-              ),
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const Registeration(),
-                    ));
-              },
-              child: Container(
-                width: 220,
-                height: 70,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.rectangle,
-                ),
-                child: const Center(
-                  child: Text(
-                    'Explore',
-                    style: TextStyle(fontSize: 24, color: Colors.white),
-                  ),
-                ),
-              )),
+          // SizedBox(
+          //   width: 200.w,
+          //   height: 50.h,
+          //   child: ElevatedButton(
+          //     style: ElevatedButton.styleFrom(
+          //       backgroundColor: Colors.indigo,
+          //       shape: RoundedRectangleBorder(
+          //         borderRadius: BorderRadius.circular(10),
+          //       ),
+          //     ),
+          //     onPressed: () {
+          //       Navigator.pushReplacement(
+          //           context,
+          //           MaterialPageRoute(
+          //             builder: (context) => const Registeration(),
+          //           ));
+          //     },
+          //     child: Text(
+          //       'Explore',
+          //       style: TextStyle(fontSize: 24, color: Colors.white),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:jop_finder_app/core/utils/app_router.dart';
 import 'package:jop_finder_app/features/splash/view/splash/OnboardingScreen3.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'OnboardingScreen2.dart';
@@ -32,14 +34,13 @@ class _OnBoardingScreen1State extends State<OnBoardingScreen1> {
   }
 
   void _goToNextPage() {
-    if (_currentPage < 1) {
+    if (_currentPage < 3) {
       _controller.nextPage(
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
     } else {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => ThirdScreen()));
+      GoRouter.of(context).pushReplacementNamed(AppRouter.signUp);
     }
   }
 
@@ -54,15 +55,31 @@ class _OnBoardingScreen1State extends State<OnBoardingScreen1> {
               _buildFirstPage(),
               buildSecondPage(),
               ThirdScreen(),
-              FourthScreen(),
+              const FourthScreen(),
             ],
           ),
           Positioned(
-            bottom: 20,
+            bottom: 60,
             left: 0,
             right: 0,
             child: Column(
               children: [
+                ElevatedButton(
+                  onPressed: _goToNextPage,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 50, vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    backgroundColor: Colors.indigo,
+                  ),
+                  child: Text(
+                    _currentPage == 3 ? 'Explore' : 'Next',
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  ),
+                ),
+                const SizedBox(height: 50),
                 SmoothPageIndicator(
                   controller: _controller,
                   count: 4,
@@ -76,7 +93,7 @@ class _OnBoardingScreen1State extends State<OnBoardingScreen1> {
                     activeDotColor: Colors.indigo,
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
               ],
             ),
           ),
@@ -92,11 +109,13 @@ class _OnBoardingScreen1State extends State<OnBoardingScreen1> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Image.asset('assets/images/Job hunt-amico 1.png'),
-          Text('Search your job',
-              style: TextStyle(fontSize: 35, color: Colors.black)),
+          const Text(
+            'Search your job',
+            style: TextStyle(fontSize: 35, color: Colors.black),
+          ),
           Container(
-            margin: EdgeInsets.all(20),
-            child: Text(
+            margin: const EdgeInsets.all(20),
+            child: const Text(
               'Figure out your top five priorities whether it is company culture, salary.',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 15),

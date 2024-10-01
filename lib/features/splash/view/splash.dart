@@ -1,28 +1,28 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:jop_finder_app/features/splash/view/splash/OnboardingScreen1.dart';
-// import 'package:jop_finder_app/features/splash/view/splash/Page1,2.dart';
+import 'package:go_router/go_router.dart';
+import 'package:jop_finder_app/core/utils/app_router.dart';
 
-class Splashscreen extends StatefulWidget {
-  const Splashscreen({super.key});
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
 
   @override
-  State<Splashscreen> createState() => _SplashscreenState();
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashscreenState extends State<Splashscreen> {
+class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    Future.delayed(Duration(seconds: 3), () {
-      if (context.mounted) {
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => OnBoardingScreen1(),
-            ));
+    navigateFromSplash();
+    super.initState();
+  }
+
+  void navigateFromSplash() async {
+    await Future.delayed(const Duration(seconds: 3), () {
+      if (mounted) {
+        GoRouter.of(context).pushReplacementNamed(AppRouter.signUp);
       }
     });
-    super.initState();
   }
 
   @override
