@@ -3,6 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 class FireBaseAuthenticationWebServices {
   final FirebaseAuth _fireBaseAuth = FirebaseAuth.instance;
 
+  // Method to get the current user
+  User? getCurrentUser() {
+    return _fireBaseAuth.currentUser;
+  }
+
   //Sign Up
   Future<String?> signUp(
       {required String email, required String password}) async {
@@ -27,7 +32,6 @@ class FireBaseAuthenticationWebServices {
     try {
       final UserCredential credential = await _fireBaseAuth
           .signInWithEmailAndPassword(email: email, password: password);
-
       if (credential.user != null) {
         return "User signed in successfully";
       }

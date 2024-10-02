@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:jop_finder_app/features/auth/view/pages/shared/styled_textField.dart';
+import 'package:jop_finder_app/features/auth/view/screens/shared/styled_textField.dart';
 import 'package:jop_finder_app/features/profile/view/widgets/bottom_sheet.dart';
 
 class ProfileScreen extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:jop_finder_app/features/auth/view/pages/shared/styled_button.dart'; // Ensure correct path
-import 'package:jop_finder_app/features/auth/view/pages/shared/styled_textField.dart';
+import 'package:jop_finder_app/features/auth/view/screens/shared/styled_button.dart'; // Ensure correct path
+import 'package:jop_finder_app/features/auth/view/screens/shared/styled_textField.dart';
 
 class CustomBottomSheet extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
@@ -40,7 +40,8 @@ class CustomBottomSheet extends StatelessWidget {
               String newEmail = emailController.text;
               // Example: Save newName, newPhoneNumber, and newEmail to Firebase
             },
-            text: 'Save Changes', // Assuming StyledButton requires a text parameter
+            text:
+                'Save Changes', // Assuming StyledButton requires a text parameter
           ),
         ],
       ),
