@@ -30,7 +30,7 @@ class AppRouter {
   static const proposalsScreen = "/proposalsScreen";
 
   static GoRouter router = GoRouter(
-    initialLocation: login,
+    initialLocation: profileScreen,
     errorPageBuilder: (context, state) => MaterialPage(
       key: state.pageKey,
       child: Scaffold(

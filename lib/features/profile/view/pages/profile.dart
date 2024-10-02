@@ -1,9 +1,14 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:jop_finder_app/features/auth/view/pages/shared/styled_textField.dart';
+import 'package:jop_finder_app/features/profile/view/widgets/bottom_sheet.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
+  ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,16 +24,21 @@ class ProfileScreen extends StatelessWidget {
           },
         ),
         centerTitle: true,
-        
         actions: [
-          TextButton(
+          IconButton(
             onPressed: () {
-              // Edit button action
+              showModalBottomSheet(
+                context: context,
+                builder: (context) => CustomBottomSheet(),
+              );
             },
-            child: Text(
-              'Edit',
-              style: TextStyle(color: Colors.blue),
-            ),
+            icon: Icon(Icons.edit, color: Colors.blue),
+          ),
+          IconButton(
+            onPressed: () {
+              GoRouter.of(context).pushNamed('/settingsScreen');
+            },
+            icon: Icon(Icons.settings, color: Colors.blue),
           )
         ],
       ),
@@ -38,12 +48,39 @@ class ProfileScreen extends StatelessWidget {
           children: [
             SizedBox(height: 16),
             Center(
-              child: CircleAvatar(
-                radius: 50.sp,
-                foregroundImage: NetworkImage(
-                    'https://picsum.photos/200/300'), // Replace with actual image URL
-              ),
-            ),
+                child: Stack(
+              alignment: Alignment.bottomRight,
+              children: [
+                CircleAvatar(
+                  radius: 60.sp,
+                  foregroundImage: NetworkImage(
+                      'https://picsum.photos/200/300'), // Replace with actual image URL
+                ),
+                Positioned(
+                  // Adjust this value to position the icon on the frame
+                  right: 7
+                      .sp, // Adjust this value to position the icon on the frame
+                  child: Container(
+                    padding: EdgeInsets.all(5), // Adjust padding if necessary
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      shape: BoxShape.circle,
+                    ),
+                    child: IconButton(
+                      onPressed: () {
+                        // Action for the button
+                      },
+                      icon: Icon(Icons.edit, color: Colors.white),
+                      iconSize: 15.sp, // Adjust icon size if necessary
+                      padding: EdgeInsets
+                          .zero, // Reduce padding inside IconButton to minimize size
+                      constraints:
+                          BoxConstraints(), // Remove minimum size constraints
+                    ),
+                  ),
+                ),
+              ],
+            )),
             SizedBox(height: 8),
             Center(
               child: Column(
@@ -81,6 +118,26 @@ class ProfileScreen extends StatelessWidget {
                 'Applied',
                 style: TextStyle(color: Colors.grey),
               ),
+            ),
+            SizedBox(height: 30),
+            Row(
+              children: [
+                Expanded(
+                  child: StyledTextField(
+                    hint: 'Email',
+                    icon: Icons.email,
+                    controller: _emailController,
+                  ),
+                ),
+                SizedBox(width: 10.w), // Adjust spacing based on your layout
+                Expanded(
+                  child: StyledTextField(
+                    hint: 'Phone Number',
+                    icon: Icons.phone,
+                    controller: _phoneNumberController,
+                  ),
+                ),
+              ],
             ),
             SizedBox(height: 20),
             buildSectionHeader('Education', onPressed: () {}),

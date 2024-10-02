@@ -1,0 +1,69 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:jop_finder_app/features/auth/data/model/user_model.dart';
+import 'package:jop_finder_app/features/auth/data/model/UserProfile_model.dart';
+import 'package:jop_finder_app/features/auth/data/web_services/firebase_authentication_web_services.dart';
+
+class FirebaseProfileWebServices {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FireBaseAuthenticationWebServices _authenticationWebServices;
+
+  FirebaseProfileWebServices(this._authenticationWebServices);
+
+  // Get the current user's ID from FirebaseAuth
+  String? getCurrentUserId() {
+    return _authenticationWebServices.getCurrentUser()?.uid;
+  }
+
+  // Fetch user information from Firestore
+  Future<User?> getUserInfo() async {
+    String? userId = getCurrentUserId();
+    if (userId == null) return null;
+
+    try {
+      DocumentSnapshot userDoc = await _firestore.collection('users').doc(userId).get();
+      if (userDoc.exists) {
+        return User.fromFirestore(userDoc);
+      }
+      return null;
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
+  // Update user information in Firestore
+  Future<bool> updateUserInfo(User user) async {
+    String? userId = getCurrentUserId();
+    if (userId == null) return false;
+
+    try {
+      await _firestore.collection('users').doc(userId).update(user.toFirestore());
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  // Update user profile information in Firestore
+  Future<bool> updateUserProfile(UserProfile profile) async {
+    String? userId = getCurrentUserId();
+    if (userId == null) return false;
+
+    try {
+      await _firestore.collection('users').doc(userId).update({
+        'profile': profile.toMap(),
+      });
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+}
+
+/*
+  String? getCurrentUserId() {
+    return _authenticationWebServices.getCurrentUser()?.uid;
+  }
+*/
