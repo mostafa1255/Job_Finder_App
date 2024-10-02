@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 
 class TextBetweenDivider extends StatelessWidget {
-  const TextBetweenDivider({
-    required this.text,
-    super.key});
-  
+  const TextBetweenDivider({required this.text, super.key});
+
   final String text;
 
   @override
