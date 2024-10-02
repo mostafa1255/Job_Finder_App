@@ -11,7 +11,7 @@ import 'package:jop_finder_app/features/auth/data/web_services/firebase_authenti
 class FirebaseProfileWebServices {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FireBaseAuthenticationWebServices _authenticationWebServices;
-
+   
   FirebaseProfileWebServices(this._authenticationWebServices);
 
   // Get the current user's ID from FirebaseAuth
@@ -53,67 +53,6 @@ class FirebaseProfileWebServices {
       return false;
     }
   }
-
-  Future<bool> setUserProfileIfNotExists(UserProfile profile) async {
-    String? userId = getCurrentUserId();
-    if (userId == null) return false;
-
-    try {
-      DocumentReference userDocRef = _firestore.collection('users').doc(userId);
-      DocumentSnapshot userDoc = await userDocRef.get();
-      if (!userDoc.exists ||
-          !(userDoc.data() as Map<String, dynamic>).containsKey('profile')) {
-        // The user document doesn't exist or doesn't have a 'profile' key
-        await userDocRef
-            .set({'profile': profile.toMap()}, SetOptions(merge: true));
-        return true;
-      }
-      // Profile already exists
-      return false;
-    } catch (e) {
-      print(e.toString());
-      return false;
-    }
-  }
-
-  // Fetch user profile information from Firestore
-  Future<UserProfile?> getUserProfileInfo() async {
-    String? userId = getCurrentUserId();
-    if (userId == null) return null;
-    try {
-      DocumentSnapshot userDoc =
-          await _firestore.collection('users').doc(userId).get();
-      if (userDoc.exists) {
-        Map<String, dynamic> data = userDoc.data() as Map<String, dynamic>;
-        // Check if the profile data exists
-        if (data.containsKey('profile')) {
-          // Construct and return the UserProfile object
-          return UserProfile.fromMap(data['profile']);
-        }
-      }
-      return null;
-    } catch (e) {
-      print(e.toString());
-      return null;
-    }
-  }
-
-  // Update user profile information in Firestore
-  Future<bool> updateUserProfile(UserProfile profile) async {
-    String? userId = getCurrentUserId();
-    if (userId == null) return false;
-
-    try {
-      await _firestore.collection('users').doc(userId).update({
-        'profile': profile.toMap(),
-      });
-      return true;
-    } catch (e) {
-      print(e.toString());
-      return false;
-    }
-  }
-
   // Method to pick a PDF file
   Future<File?> pickPDF() async {
     try {
@@ -128,21 +67,27 @@ class FirebaseProfileWebServices {
         return null;
       }
     } catch (e) {
-      print(e);
+      print(e.toString());
       return null;
     }
   }
 
   // Method to upload a file to Firebase Storage
-  Future<String?> uploadFile(File file, String path) async {
+  Future<bool?> uploadFile(File cvPdf) async {
+     String? userId = getCurrentUserId();
+    if (userId == null) return false;
     try {
-      Reference ref = FirebaseStorage.instance.ref().child('CVs/$path');
-      UploadTask uploadTask = ref.putFile(file);
+      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+      Reference ref = FirebaseStorage.instance.ref().child('CVs/$fileName');
+      UploadTask uploadTask = ref.putFile(cvPdf);
       final snapshot = await uploadTask.whenComplete(() {});
-      final urlDownload = await snapshot.ref.getDownloadURL();
-      return urlDownload;
+      final cvUrl = await snapshot.ref.getDownloadURL();
+       await _firestore.collection('users').doc(userId).update({
+        'cvUrl': cvUrl,
+      });
+      return true;
     } catch (e) {
-      print(e);
+      print(e.toString());
       return null;
     }
   }
@@ -159,7 +104,7 @@ class FirebaseProfileWebServices {
       }
       return null;
     } catch (e) {
-      print(e);
+      print(e.toString());
       return null;
     }
   }
@@ -183,7 +128,7 @@ class FirebaseProfileWebServices {
       });
       return true;
     } catch (e) {
-      print(e);
+      print(e.toString());
       return false;
     }
   }
@@ -204,3 +149,64 @@ class FirebaseProfileWebServices {
     return _authenticationWebServices.getCurrentUser()?.uid;
   }
 */
+
+
+/*
+
+Future<UserProfile?> getUserProfile(String userId) async {
+  try {
+    DocumentSnapshot userDoc = await _firestore.collection('users').doc(userId).get();
+    if (userDoc.exists && userDoc.data().containsKey('profile')) {
+      return UserProfile.fromMap(userDoc.data()['profile']);
+    }
+    return null;
+  } catch (e) {
+    print(e.toString());
+    return null;
+  }
+}
+
+Future<bool> updateUserProfileDirectly(String userId, UserProfile profile) async {
+  try {
+    await _firestore.collection('users').doc(userId).update({
+      'profile': profile.toMap(),
+    });
+    return true;
+  } catch (e) {
+    print(e.toString());
+    return false;
+  }
+}
+
+//   // Fetch user profile information from Firestore
+//   Future<UserProfile?> getUserProfileInfo() async {
+//   String? userId = getCurrentUserId();
+//   if (userId == null) return null;
+//   try {
+//     DocumentSnapshot userDoc = await _firestore.collection('users').doc(userId).get();
+//     Map<String, dynamic> data = userDoc.data() as Map<String, dynamic>;
+//     // Directly construct and return the UserProfile object without checking if the profile data exists
+//     return UserProfile.fromMap(data['profile']);
+//   } catch (e) {
+//     print(e.toString());
+//     return null;
+//   }
+// }
+
+//   // Update user profile information in Firestore
+//   Future<bool> updateUserProfile(UserProfile profile) async {
+//     String? userId = getCurrentUserId();
+//     if (userId == null) return false;
+
+//     try {
+//       await _firestore.collection('users').doc(userId).update({
+//         'profile': profile.toMap(),
+//       });
+//       return true;
+//     } catch (e) {
+//       print(e.toString());
+//       return false;
+//     }
+//   }
+
+ */
