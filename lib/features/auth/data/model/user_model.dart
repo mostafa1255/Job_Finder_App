@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:jop_finder_app/features/auth/model/AppliedJob_model.dart';
-import 'package:jop_finder_app/features/auth/model/PostedJob_model.dart';
-import 'package:jop_finder_app/features/auth/model/UserProfile_model.dart';
+import 'package:jop_finder_app/features/auth/data/model/AppliedJob_model.dart';
+import 'package:jop_finder_app/features/auth/data/model/PostedJob_model.dart';
+import 'package:jop_finder_app/features/auth/data/model/UserProfile_model.dart';
 
 class User {
   final String id;

@@ -23,8 +23,8 @@ class RecommendedJopsCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(right: 16.0),
       child: Container(
-        width: 250.w,
-        height: 200,
+        width: 150.w,
+        height: 260,
         decoration: BoxDecoration(
           // Setting the card background with opacity
           color: color, // Adjust the background opacity here
@@ -41,7 +41,7 @@ class RecommendedJopsCard extends StatelessWidget {
                 radius: 30,
               ),
 
-              SizedBox(height: 20),
+              SizedBox(height: 15),
 
               // Job Title
               Text(
