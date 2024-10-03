@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:jop_finder_app/features/auth/data/web_services/firebase_authentication_web_services.dart';
 import 'package:jop_finder_app/features/auth/view/pages/forget_password.dart';
 import 'package:jop_finder_app/features/auth/view/pages/signin.dart';
 import 'package:jop_finder_app/features/auth/view/pages/signup.dart';
@@ -11,6 +13,8 @@ import 'package:jop_finder_app/features/profile/view/pages/profile.dart';
 import 'package:jop_finder_app/features/profile/view/pages/proposals.dart';
 import 'package:jop_finder_app/features/profile/view/pages/resume.dart';
 import 'package:jop_finder_app/features/profile/view/pages/settings.dart';
+import 'package:jop_finder_app/features/profile/viewmodel/firebase_profile_web_services.dart';
+import 'package:jop_finder_app/features/profile/viewmodel/profile_cubit.dart';
 import 'package:jop_finder_app/features/splash/view/splash.dart';
 import 'package:jop_finder_app/features/splash/view/splash/OnboardingScreen1.dart';
 
@@ -28,6 +32,10 @@ class AppRouter {
   static const settingsScreen = "/settingsScreen";
   static const applicationsScreen = "/applicationsScreen";
   static const proposalsScreen = "/proposalsScreen";
+
+  static  FireBaseAuthenticationWebServices fireBaseAuthenticationWebServices = FireBaseAuthenticationWebServices();
+  static FirebaseProfileWebServices firebaseProfileWebServices =FirebaseProfileWebServices(fireBaseAuthenticationWebServices); 
+  static ProfileCubit profileCubit = ProfileCubit(firebaseProfileWebServices);       
 
   static GoRouter router = GoRouter(
     initialLocation: profileScreen,
@@ -84,7 +92,10 @@ class AppRouter {
       GoRoute(
         path: profileScreen,
         name: profileScreen,
-        builder: (context, state) => ProfileScreen(),
+        builder: (context, state) => BlocProvider.value(
+          value: profileCubit,
+          child: ProfileScreen(),
+        ),
       ),
       GoRoute(
         path: resumeUploadScreen,

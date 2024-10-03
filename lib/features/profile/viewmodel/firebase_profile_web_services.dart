@@ -144,11 +144,44 @@ class FirebaseProfileWebServices {
   }
 }
 
+
+
+
+
 /*
+***************************important ***********************
+
+
   String? getCurrentUserId() {
     return _authenticationWebServices.getCurrentUser()?.uid;
   }
+
+  or
+  String userId = FirebaseAuth.instance.currentUser!.uid;
+
+
+  
+***************************important ***********************
+
 */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /*

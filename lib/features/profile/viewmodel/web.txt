@@ -67,3 +67,53 @@ class FirebaseProfileWebServices {
     return _authenticationWebServices.getCurrentUser()?.uid;
   }
 */
+
+
+
+// ignore: slash_for_doc_comments
+  /**
+   * 
+   * // get file
+final result = await FilePicker.platform.pickFiles(type: FileType.any, allowMultiple: false);
+
+if (result != null && result.files.isNotEmpty) {
+  final fileBytes = result.files.first.bytes;
+  final fileName = result.files.first.name;
+  
+  // upload file
+  await FirebaseStorage.instance.ref('uploads/$fileName').putData(fileBytes);
+}
+   */
+
+//   // Method to upload a file to Firebase Storage
+//   Future<bool?> uploadFile(File cvPdf) async {
+//     //  String? userId = getCurrentUserId();
+//     // if (userId == null) return false;
+//     try {
+//   String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+//   Reference ref = FirebaseStorage.instance.ref().child('CVs/$fileName');
+
+//   UploadTask uploadTask;
+
+//   // Check if running on web
+//   if (kIsWeb) {
+//     // Use bytes for uploading if on web
+//     final bytes = cvPdf.bytes; // Assuming cvPdf is the file picked using FilePicker and has a bytes property
+//     if (bytes == null) throw Exception("File bytes are null");
+//     uploadTask = ref.putData(bytes);
+//   } else {
+//     // Use the file path for uploading if not on web
+//     uploadTask = ref.putFile(cvPdf);
+//   }
+
+//   final snapshot = await uploadTask.whenComplete(() {
+//     print("complete uploading");
+//   });
+//   final cvUrl = await snapshot.ref.getDownloadURL();
+//   print("the cv url is: $cvUrl");
+//   return true;
+// } catch (e) {
+//   print(e.toString());
+//   return null;
+// }
+//   }
