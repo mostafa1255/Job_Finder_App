@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+<<<<<<< HEAD
 import 'package:jop_finder_app/features/auth/data/web_services/firebase_authentication_web_services.dart';
 import 'package:jop_finder_app/features/auth/view/pages/forget_password.dart';
 import 'package:jop_finder_app/features/auth/view/pages/signin.dart';
 import 'package:jop_finder_app/features/auth/view/pages/signup.dart';
+=======
+import 'package:jop_finder_app/features/auth/view/screens/forget_password.dart';
+import 'package:jop_finder_app/features/auth/view/screens/signin.dart';
+import 'package:jop_finder_app/features/auth/view/screens/signup.dart';
+>>>>>>> 4aadca51e5c30156b0b7f712bbabeff3ba850ead
 import 'package:jop_finder_app/features/home/view/pages/home_screen.dart';
 import 'package:jop_finder_app/features/job_apply/view/pages/job_apply.dart';
 import 'package:jop_finder_app/features/job_post/view/pages/job_post.dart';

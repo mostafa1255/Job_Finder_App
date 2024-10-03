@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jop_finder_app/features/auth/data/model/user_model.dart';
-import 'package:jop_finder_app/features/auth/view/pages/shared/styled_textField.dart';
 import 'package:jop_finder_app/features/profile/view/widgets/bottom_sheet.dart';
 import 'package:jop_finder_app/features/profile/view/widgets/info_display.dart';
 import 'package:jop_finder_app/features/profile/viewmodel/profile_cubit.dart';
@@ -16,8 +15,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneNumberController = TextEditingController();
   User? user;
 
   @override

@@ -8,11 +8,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jop_finder_app/core/utils/app_router.dart';
-import 'package:jop_finder_app/features/auth/view/pages/signin.dart';
-import 'package:jop_finder_app/features/auth/view/pages/shared/styled_Button.dart';
-import 'package:jop_finder_app/features/auth/view/pages/shared/styled_textField.dart';
-import 'package:jop_finder_app/features/auth/view/pages/shared/text_Divider.dart';
-import 'package:jop_finder_app/features/auth/view/pages/shared/welcome_text.dart';
+import 'package:jop_finder_app/features/auth/view/screens/shared/signup_column.dart';
+import 'package:jop_finder_app/features/auth/view/screens/shared/styled_button.dart';
+import 'package:jop_finder_app/features/auth/view/screens/shared/styled_textField.dart';
+import 'package:jop_finder_app/features/auth/view/screens/shared/text_between_divider.dart';
+import 'package:jop_finder_app/features/auth/view/screens/shared/welcome_text.dart';
 import 'package:jop_finder_app/features/auth/viewmodel/cubit/auth_cubit.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -37,20 +37,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool registerCheck() {
     //condition to check the validation of textfields
     if (_formKey.currentState!.validate()) {
-      //check if password and confirmpassword match
-      if (_confirmPasswordController.text == _passwordController.text) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Registration Successful!')),
-        );
-        return true;
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Password doesn't match"),
-          ),
-        );
-        return false;
-      }
+      return true;
     }
     return false;
   }
@@ -74,9 +61,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       child: CircularProgressIndicator(),
                     );
                   } else if (state is AuthError) {
-                    return Center(
-                      child: Text(state.errorMessage),
-                    );
+                    return SignupColumn(errorMessage: state.errorMessage);
                   } else {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -107,10 +92,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             controller: _passwordController),
                         const SizedBox(height: 16),
                         StyledTextField(
-                            hint: "Confirm Password",
-                            icon: Icons.lock_outlined,
-                            isPassword: true,
-                            controller: _confirmPasswordController),
+                          hint: "Confirm Password",
+                          icon: Icons.lock_outlined,
+                          isPassword: true,
+                          controller: _confirmPasswordController,
+                          password: _passwordController,
+                        ),
                         const SizedBox(height: 30),
 
                         //Button to Register

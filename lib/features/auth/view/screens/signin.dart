@@ -3,12 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jop_finder_app/core/utils/app_router.dart';
-import 'package:jop_finder_app/features/auth/view/pages/forget_password.dart';
-import 'package:jop_finder_app/features/auth/view/pages/shared/styled_Button.dart';
-import 'package:jop_finder_app/features/auth/view/pages/shared/styled_textField.dart';
-import 'package:jop_finder_app/features/auth/view/pages/shared/text_Divider.dart';
-import 'package:jop_finder_app/features/auth/view/pages/shared/welcome_text.dart';
-import 'package:jop_finder_app/features/auth/view/pages/signup.dart';
+import 'package:jop_finder_app/features/auth/view/screens/shared/signin_column.dart';
+import 'package:jop_finder_app/features/auth/view/screens/shared/styled_button.dart';
+import 'package:jop_finder_app/features/auth/view/screens/shared/styled_textField.dart';
+import 'package:jop_finder_app/features/auth/view/screens/shared/text_between_divider.dart';
+import 'package:jop_finder_app/features/auth/view/screens/shared/welcome_text.dart';
 import 'package:jop_finder_app/features/auth/viewmodel/cubit/auth_cubit.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -51,9 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: CircularProgressIndicator(),
                     );
                   } else if (state is AuthError) {
-                    return Center(
-                      child: Text(state.errorMessage),
-                    );
+                    return SignInColumn(errorMessage: state.errorMessage);
                   } else {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -95,11 +92,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         //Forgetpassword Text button
                         TextButton(
                             onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          ForgetPasswordScreen()));
+                              GoRouter.of(context)
+                                  .pushNamed(AppRouter.forgetPassword);
                             },
                             child: const Text(
                               "Forgot Password?",

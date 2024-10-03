@@ -11,7 +11,7 @@ import 'package:jop_finder_app/features/auth/data/web_services/firebase_authenti
 class FirebaseProfileWebServices {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FireBaseAuthenticationWebServices _authenticationWebServices;
-   
+
   FirebaseProfileWebServices(this._authenticationWebServices);
 
   // Get the current user's ID from FirebaseAuth
@@ -53,6 +53,7 @@ class FirebaseProfileWebServices {
       return false;
     }
   }
+
   // Method to pick a PDF file
   Future<File?> pickPDF() async {
     try {
@@ -74,7 +75,7 @@ class FirebaseProfileWebServices {
 
   // Method to upload a file to Firebase Storage
   Future<bool?> uploadFile(File cvPdf) async {
-     String? userId = getCurrentUserId();
+    String? userId = getCurrentUserId();
     if (userId == null) return false;
     try {
       String fileName = DateTime.now().millisecondsSinceEpoch.toString();
@@ -82,7 +83,7 @@ class FirebaseProfileWebServices {
       UploadTask uploadTask = ref.putFile(cvPdf);
       final snapshot = await uploadTask.whenComplete(() {});
       final cvUrl = await snapshot.ref.getDownloadURL();
-       await _firestore.collection('users').doc(userId).update({
+      await _firestore.collection('users').doc(userId).update({
         'cvUrl': cvUrl,
       });
       return true;
@@ -92,7 +93,7 @@ class FirebaseProfileWebServices {
     }
   }
 
-   //  pickImage method    
+  //  pickImage method
   Future<File?> pickImage() async {
     try {
       final picker = ImagePicker();
@@ -133,8 +134,6 @@ class FirebaseProfileWebServices {
     }
   }
 
-  
-
   Future<void> openPdf(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
@@ -165,25 +164,10 @@ class FirebaseProfileWebServices {
 
 */
 
+<<<<<<< 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+=======
+>>>>>>> 4aadca51e5c30156b0b7f712bbabeff3ba850ead
 /*
 
 Future<UserProfile?> getUserProfile(String userId) async {

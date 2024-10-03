@@ -8,52 +8,84 @@ part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
-  FireBaseAuthenticationWebServices fireBaseAuthenticationWebServices =
+
+  final FireBaseAuthenticationWebServices fireBaseAuthenticationWebServices =
       FireBaseAuthenticationWebServices();
 
-  Future<void> signIn(
-      {required String email,
-      required String password,
-      required BuildContext context}) async {
+  // Sign In
+  Future<void> signIn({
+    required String email,
+    required String password,
+    required BuildContext context,
+  }) async {
+    emit(AuthLoading());
     try {
-      var user = await fireBaseAuthenticationWebServices.signIn(
+      var result = await fireBaseAuthenticationWebServices.signIn(
           email: email, password: password);
-      if (user != null)
+
+      if (result == "User signed in successfully") {
         GoRouter.of(context).pushReplacementNamed(AppRouter.homeScreen);
-      emit(AuthLoaded());
+        emit(AuthLoaded());
+      } else {
+        emit(AuthError(errorMessage: result ?? "Failed to sign in"));
+      }
     } catch (e) {
       emit(AuthError(errorMessage: e.toString()));
     }
   }
 
-  Future<void> signUp(
-      {required String email,
-      required String password,
-      required BuildContext context}) async {
+  // Sign Up
+  Future<void> signUp({
+    required String email,
+    required String password,
+    required BuildContext context,
+  }) async {
+    emit(AuthLoading());
     try {
-      var user = await fireBaseAuthenticationWebServices.signUp(
+      var result = await fireBaseAuthenticationWebServices.signUp(
           email: email, password: password);
-      fireBaseAuthenticationWebServices.signOut();
-      GoRouter.of(context).pushReplacementNamed(AppRouter.login);
-      emit(AuthLoaded());
+
+      if (result == "User signed up successfully") {
+        await fireBaseAuthenticationWebServices.signOut();
+        GoRouter.of(context).pushReplacementNamed(AppRouter.login);
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(result.toString())));
+        emit(AuthLoaded());
+      } else {
+        emit(AuthError(errorMessage: result ?? "Failed to sign up"));
+      }
     } catch (e) {
       emit(AuthError(errorMessage: e.toString()));
     }
   }
 
+  // Sign Out
   Future<void> signOut() async {
+    emit(AuthLoading());
     try {
       await fireBaseAuthenticationWebServices.signOut();
       emit(AuthLoaded());
     } catch (e) {
-      emit(AuthError(errorMessage: e.toString()));
+      emit(AuthError(errorMessage: "Failed to sign out: ${e.toString()}"));
     }
   }
 
-  Future<void> resetPassword({required String email}) async {
+  // Reset Password
+  Future<void> resetPassword(
+      {required String email, required BuildContext context}) async {
+    emit(AuthLoading());
     try {
-      await fireBaseAuthenticationWebServices.resetPassword(email: email);
-      emit(AuthLoaded());
+      var result =
+          await fireBaseAuthenticationWebServices.resetPassword(email: email);
+
+      if (result == "Password reset email sent") {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Email password reset link sent!')));
+        GoRouter.of(context).pushReplacementNamed(AppRouter.login);
+        emit(AuthLoaded());
+      } else {
+        emit(AuthError(errorMessage: result ?? "Failed to send reset email"));
+      }
     } catch (e) {
       emit(AuthError(errorMessage: e.toString()));
     }
