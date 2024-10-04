@@ -1,9 +1,8 @@
 change Navigator to AppRouter
+make use of the Full name TextField
 
-add two password check for the in text field
+rememer me button
 
-
-make the error managment screen 
 
 
 
