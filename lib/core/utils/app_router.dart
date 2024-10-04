@@ -33,12 +33,14 @@ class AppRouter {
   static const applicationsScreen = "/applicationsScreen";
   static const proposalsScreen = "/proposalsScreen";
 
-  static  FireBaseAuthenticationWebServices fireBaseAuthenticationWebServices = FireBaseAuthenticationWebServices();
-  static FirebaseProfileWebServices firebaseProfileWebServices =FirebaseProfileWebServices(fireBaseAuthenticationWebServices); 
-  static ProfileCubit profileCubit = ProfileCubit(firebaseProfileWebServices);       
+  static FireBaseAuthenticationWebServices fireBaseAuthenticationWebServices =
+      FireBaseAuthenticationWebServices();
+  static FirebaseProfileWebServices firebaseProfileWebServices =
+      FirebaseProfileWebServices(fireBaseAuthenticationWebServices);
+  static ProfileCubit profileCubit = ProfileCubit(firebaseProfileWebServices);
 
   static GoRouter router = GoRouter(
-    initialLocation: profileScreen,
+    initialLocation: jobPostScreen,
     errorPageBuilder: (context, state) => MaterialPage(
       key: state.pageKey,
       child: Scaffold(
@@ -118,7 +120,6 @@ class AppRouter {
         builder: (context, state) => ProposalsScreen(),
       ),
       //end bodaSayed
-
     ],
   );
 }
