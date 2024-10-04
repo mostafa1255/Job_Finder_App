@@ -16,7 +16,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       final userId = _profileWebServices.getCurrentUserId();
       if (userId == null) {
         emit(ProfileError("User not found"));
-        return User(id: "", name: "", email: ""); // Add return statement here
+        return User(id: "", name: "error", email: ""); // Add return statement here
       }
       final user = await _profileWebServices.getUserInfo();
       if (user != null) {

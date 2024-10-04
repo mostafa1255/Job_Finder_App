@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:jop_finder_app/features/auth/data/model/user_model.dart';
-import 'package:jop_finder_app/features/auth/data/model/UserProfile_model.dart';
 import 'package:jop_finder_app/features/auth/data/web_services/firebase_authentication_web_services.dart';
 
 class FirebaseProfileWebServices {
@@ -18,12 +17,10 @@ class FirebaseProfileWebServices {
   String? getCurrentUserId() {
     return _authenticationWebServices.getCurrentUser()?.uid;
   }
-
   // Fetch user information from Firestore
   Future<User?> getUserInfo() async {
     String? userId = getCurrentUserId();
     if (userId == null) return null;
-
     try {
       DocumentSnapshot userDoc =
           await _firestore.collection('users').doc(userId).get();
@@ -164,10 +161,7 @@ class FirebaseProfileWebServices {
 
 */
 
-<<<<<<< 
 
-=======
->>>>>>> 4aadca51e5c30156b0b7f712bbabeff3ba850ead
 /*
 
 Future<UserProfile?> getUserProfile(String userId) async {

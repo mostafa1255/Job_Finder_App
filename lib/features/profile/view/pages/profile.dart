@@ -9,19 +9,32 @@ import 'package:jop_finder_app/features/profile/view/widgets/info_display.dart';
 import 'package:jop_finder_app/features/profile/viewmodel/profile_cubit.dart';
 
 class ProfileScreen extends StatefulWidget {
-  ProfileScreen({super.key});
+   const ProfileScreen({super.key});
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
   User? user;
+  ProfileCubit? profileCubit ;
 
   @override
-  void initState() async {
+  void initState() {
     super.initState();
+    profileCubit = BlocProvider.of<ProfileCubit>(context);
+    // Schedule the asynchronous operation to fetch user information
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchUserInfo();
+    });
+  }
+
+  Future<void> _fetchUserInfo() async {
     // Fetch user information from Firestore using the cubit method
-    user = await BlocProvider.of<ProfileCubit>(context).getUserInfo();
+    var fetchedUser =
+        await BlocProvider.of<ProfileCubit>(context).getUserInfo();
+    setState(() {
+      user = fetchedUser;
+    });
   }
 
   Widget buildBlock() {
@@ -35,7 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         } else if (state is ProfileError) {
           return Center(child: Text(state.errorMessage));
         } else {
-          return Center(child: Text('An error occurred'));
+          return Center(child: Text('Error occurred'));
         }
       },
     );
@@ -68,7 +81,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   child: IconButton(
                     onPressed: () {
-
                       // Action for Edit icon to change profile image///////////////////////
                     },
                     icon: Icon(Icons.edit, color: Colors.white),
@@ -130,7 +142,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               SizedBox(width: 10.w), // Adjust spacing based on your layout
               Expanded(
                 child: CustomInfoDisplay(
-                    text: user!.phoneNumber!, icon: Icons.phone_android_outlined),
+                    text: user!.phoneNumber!,
+                    icon: Icons.phone_android_outlined),
               ),
             ],
           ),
