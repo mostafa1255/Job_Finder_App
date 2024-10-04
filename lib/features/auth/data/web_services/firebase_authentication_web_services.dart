@@ -9,13 +9,20 @@ class FireBaseAuthenticationWebServices {
   }
 
   //Sign Up
-  Future<String?> signUp(
-      {required String email, required String password}) async {
+  Future<String?> signUp({
+    required String email,
+    required String password,
+    required String fullName, // Add fullName as a required parameter
+  }) async {
     try {
       final UserCredential credential = await _fireBaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
 
       if (credential.user != null) {
+        // Update the display name (full name) for the new user
+        await credential.user!.updateDisplayName(fullName);
+        await credential.user!.reload(); // Reload the user to apply the changes
+
         return "User signed up successfully";
       }
       return "Failed to sign up user";

@@ -95,7 +95,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       builder: (context, state) {
                         if (state is AuthLoading) {
                           return const Center(
-                            child: CircularProgressIndicator(),
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 15.0),
+                              child: Center(
+                                child: LinearProgressIndicator(
+                                  color: Color.fromARGB(255, 53, 104, 153),
+                                ),
+                              ),
+                            ),
                           );
                         } else if (state is AuthError) {
                           return Column(
@@ -118,6 +125,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                               email: _emailController.text,
                                               password:
                                                   _passwordController.text,
+                                              fullName:
+                                                  _fullNameController.text,
                                               context: context);
                                     }
                                   },
@@ -134,6 +143,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                               email: _emailController.text,
                                               password:
                                                   _passwordController.text,
+                                              fullName:
+                                                  _fullNameController.text,
                                               context: context);
                                     }
                                   },

@@ -71,7 +71,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     builder: (context, state) {
                       if (state is AuthLoading) {
                         return const Center(
-                          child: CircularProgressIndicator(),
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 15.0),
+                            child: Center(
+                              child: LinearProgressIndicator(
+                                color: Color.fromARGB(255, 53, 104, 153),
+                              ),
+                            ),
+                          ),
                         );
                       } else if (state is AuthError) {
                         return Column(

@@ -38,12 +38,13 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> signUp({
     required String email,
     required String password,
+    required String fullName,
     required BuildContext context,
   }) async {
     emit(AuthLoading());
     try {
       var result = await fireBaseAuthenticationWebServices.signUp(
-          email: email, password: password);
+          email: email, password: password, fullName: fullName);
 
       if (result == "User signed up successfully") {
         await fireBaseAuthenticationWebServices.signOut();
