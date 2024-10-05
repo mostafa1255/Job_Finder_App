@@ -9,14 +9,13 @@ import 'package:jop_finder_app/features/profile/viewmodel/profile_cubit.dart';
 class ApplicationsScreen extends StatefulWidget {
   const ApplicationsScreen({super.key});
 
-
   @override
   State<ApplicationsScreen> createState() => _ApplicationsScreenState();
 }
 
 class _ApplicationsScreenState extends State<ApplicationsScreen> {
- User? user;
-  ProfileCubit? profileCubit ;
+  User? user;
+  ProfileCubit? profileCubit;
 
   @override
   void initState() {
@@ -32,13 +31,13 @@ class _ApplicationsScreenState extends State<ApplicationsScreen> {
     // Fetch user information from Firestore using the cubit method
     var fetchedUser =
         await BlocProvider.of<ProfileCubit>(context).getUserInfo();
-    setState(() {
-      user = fetchedUser;
-    });
+    if (mounted) {
+      setState(() {
+        user = fetchedUser;
+      });
+    }
   }
 
-
-  
   Widget buildBlock() {
     return BlocBuilder<ProfileCubit, ProfileState>(
       builder: (context, state) {
@@ -56,124 +55,151 @@ class _ApplicationsScreenState extends State<ApplicationsScreen> {
     );
   }
 
-Widget buildApplicationsScreen () {
-  return Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'You have ${user!.appliedJobs!.length} Applications ',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+  Widget buildApplicationsScreen() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'You have ${user?.appliedJobs?.length ?? 0} Applications',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 16),
+          Expanded(
+            child: ListView.builder(
+              itemCount: user!.appliedJobs!.length,
+              itemBuilder: (context, index) {
+                return ApplicationCard(appliedJob: user!.appliedJobs![index]);
+              },
             ),
-            SizedBox(height: 16),
-            Expanded(
-              child: ListView.builder(
-                itemCount: user!.appliedJobs!.length,
-                itemBuilder: (context, index) {
-                  return ApplicationCard(appliedJob: user!.appliedJobs![index]);
-                },
-              ),
-            ),
-          ],
-        ),
-      );
-}
-
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-              backgroundColor: Colors.white,
-
-        title: Text('Applications'),
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        actions: [
-          CircleAvatar(
-            backgroundImage: NetworkImage(user!.profileImageUrl!), // Placeholder for profile image
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          title: Text('Applications'),
+          centerTitle: true,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
           ),
-          SizedBox(width: 10),
-        ],
-      ),
-      body: buildBlock()
-    );
+          actions: [
+            // if (user != null)
+            //   CircleAvatar(
+            //     backgroundImage: NetworkImage(user!.profileImageUrl!),
+            //   ),
+            SizedBox(width: 10),
+          ],
+        ),
+        body: buildBlock());
   }
 }
-
-
-
 
 class ApplicationCard extends StatelessWidget {
   final AppliedJob appliedJob;
 
-  const ApplicationCard({super.key, required this.appliedJob});
+  const ApplicationCard({required this.appliedJob});
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      
+      color: Colors.white,
       margin: EdgeInsets.symmetric(vertical: 8.0),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Placeholder for company logos
-                Image.network(
-                  appliedJob.companyImageURL!, // Replace with actual company logo URL
-                  height: 40,
-                  width: 40,
-                ),
-                SizedBox(width: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
                   children: [
-                    Text(
-                      appliedJob.jobTitle!,
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    CircleAvatar(
+                      radius: 35,
+                      foregroundImage: NetworkImage(
+                        appliedJob.companyImageURL ??
+                            'https://picsum.photos/200/300', // Replace with actual company logo URL
+                      ),
                     ),
-                    SizedBox(height: 4),
-                    Text(
-                      appliedJob.companyName!,
-                      style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                    SizedBox(width: 14),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          appliedJob.jobTitle ?? 'No Title',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          appliedJob.companyName ?? 'No Company',
+                          style:
+                              TextStyle(fontSize: 16, color: Colors.grey[600]),
+                        ),
+                      ],
                     ),
                   ],
                 ),
+                SizedBox(height: 20),
+                Container(
+                  margin: EdgeInsets.only(left: 4),
+                  child: Text(appliedJob.salary ?? 'No salary',
+                      style: TextStyle(fontSize: 16)),
+                ),
               ],
             ),
-            SizedBox(height: 16),
-            Row(
+            Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(appliedJob.salary!, style: TextStyle(fontSize: 16)),
+                Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(top: 16), 
+                      child: Text(appliedJob.jobType ?? 'No Type',
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold)),
+                    ),
+                    SizedBox(height: 4),
+                    Text(appliedJob.location ?? 'No Location',
+                        style: TextStyle(fontSize: 14, color: Colors.grey)),
+                  ],
+                ),
+                SizedBox(height: 34),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: appliedJob.status=="Canceled"? Colors.red :Colors.green  , width: 1),
+                    border: Border.all(
+                        color: appliedJob.status == "Canceled"
+                            ? Colors.red
+                            : Colors.green,
+                        width: 1),
                   ),
                   child: Text(
-                    appliedJob.status!,
-                    style: TextStyle(color: appliedJob.status=="Canceled"? Colors.red :Colors.green),
+                    appliedJob.status ?? 'no status',
+                    style: TextStyle(
+                        color: appliedJob.status == "Canceled"
+                            ? Colors.red
+                            : Colors.green),
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 4),
-            Text(appliedJob.jobType!, style: TextStyle(fontSize: 14, color: Colors.grey)),
-            SizedBox(height: 4),
-            Text(appliedJob.location! , style: TextStyle(fontSize: 14, color: Colors.grey)),
           ],
         ),
       ),

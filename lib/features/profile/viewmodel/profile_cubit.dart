@@ -25,7 +25,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         emit(UserLoaded(user));
         return user;
       } else {
-        emit(ProfileError("User profile not found"));
+        emit(ProfileError("Error loading User profile not found"));
         return User(id: "", name: "", email: ""); // Add return statement here
       }
     } catch (e) {

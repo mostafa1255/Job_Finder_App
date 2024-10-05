@@ -16,7 +16,7 @@ class FirebaseProfileWebServices {
 
   // Get the current user's ID from FirebaseAuth
   String? getCurrentUserId() {
-    return _authenticationWebServices.getCurrentUser()?.uid;
+    return "YVgkl5eBX6N0aPlEY4Pl";
   }
   // Fetch user information from Firestore
   Future<User?> getUserInfo() async {
