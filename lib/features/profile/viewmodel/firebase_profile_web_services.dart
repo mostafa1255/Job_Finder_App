@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -51,45 +52,6 @@ class FirebaseProfileWebServices {
     }
   }
 
-  // Method to pick a PDF file
-  Future<File?> pickPDF() async {
-    try {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['pdf'],
-      );
-      if (result != null) {
-        return File(result.files.single.path!);
-      } else {
-        // User canceled the picker
-        return null;
-      }
-    } catch (e) {
-      print(e.toString());
-      return null;
-    }
-  }
-
-  // Method to upload a file to Firebase Storage
-  Future<bool?> uploadFile(File cvPdf) async {
-    String? userId = getCurrentUserId();
-    if (userId == null) return false;
-    try {
-      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-      Reference ref = FirebaseStorage.instance.ref().child('CVs/$fileName');
-      UploadTask uploadTask = ref.putFile(cvPdf);
-      final snapshot = await uploadTask.whenComplete(() {});
-      final cvUrl = await snapshot.ref.getDownloadURL();
-      await _firestore.collection('users').doc(userId).update({
-        'cvUrl': cvUrl,
-      });
-      return true;
-    } catch (e) {
-      print(e.toString());
-      return null;
-    }
-  }
-
   //  pickImage method
   Future<File?> pickImage() async {
     try {
@@ -130,6 +92,46 @@ class FirebaseProfileWebServices {
       return false;
     }
   }
+
+  
+  Future<bool?> uploadFileAndUpdateUser(FilePickerResult cvPdf) async {
+    String? userId = getCurrentUserId();
+    if (userId == null) return false;
+    try {
+      // Ensure the file name retains the .pdf extension
+      String fileName =
+          "${DateTime.now().millisecondsSinceEpoch.toString()}.pdf";
+      Reference ref = FirebaseStorage.instance.ref().child('CVs/$fileName');
+      UploadTask uploadTask;
+      // Check if running on web
+      if (kIsWeb) {
+        // Use bytes for uploading if on web
+        final bytes = cvPdf.files.first.bytes;
+        if (bytes == null) throw Exception("File bytes are null");
+        uploadTask = ref.putData(
+            bytes, SettableMetadata(contentType: 'application/pdf'));
+      } else {
+        // Use the file path for uploading if not on web
+        File file = File(cvPdf.files.single.path!);
+        uploadTask =
+            ref.putFile(file, SettableMetadata(contentType: 'application/pdf'));
+      }
+      final snapshot = await uploadTask.whenComplete(() {
+        
+        // Perform any actions after the file is uploaded
+      });
+      final cvUrl = await snapshot.ref.getDownloadURL();
+      await _firestore.collection('users').doc(userId).update({
+        'cvUrl': cvUrl,
+      });
+      // Update the user's document with the CV URL
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
 
   Future<void> openPdf(String url) async {
     if (await canLaunch(url)) {

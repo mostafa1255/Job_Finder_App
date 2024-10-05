@@ -1,12 +1,85 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
-class ApplicationsScreen extends StatelessWidget {
-  final List<Application> applications = [
-    Application('Google', 'Jr Executive', '\$115,000/y', 'Canceled', 'Full-Time', 'Los Angeles, US', Colors.redAccent),
-    Application('Beats', 'Mid Executive', '\$86,000/y', 'Reviewing', 'Full-Time', 'San Jose, US', Colors.greenAccent),
-    Application('Spotify', 'Sr Executive', '\$96,000/y', 'Delivered', 'Full-Time', 'San Francisco, US', Colors.blueAccent),
-  ];
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jop_finder_app/features/auth/data/model/AppliedJob_model.dart';
+import 'package:jop_finder_app/features/auth/data/model/user_model.dart';
+import 'package:jop_finder_app/features/profile/viewmodel/profile_cubit.dart';
+
+class ApplicationsScreen extends StatefulWidget {
+  const ApplicationsScreen({super.key});
+
+
+  @override
+  State<ApplicationsScreen> createState() => _ApplicationsScreenState();
+}
+
+class _ApplicationsScreenState extends State<ApplicationsScreen> {
+ User? user;
+  ProfileCubit? profileCubit ;
+
+  @override
+  void initState() {
+    super.initState();
+    profileCubit = BlocProvider.of<ProfileCubit>(context);
+    // Schedule the asynchronous operation to fetch user information
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchUserInfo();
+    });
+  }
+
+  Future<void> _fetchUserInfo() async {
+    // Fetch user information from Firestore using the cubit method
+    var fetchedUser =
+        await BlocProvider.of<ProfileCubit>(context).getUserInfo();
+    setState(() {
+      user = fetchedUser;
+    });
+  }
+
+
+  
+  Widget buildBlock() {
+    return BlocBuilder<ProfileCubit, ProfileState>(
+      builder: (context, state) {
+        if (state is ProfileLoading) {
+          return Center(child: CircularProgressIndicator());
+        } else if (state is UserLoaded) {
+          user = state.user;
+          return buildApplicationsScreen();
+        } else if (state is ProfileError) {
+          return Center(child: Text(state.errorMessage));
+        } else {
+          return Center(child: Text('Error occurred'));
+        }
+      },
+    );
+  }
+
+Widget buildApplicationsScreen () {
+  return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'You have ${user!.appliedJobs!.length} Applications ',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 16),
+            Expanded(
+              child: ListView.builder(
+                itemCount: user!.appliedJobs!.length,
+                itemBuilder: (context, index) {
+                  return ApplicationCard(appliedJob: user!.appliedJobs![index]);
+                },
+              ),
+            ),
+          ],
+        ),
+      );
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -25,53 +98,23 @@ class ApplicationsScreen extends StatelessWidget {
         ),
         actions: [
           CircleAvatar(
-            backgroundImage: NetworkImage('https://example.com/profile.jpg'), // Placeholder for profile image
+            backgroundImage: NetworkImage(user!.profileImageUrl!), // Placeholder for profile image
           ),
           SizedBox(width: 10),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'You have 27 Applications ',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 16),
-            Expanded(
-              child: ListView.builder(
-                itemCount: applications.length,
-                itemBuilder: (context, index) {
-                  return ApplicationCard(application: applications[index]);
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
+      body: buildBlock()
     );
   }
 }
 
-class Application {
-  final String company;
-  final String title;
-  final String salary;
-  final String status;
-  final String jobType;
-  final String location;
-  final Color statusColor;
 
-  Application(this.company, this.title, this.salary, this.status, this.jobType, this.location, this.statusColor);
-}
 
 
 class ApplicationCard extends StatelessWidget {
-  final Application application;
+  final AppliedJob appliedJob;
 
-  const ApplicationCard({required this.application});
+  const ApplicationCard({super.key, required this.appliedJob});
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +131,7 @@ class ApplicationCard extends StatelessWidget {
               children: [
                 // Placeholder for company logos
                 Image.network(
-                  'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png', // Replace with actual company logo URL
+                  appliedJob.companyImageURL!, // Replace with actual company logo URL
                   height: 40,
                   width: 40,
                 ),
@@ -97,12 +140,12 @@ class ApplicationCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      application.title,
+                      appliedJob.jobTitle!,
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 4),
                     Text(
-                      application.company,
+                      appliedJob.companyName!,
                       style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                     ),
                   ],
@@ -113,24 +156,24 @@ class ApplicationCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(application.salary, style: TextStyle(fontSize: 16)),
+                Text(appliedJob.salary!, style: TextStyle(fontSize: 16)),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                   decoration: BoxDecoration(
-                    color: application.statusColor.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: appliedJob.status=="Canceled"? Colors.red :Colors.green  , width: 1),
                   ),
                   child: Text(
-                    application.status,
-                    style: TextStyle(color: application.statusColor),
+                    appliedJob.status!,
+                    style: TextStyle(color: appliedJob.status=="Canceled"? Colors.red :Colors.green),
                   ),
                 ),
               ],
             ),
             SizedBox(height: 4),
-            Text(application.jobType, style: TextStyle(fontSize: 14, color: Colors.grey)),
+            Text(appliedJob.jobType!, style: TextStyle(fontSize: 14, color: Colors.grey)),
             SizedBox(height: 4),
-            Text(application.location, style: TextStyle(fontSize: 14, color: Colors.grey)),
+            Text(appliedJob.location! , style: TextStyle(fontSize: 14, color: Colors.grey)),
           ],
         ),
       ),

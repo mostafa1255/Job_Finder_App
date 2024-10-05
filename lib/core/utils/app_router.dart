@@ -40,7 +40,7 @@ class AppRouter {
   static ProfileCubit profileCubit = ProfileCubit(firebaseProfileWebServices);
 
   static GoRouter router = GoRouter(
-    initialLocation: jobPostScreen,
+    initialLocation: resumeUploadScreen,
     errorPageBuilder: (context, state) => MaterialPage(
       key: state.pageKey,
       child: Scaffold(
@@ -102,8 +102,11 @@ class AppRouter {
       GoRoute(
         path: resumeUploadScreen,
         name: resumeUploadScreen,
-        builder: (context, state) => ResumeUploadScreen(),
-      ),
+        builder: (context, state) => BlocProvider.value(
+          value: profileCubit,
+          child: ResumeUploadScreen(),
+          )
+        ),
       GoRoute(
         path: settingsScreen,
         name: settingsScreen,
@@ -112,7 +115,10 @@ class AppRouter {
       GoRoute(
         path: applicationsScreen,
         name: applicationsScreen,
-        builder: (context, state) => ApplicationsScreen(),
+        builder:  (context, state) => BlocProvider.value(
+          value: profileCubit,
+          child: ApplicationsScreen(),
+        ),
       ),
       GoRoute(
         path: proposalsScreen,
