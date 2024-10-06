@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:jop_finder_app/core/utils/app_router.dart';
 import 'package:jop_finder_app/features/auth/data/web_services/firebase_authentication_web_services.dart';
 import 'package:jop_finder_app/features/auth/data/web_services/google_authentication_web_services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'auth_state.dart';
 
@@ -20,13 +21,24 @@ class AuthCubit extends Cubit<AuthState> {
     required String email,
     required String password,
     required BuildContext context,
+    bool rememberMe = false, // Add rememberMe as a parameter
   }) async {
     emit(AuthLoading());
     try {
       var result = await fireBaseAuthenticationWebServices.signIn(
-          email: email, password: password);
+        email: email,
+        password: password,
+      );
 
       if (result == "User signed in successfully") {
+        if (rememberMe) {
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setBool('isLoggedIn', true); // Store login status
+          await prefs.setString('email', email); // Store email
+          await prefs.setString(
+              'password', password); // Optionally store password
+        }
+
         GoRouter.of(context).pushReplacementNamed(AppRouter.homeScreen);
         emit(AuthLoaded());
       } else {

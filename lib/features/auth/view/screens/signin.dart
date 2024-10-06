@@ -9,6 +9,7 @@ import 'package:jop_finder_app/features/auth/view/screens/shared/styled_text_nav
 import 'package:jop_finder_app/features/auth/view/screens/shared/text_between_divider.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/welcome_text.dart';
 import 'package:jop_finder_app/features/auth/viewmodel/cubit/auth_cubit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -23,12 +24,38 @@ class _LoginScreenState extends State<LoginScreen> {
   // Create controllers for the TextFields
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _rememberMe = false;
 
   bool validation() {
     if (_formKey.currentState!.validate()) {
       return true;
     }
     return false;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _checkRememberMe();
+  }
+
+  void _checkRememberMe() async {
+    final prefs = await SharedPreferences.getInstance();
+    bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+
+    if (isLoggedIn) {
+      // Retrieve email and password if you stored them
+      String? email = prefs.getString('email');
+      String? password = prefs.getString('password');
+
+      if (email != null && password != null) {
+        BlocProvider.of<AuthCubit>(context).signIn(
+          email: email,
+          password: password,
+          context: context,
+        );
+      }
+    }
   }
 
   @override
@@ -65,6 +92,30 @@ class _LoginScreenState extends State<LoginScreen> {
                       icon: Icons.lock_outlined,
                       isPassword: true,
                       controller: _passwordController),
+
+                  //remember me button
+                  Row(
+                    children: [
+                      Checkbox(
+                        side: BorderSide(
+                            color: const Color.fromARGB(255, 175, 176, 182)),
+                        activeColor: Color.fromARGB(255, 53, 104, 153),
+                        value: _rememberMe,
+                        onChanged: (newValue) {
+                          setState(() {
+                            _rememberMe = newValue!;
+                          });
+                        },
+                      ),
+                      const Text(
+                        "Remember Me",
+                        style: TextStyle(
+                            color: const Color.fromARGB(255, 175, 176, 182),
+                            fontSize: 14),
+                      ),
+                    ],
+                  ),
+
                   const SizedBox(height: 15),
 
                   // cubit builder
@@ -100,6 +151,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     BlocProvider.of<AuthCubit>(context).signIn(
                                         email: _emailController.text,
                                         password: _passwordController.text,
+                                        rememberMe: _rememberMe,
                                         context: context);
                                   }
                                 },
@@ -115,6 +167,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     BlocProvider.of<AuthCubit>(context).signIn(
                                         email: _emailController.text,
                                         password: _passwordController.text,
+                                        rememberMe: _rememberMe,
                                         context: context);
                                   }
                                 },
@@ -123,7 +176,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                   ),
 
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 15),
+
+                  const SizedBox(height: 15),
 
                   //Forgetpassword Text button
                   TextButton(
