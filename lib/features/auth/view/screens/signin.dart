@@ -5,6 +5,7 @@ import 'package:jop_finder_app/core/utils/app_router.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/google_facebook_sign.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/styled_button.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/styled_textField.dart';
+import 'package:jop_finder_app/features/auth/view/screens/shared/styled_text_navigation_to_from_signin.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/text_between_divider.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/welcome_text.dart';
 import 'package:jop_finder_app/features/auth/viewmodel/cubit/auth_cubit.dart';
@@ -150,40 +151,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 30),
 
                   // Row for Navigating to Sign in Screen contains text and texButton
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(right: 5),
-                        child: Text(
-                          "Haven't an account?",
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 175, 176, 182),
-                            fontSize: 13,
-                          ),
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          // Navigate to register screen
-                          GoRouter.of(context)
-                              .pushReplacementNamed(AppRouter.signUp);
-                        },
-                        style: TextButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                          minimumSize: const Size(0, 0),
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
-                        child: const Text(
-                          "Register",
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 53, 104, 153),
-                            fontSize: 13,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  const StyledTextNavigationToFromSignin(
+                      headText: "Haven't an account?", tailText: 'Register'),
                 ],
               ),
             ),

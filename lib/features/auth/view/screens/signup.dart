@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:jop_finder_app/core/utils/app_router.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/google_facebook_sign.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/styled_button.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/styled_textField.dart';
+import 'package:jop_finder_app/features/auth/view/screens/shared/styled_text_navigation_to_from_signin.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/text_between_divider.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/welcome_text.dart';
 import 'package:jop_finder_app/features/auth/viewmodel/cubit/auth_cubit.dart';
@@ -153,40 +152,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   const SizedBox(height: 50),
 
                   //Row with Text and TextButton for navigation to Login screen
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(right: 5),
-                        child: Text(
-                          "Have an account?",
-                          style: TextStyle(
-                              color: Color.fromARGB(255, 175, 176, 182),
-                              fontSize: 13,
-                              fontWeight: FontWeight.w400),
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          // Navigate to login screen
-                          GoRouter.of(context)
-                              .pushReplacementNamed(AppRouter.login);
-                        },
-                        style: TextButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                          minimumSize: const Size(0, 0),
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
-                        child: const Text(
-                          "Log in",
-                          style: TextStyle(
-                              color: Color.fromARGB(255, 53, 104, 153),
-                              fontSize: 13,
-                              fontWeight: FontWeight.w400),
-                        ),
-                      ),
-                    ],
-                  ),
+                  const StyledTextNavigationToFromSignin(
+                      headText: "Haven an account?", tailText: 'Log in'),
                 ],
               ),
             ),
