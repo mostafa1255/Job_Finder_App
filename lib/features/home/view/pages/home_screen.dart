@@ -10,8 +10,11 @@ class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   Future<List<PostedJob>> fetchJobs() async {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('jobs').get();
-    return querySnapshot.docs.map((doc) => PostedJob.fromMap(doc.data() as Map<String, dynamic>)).toList();
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('jobs').get();
+    return querySnapshot.docs
+        .map((doc) => PostedJob.fromMap(doc.data() as Map<String, dynamic>))
+        .toList();
   }
 
   @override
@@ -28,27 +31,27 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   Text('Welcome Back!', style: TextStyle(fontSize: 24)),
                   CircleAvatar(
-                    backgroundImage: AssetImage('assets/profile.jpg'),
                     radius: 20,
                   ),
                 ],
               ),
-              Text('John Lucas 👋',
+              const Text('John Lucas 👋',
                   style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               GestureDetector(
                 onTap: () {},
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 15.h),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 12.w, vertical: 15.h),
                   decoration: BoxDecoration(
                     color: Colors.grey[200],
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.search, color: Colors.grey),
+                      const Icon(Icons.search, color: Colors.grey),
                       SizedBox(width: 10.w),
-                      Expanded(
+                      const Expanded(
                         child: Text(
                           'Search for jobs...',
                           style: TextStyle(color: Colors.grey),
@@ -63,7 +66,8 @@ class HomeScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Featured Jobs',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                   Text('See all',
                       style: TextStyle(fontSize: 16, color: Colors.grey)),
                 ],
@@ -106,7 +110,8 @@ class HomeScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Recommended Jobs',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                   Text('See all',
                       style: TextStyle(fontSize: 16, color: Colors.grey)),
                 ],
@@ -135,7 +140,7 @@ class HomeScreen extends StatelessWidget {
                             title: jobs[index].jobTitle ?? '',
                             salary: jobs[index].salary ?? '',
                             color: Colors.pinkAccent,
-                            companyLogo: Image.network(jobs[index].imageUrl ?? ''),
+                            companyLogo: jobs[index].imageUrl ?? '',
                           );
                         },
                       ),

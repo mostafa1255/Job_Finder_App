@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jop_finder_app/features/home/view/pages/home_screen.dart';
@@ -7,7 +8,7 @@ class RecommendedJopsCard extends StatelessWidget {
   final String title;
   final String salary;
   final Color color;
-  final Image companyLogo;
+  final String companyLogo;
 
   const RecommendedJopsCard({
     Key? key,
@@ -36,9 +37,25 @@ class RecommendedJopsCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               CircleAvatar(
-                backgroundImage:
-                    companyLogo.image, // Add your profile image here
                 radius: 30,
+                backgroundColor: Colors.grey.shade200,
+                child: ClipOval(
+                  child: CachedNetworkImage(
+                    imageUrl: companyLogo,
+                    fit: BoxFit.cover,
+                    width: 60,
+                    height: 60,
+                    progressIndicatorBuilder: (context, url, progress) =>
+                        Center(
+                      child: CircularProgressIndicator(
+                        value: progress.progress,
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => Center(
+                      child: Icon(Icons.error),
+                    ),
+                  ),
+                ),
               ),
 
               SizedBox(height: 15),

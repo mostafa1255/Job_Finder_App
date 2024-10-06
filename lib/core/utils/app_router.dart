@@ -40,7 +40,11 @@ class AppRouter {
   static ProfileCubit profileCubit = ProfileCubit(firebaseProfileWebServices);
 
   static GoRouter router = GoRouter(
+<<<<<<< Updated upstream
     initialLocation: profileScreen,
+=======
+    initialLocation: homeScreen,
+>>>>>>> Stashed changes
     errorPageBuilder: (context, state) => MaterialPage(
       key: state.pageKey,
       child: Scaffold(
