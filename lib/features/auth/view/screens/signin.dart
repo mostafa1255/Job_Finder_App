@@ -64,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       icon: Icons.lock_outlined,
                       isPassword: true,
                       controller: _passwordController),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 15),
 
                   // cubit builder
                   BlocBuilder<AuthCubit, AuthState>(
@@ -91,6 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 style: const TextStyle(color: Colors.red),
                               ),
                             ),
+                            const SizedBox(height: 15),
                             //Button to Login
                             StyledButton(
                                 onPressed: () {
