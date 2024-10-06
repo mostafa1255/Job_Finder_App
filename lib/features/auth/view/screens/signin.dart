@@ -36,12 +36,12 @@ class _LoginScreenState extends State<LoginScreen> {
       create: (context) => AuthCubit(),
       child: Scaffold(
         backgroundColor: const Color.fromARGB(255, 250, 250, 253),
-        appBar: AppBar(),
         body: Form(
           key: _formKey,
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 100),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
