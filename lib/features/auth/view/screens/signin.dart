@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jop_finder_app/core/utils/app_router.dart';
+import 'package:jop_finder_app/features/auth/view/screens/shared/google_facebook_sign.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/styled_button.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/styled_textField.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/text_between_divider.dart';
@@ -145,33 +145,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 70),
 
                   //Row for the Google and facebook Login
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const SizedBox(),
-                      BlocBuilder<AuthCubit, AuthState>(
-                        builder: (context, state) {
-                          return InkWell(
-                            onTap: () {
-                              BlocProvider.of<AuthCubit>(context)
-                                  .signInWithGoogle(context);
-                            },
-                            child: SvgPicture.asset(
-                              'assets/images/google.svg',
-                              width: 30,
-                              height: 30,
-                            ),
-                          );
-                        },
-                      ),
-                      const Icon(
-                        Icons.facebook,
-                        color: Colors.blue,
-                        size: 38,
-                      ),
-                      const SizedBox(),
-                    ],
-                  ),
+                  const GoogleFacebookSign(),
                   const SizedBox(height: 30),
 
                   // Row for Navigating to Sign in Screen contains text and texButton
