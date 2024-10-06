@@ -1,4 +1,5 @@
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jop_finder_app/features/auth/data/model/user_model.dart';
@@ -34,20 +35,42 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-  Future<void> updateUserInfo(User user) async {
-    emit(ProfileLoading());
+
+// i need a implement the pick image method that is in the profile_web_services.dart
+  Future<void> pickImageAndUpdateUser() async {
     try {
-      final updateSuccess = await _profileWebServices.updateUserInfo(user);
-      if (updateSuccess) {
-        emit(UserLoaded(user));
+      final image = await _profileWebServices.pickImage();
+      if (image != null) {
+        final success = await _profileWebServices.uploadImageAndUpdateUser(image);
+        if (success == true) {
+          final user = await _profileWebServices.getUserInfo();
+          if (user != null) {
+            emit(UserUpdated(user));
+          } else {
+            emit(ProfileError("Failed to fetch updated user info"));
+          }
+        } else {
+          emit(ProfileError("Failed to upload image "));
+          await 
+          Future.delayed(const Duration(seconds: 5));
+          final user = await _profileWebServices.getUserInfo();
+          if (user != null) {
+            emit(UserUpdated(user));}
+        }
       } else {
-        emit(ProfileError("Failed to update user profile"));
+        emit(ProfileError("Failed to pick image"));
+        final user = await _profileWebServices.getUserInfo();
+          if (user != null) {
+            emit(UserUpdated(user));}
       }
     } catch (e) {
       emit(ProfileError(e.toString()));
     }
   }
-  
+
+
+
+
   Future<void> uploadCVAndUpdateUser(FilePickerResult cvPdf) async {
     emit(ProfileLoading());
     try {
@@ -72,10 +95,33 @@ class ProfileCubit extends Cubit<ProfileState> {
     emit(ProfileLoading()); // Optional: Emit loading state before attempting to launch URL
     if (await canLaunch(url)) {
       await launch(url);
-      emit(ProfileInitial()); // Optional: Emit initial state after launching URL successfully
+      final user = await _profileWebServices.getUserInfo();
+        if (user != null) {
+          emit(UserUpdated(user));
+          }
+      // Optional: Emit initial state after launching URL successfully
     } else {
-      print('Could not launch $url');
       emit(ProfileError("Could not launch URL")); // Emit error state if URL cannot be launched
+    }
+  }
+
+  //i need to implement the update bio method that is in the profile_web_services.dart
+  Future<void> updateBio(String bio) async {
+    emit(ProfileLoading());
+    try {
+      final success = await _profileWebServices.updateBio(bio);
+      if (success == true) {
+        final user = await _profileWebServices.getUserInfo();
+        if (user != null) {
+          emit(UserUpdated(user));
+        } else {
+          emit(ProfileError("Failed to fetch updated user info"));
+        }
+      } else {
+        emit(ProfileError("Failed to update bio"));
+      }
+    } catch (e) {
+      emit(ProfileError(e.toString()));
     }
   }
 

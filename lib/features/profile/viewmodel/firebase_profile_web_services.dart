@@ -18,6 +18,7 @@ class FirebaseProfileWebServices {
   String? getCurrentUserId() {
     return "YVgkl5eBX6N0aPlEY4Pl";
   }
+  //_authenticationWebServices.getCurrentUser()?.uid
   // Fetch user information from Firestore
   Future<User?> getUserInfo() async {
     String? userId = getCurrentUserId();
@@ -138,6 +139,22 @@ class FirebaseProfileWebServices {
       await launch(url);
     } else {
       print('Could not launch $url');
+    }
+  }
+
+  //i want to make a method to update the bio in the firestore
+  Future<bool> updateBio(String bio) async {
+    String? userId = getCurrentUserId();
+    if (userId == null) return false;
+
+    try {
+      await _firestore.collection('users').doc(userId).update({
+        'bio': bio,
+      });
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
     }
   }
 }

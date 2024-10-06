@@ -3,20 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:jop_finder_app/core/constants/app_colors.dart';
+import 'package:jop_finder_app/features/auth/data/model/UserProfile_model.dart';
 import 'package:jop_finder_app/features/auth/data/model/user_model.dart';
 import 'package:jop_finder_app/features/profile/view/widgets/bottom_sheet.dart';
+import 'package:jop_finder_app/features/profile/view/widgets/edit_bio_bottomsheet.dart';
 import 'package:jop_finder_app/features/profile/view/widgets/info_display.dart';
 import 'package:jop_finder_app/features/profile/viewmodel/profile_cubit.dart';
 
 class ProfileScreen extends StatefulWidget {
-   const ProfileScreen({super.key});
+  const ProfileScreen({super.key});
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
   User? user;
-  ProfileCubit? profileCubit ;
+  ProfileCubit? profileCubit;
 
   @override
   void initState() {
@@ -32,9 +35,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // Fetch user information from Firestore using the cubit method
     var fetchedUser =
         await BlocProvider.of<ProfileCubit>(context).getUserInfo();
-    setState(() {
-      user = fetchedUser;
-    });
+    if (mounted) {
+      setState(() {
+        user = fetchedUser;
+      });
+    }
   }
 
   Widget buildBlock() {
@@ -43,6 +48,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         if (state is ProfileLoading) {
           return Center(child: CircularProgressIndicator());
         } else if (state is UserLoaded) {
+          user = state.user;
+          return buildProfileScreen();
+        } else if (state is UserUpdated) {
           user = state.user;
           return buildProfileScreen();
         } else if (state is ProfileError) {
@@ -76,12 +84,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Container(
                   padding: EdgeInsets.all(5), // Adjust padding if necessary
                   decoration: BoxDecoration(
-                    color: Colors.blue,
+                    color: MyColor.primaryBlue,
                     shape: BoxShape.circle,
                   ),
                   child: IconButton(
                     onPressed: () {
-                      // Action for Edit icon to change profile image///////////////////////
+                      profileCubit!.pickImageAndUpdateUser();
                     },
                     icon: Icon(Icons.edit, color: Colors.white),
                     iconSize: 15.sp, // Adjust icon size if necessary
@@ -112,7 +120,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     Icon(
                       Icons.verified,
-                      color: Colors.blue,
+                      color: MyColor.primaryBlue,
                       size: 16,
                     )
                   ],
@@ -147,76 +155,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ],
           ),
-          SizedBox(height: 20),
+          SizedBox(height: 24),
+          buildAboutHeader('About', onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              builder: (context) => EditBioBottomSheet(profileCubit!),
+            );
+          }),
+          SizedBox(height: 10),
+          CustomBioDisplay(text: user!.profile!.bio ?? 'no Bio'),
+          SizedBox(height: 24),
           buildSectionHeader('Education', onPressed: () {}),
-          buildExperienceItem(
-            title: 'Computer Science',
-            subtitle: 'Bachelor | Caltech',
-            location: 'Pasadena',
-            duration: '2017 - 2020',
-            iconData: Icons.school,
+          ListView.builder(
+            shrinkWrap:
+                true, // This ensures the ListView takes only the necessary height
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: user!.profile!.education!.length,
+            itemBuilder: (context, index) {
+              return buildEducationItem(
+                  education: user!.profile!.education![index]);
+            },
           ),
           SizedBox(height: 20),
-          buildSectionHeader('About', onPressed: () {}),
-          buildExperienceItem(
-            title: 'UX Intern',
-            subtitle: 'Spotify',
-            location: 'San Jose, US',
-            duration: 'Dec 20 - Feb 21',
-            iconData: Icons.music_note,
-          ),
-          SizedBox(height: 20),
-          buildSectionHeader('Resume', onPressed: () {}),
-          Container(
-            padding: EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: Colors.white,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        // CV download action
-                      },
-                      child: Text('CV'),
-                    ),
-                    SizedBox(width: 8),
-                    OutlinedButton(
-                      onPressed: () {
-                        // PDF download action
-                      },
-                      child: Text('PDF'),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 8),
-                Center(
-                  child: Column(
-                    children: [
-                      Text(
-                        'Haley Jessica',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                      Text(
-                        'UX Designer',
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'Creative UX Designer with 3+ years of experience working with cross-functional teams to produce beautiful, functional designs.',
-                  style: TextStyle(color: Colors.black),
-                ),
-              ],
-            ),
-          ),
+          buildSectionHeader('Resume', onPressed: () {
+            GoRouter.of(context).pushNamed('/resumeUploadScreen');
+          }),
+          resumeDisplay(),
           SizedBox(height: 32),
         ],
       ),
@@ -226,12 +190,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(244, 255, 255, 255),
+      backgroundColor: const Color.fromARGB(230, 255, 255, 255),
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(244, 255, 255, 255),
+        backgroundColor: const Color.fromARGB(230, 255, 255, 255),
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: MyColor.primaryBlue),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -245,13 +209,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 builder: (context) => CustomBottomSheet(),
               );
             },
-            icon: Icon(Icons.edit, color: Colors.blue),
+            icon: Icon(Icons.edit, color: MyColor.primaryBlue),
           ),
           IconButton(
             onPressed: () {
               GoRouter.of(context).pushNamed('/settingsScreen');
             },
-            icon: Icon(Icons.settings, color: Colors.blue),
+            icon: Icon(Icons.settings, color: MyColor.primaryBlue),
           )
         ],
       ),
@@ -271,23 +235,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
         TextButton(
           onPressed: onPressed,
           child: Text(
-            'See all',
-            style: TextStyle(color: Colors.blue),
+            'Add',
+            style: TextStyle(color: MyColor.primaryBlue),
           ),
         )
       ],
     );
   }
 
-  Widget buildExperienceItem({
-    required String title,
-    required String subtitle,
-    required String location,
-    required String duration,
-    required IconData iconData,
+  Widget buildAboutHeader(String title, {required VoidCallback onPressed}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black),
+        ),
+        TextButton(
+          onPressed: onPressed,
+          child: Text(
+            'Edit',
+            style: TextStyle(color: MyColor.primaryBlue),
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget buildEducationItem({
+    required Education? education,
   }) {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: EdgeInsets.all(10),
       margin: EdgeInsets.only(top: 8),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -295,27 +275,63 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       child: Row(
         children: [
-          Icon(iconData, size: 40, color: Colors.orange),
+          Icon(Icons.school, size: 40, color: MyColor.primaryBlue),
           SizedBox(width: 16),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                title,
+                education!.fieldOfStudy ?? 'No Field',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               Text(
-                subtitle,
+                education.degree ?? 'No Degree',
                 style: TextStyle(color: Colors.grey),
               ),
               Text(
-                '$location • $duration',
+                '${education.institution ?? 'no institution'}  • ${education.startDate!.year} - ${education.endDate!.year}',
                 style: TextStyle(color: Colors.grey),
               ),
             ],
           )
         ],
       ),
+    );
+  }
+
+  Widget resumeDisplay() {
+    return Container(
+      padding: EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: Colors.white,
+      ),
+      child: (user?.cvUrl == null || user!.cvUrl!.isEmpty)
+          ? Center(
+              child: Text('No CV. Add one.'.toUpperCase(),
+                  style: TextStyle(color: Colors.grey, fontSize: 16)),
+            )
+          : InkWell(
+              onTap: () {
+                // Assuming `profileCubit` has the method `openPdf` to open the URL
+                profileCubit!.openPdf(user!.cvUrl!);
+                
+              },
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(width: 4), // Spacing between icon and text
+                  Icon(Icons.file_present,size:30 ,color: MyColor.primaryBlue,), // File icon
+                  SizedBox(width: 8), // Spacing between icon and text
+                  Expanded(
+                    child: Text('${user!.name} CV.pdf',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis
+                        ),
+                  ), // Displaying the file name extracted from the URL
+                ],
+              ),
+            ),
     );
   }
 }

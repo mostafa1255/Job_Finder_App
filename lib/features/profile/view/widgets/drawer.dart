@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'logout_alert.dart';
+import 'custom_alert.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
@@ -93,7 +93,7 @@ class CustomDrawer extends StatelessWidget {
               route: '/resumeUploadScreen'),
           buildDrawerItem(Icons.settings_outlined, 'Settings',
               route: '/settingsScreen'),
-              // Logout
+          // Logout
           ListTile(
             contentPadding: EdgeInsets.only(left: 18.w), // 24 pixels padding
             leading: Icon(Icons.logout, color: Colors.red),
@@ -103,7 +103,12 @@ class CustomDrawer extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (context) {
-                  return CustomLogoutAlert();
+                  return CustomAlertDialog(
+                    title: 'Logout',
+                    body: 'Are you sure you want to logout ?',
+                    actionButtonTitle: 'Logout',
+                    route: '/login',
+                  );
                 },
               );
             },
