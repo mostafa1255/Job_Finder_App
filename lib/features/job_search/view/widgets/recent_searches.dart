@@ -38,7 +38,7 @@ class RecentSearches extends StatelessWidget {
             ),
           ),
           const Icon(
-            FontAwesome.x,
+            OctIcons.x,
             color: Colors.grey,
           ),
         ],
