@@ -91,6 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 style: const TextStyle(color: Colors.red),
                               ),
                             ),
+                            //Button to Login
                             StyledButton(
                                 onPressed: () {
                                   if (validation()) {
@@ -104,21 +105,21 @@ class _LoginScreenState extends State<LoginScreen> {
                           ],
                         );
                       } else {
-                        return StyledButton(
-                            onPressed: () {
-                              if (validation()) {
-                                BlocProvider.of<AuthCubit>(context).signIn(
-                                    email: _emailController.text,
-                                    password: _passwordController.text,
-                                    context: context);
-                              }
-                            },
-                            text: "Login");
+                        return
+                            //Button to Login
+                            StyledButton(
+                                onPressed: () {
+                                  if (validation()) {
+                                    BlocProvider.of<AuthCubit>(context).signIn(
+                                        email: _emailController.text,
+                                        password: _passwordController.text,
+                                        context: context);
+                                  }
+                                },
+                                text: "Login");
                       }
                     },
                   ),
-
-                  //Button to Login
 
                   const SizedBox(height: 30),
 
@@ -148,10 +149,20 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const SizedBox(),
-                      SvgPicture.asset(
-                        'assets/images/google.svg',
-                        width: 30,
-                        height: 30,
+                      BlocBuilder<AuthCubit, AuthState>(
+                        builder: (context, state) {
+                          return InkWell(
+                            onTap: () {
+                              BlocProvider.of<AuthCubit>(context)
+                                  .signInWithGoogle(context);
+                            },
+                            child: SvgPicture.asset(
+                              'assets/images/google.svg',
+                              width: 30,
+                              height: 30,
+                            ),
+                          );
+                        },
                       ),
                       const Icon(
                         Icons.facebook,
