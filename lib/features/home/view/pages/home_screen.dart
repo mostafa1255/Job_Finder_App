@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:jop_finder_app/core/utils/app_router.dart';
 import 'recommended_jops_card.dart';
 import 'job_card.dart';
 import 'bottom_navigation.dart';
@@ -91,13 +93,20 @@ class HomeScreen extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
-                          return JobCard(
-                            company: jobs[index].companyName ?? '',
-                            title: jobs[index].jobTitle ?? '',
-                            salary: jobs[index].salary ?? '',
-                            location: jobs[index].location ?? '',
-                            tags: jobs[index].jobTags ?? [],
-                            color: Colors.blue,
+                          return GestureDetector(
+                            onTap: () {
+                              GoRouter.of(context).push(
+                                  AppRouter.jobApplyScreen,
+                                  extra: jobs[index]);
+                            },
+                            child: JobCard(
+                              company: jobs[index].companyName ?? '',
+                              title: jobs[index].jobTitle ?? '',
+                              salary: jobs[index].salary ?? '',
+                              location: jobs[index].location ?? '',
+                              tags: jobs[index].jobTags ?? [],
+                              color: Colors.blue,
+                            ),
                           );
                         },
                       ),
@@ -135,12 +144,19 @@ class HomeScreen extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
-                          return RecommendedJopsCard(
-                            company: jobs[index].companyName ?? '',
-                            title: jobs[index].jobTitle ?? '',
-                            salary: jobs[index].salary ?? '',
-                            color: Colors.pinkAccent,
-                            companyLogo: jobs[index].imageUrl ?? '',
+                          return GestureDetector(
+                            onTap: () {
+                              GoRouter.of(context).push(
+                                  AppRouter.jobApplyScreen,
+                                  extra: jobs[index]);
+                            },
+                            child: RecommendedJopsCard(
+                              company: jobs[index].companyName ?? '',
+                              title: jobs[index].jobTitle ?? '',
+                              salary: jobs[index].salary ?? '',
+                              color: Colors.pinkAccent,
+                              companyLogo: jobs[index].imageUrl ?? '',
+                            ),
                           );
                         },
                       ),

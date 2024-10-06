@@ -51,7 +51,7 @@ class RecommendedJopsCard extends StatelessWidget {
                         value: progress.progress,
                       ),
                     ),
-                    errorWidget: (context, url, error) => Center(
+                    errorWidget: (context, url, error) => const Center(
                       child: Icon(Icons.error),
                     ),
                   ),
