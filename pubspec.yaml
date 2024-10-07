@@ -28,8 +28,12 @@ dependencies:
   firebase_storage: ^12.3.2
   firebase_auth: ^5.3.1
   url_launcher: ^6.0.12
+<<<<<<< HEAD
   google_sign_in: ^6.2.1
   shared_preferences: ^2.3.2
+=======
+  cached_network_image: ^3.3.1
+>>>>>>> 3696a2fdd604313c6d47e816bbbdae31c7e9f030
 
 dev_dependencies:
   flutter_test:

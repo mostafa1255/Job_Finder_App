@@ -253,9 +253,14 @@ class _JobPostScreenState extends State<JobPostScreen> {
       );
 
       try {
-        await FirebaseFirestore.instance
+        final docRef = await FirebaseFirestore.instance
             .collection('jobs')
             .add(postedJob.toMap());
+
+        final String jobId = docRef.id;
+
+        await docRef.update({'jobId': jobId});
+
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text('Job posted successfully!'),
@@ -266,8 +271,8 @@ class _JobPostScreenState extends State<JobPostScreen> {
         _clearForm();
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Error posting job. Please try again.'),
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Error posting job: ${e.toString()}'),
             backgroundColor: Colors.red,
           ));
         }

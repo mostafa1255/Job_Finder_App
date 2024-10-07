@@ -94,10 +94,10 @@ class _ApplicationsScreenState extends State<ApplicationsScreen> {
             },
           ),
           actions: [
-            // if (user != null)
-            //   CircleAvatar(
-            //     backgroundImage: NetworkImage(user!.profileImageUrl!),
-            //   ),
+            if (user != null)
+              CircleAvatar(
+                backgroundImage: NetworkImage(user!.profileImageUrl!),
+              ),
             SizedBox(width: 10),
           ],
         ),
@@ -108,8 +108,7 @@ class _ApplicationsScreenState extends State<ApplicationsScreen> {
 class ApplicationCard extends StatelessWidget {
   final AppliedJob appliedJob;
 
-  const ApplicationCard({required this.appliedJob});
-
+  const ApplicationCard({super.key, required this.appliedJob});
   @override
   Widget build(BuildContext context) {
     return Card(
