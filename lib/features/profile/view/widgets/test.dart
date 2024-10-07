@@ -6,7 +6,7 @@ import 'package:jop_finder_app/features/auth/data/model/AppliedJob_model.dart';
 import 'package:jop_finder_app/features/auth/data/model/PostedJob_model.dart';
 import 'package:jop_finder_app/features/auth/data/model/UserProfile_model.dart';
 import 'package:flutter/material.dart';
-import 'package:jop_finder_app/features/profile/view/widgets/logout_alert.dart';
+import 'package:jop_finder_app/features/profile/view/widgets/custom_alert.dart';
 import 'package:jop_finder_app/firebase_options.dart';
 
 void main() async{WidgetsFlutterBinding.ensureInitialized();

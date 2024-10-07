@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jop_finder_app/features/auth/data/model/PostedJob_model.dart';
 import 'package:jop_finder_app/features/job_apply/view/widgets/buildAboutCompany.dart';
 import 'package:jop_finder_app/features/job_apply/view/widgets/buildApplyButton.dart';
 import 'package:jop_finder_app/features/job_apply/view/widgets/buildJobDescription.dart';
@@ -7,8 +8,8 @@ import 'package:jop_finder_app/features/job_apply/view/widgets/buildJobRequireme
 import 'package:jop_finder_app/features/job_apply/view/widgets/buildReviews.dart';
 
 class JobApplyScreen extends StatelessWidget {
-  const JobApplyScreen({super.key});
-
+  const JobApplyScreen({super.key, required this.job});
+  final PostedJob job;
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -16,10 +17,10 @@ class JobApplyScreen extends StatelessWidget {
       child: Scaffold(
         body: Column(
           children: [
-            buildJobHeader(),
+            buildJobHeader(jobApply: job, context: context),
             _buildTabBar(),
-            Expanded(child: _buildTabView()),
-            buildApplyButton(),
+            Expanded(child: _buildTabView(job: job)),
+            buildApplyButton(context: context, job: job),
           ],
         ),
       ),
@@ -46,12 +47,12 @@ class JobApplyScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTabView() {
+  Widget _buildTabView({required PostedJob job}) {
     return TabBarView(
       children: [
-        buildJobDescription(),
-        buildJobRequirement(),
-        buildAboutCompany(),
+        buildJobDescription(jobDescription: job.description!),
+        buildJobRequirement(jobRequirement: job.requirements!),
+        buildAboutCompany(jobAbout: job.about!),
         buildReviews(),
       ],
     );

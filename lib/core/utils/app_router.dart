@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:jop_finder_app/features/auth/data/model/PostedJob_model.dart';
 import 'package:jop_finder_app/features/auth/data/web_services/firebase_authentication_web_services.dart';
 import 'package:jop_finder_app/features/auth/view/screens/forget_password.dart';
 import 'package:jop_finder_app/features/auth/view/screens/signin.dart';
 import 'package:jop_finder_app/features/auth/view/screens/signup.dart';
 import 'package:jop_finder_app/features/home/view/pages/home_screen.dart';
 import 'package:jop_finder_app/features/job_apply/view/pages/job_apply.dart';
+import 'package:jop_finder_app/features/job_apply/view/pages/succefull_Screen.dart';
+import 'package:jop_finder_app/features/job_post/view/pages/all_applicants_screen.dart';
 import 'package:jop_finder_app/features/job_post/view/pages/job_post.dart';
 import 'package:jop_finder_app/features/profile/view/pages/applications.dart';
 import 'package:jop_finder_app/features/profile/view/pages/profile.dart';
@@ -32,6 +35,8 @@ class AppRouter {
   static const settingsScreen = "/settingsScreen";
   static const applicationsScreen = "/applicationsScreen";
   static const proposalsScreen = "/proposalsScreen";
+  static const allApplicantsScreen = "/allApplicantsScreen";
+  static const successScreen = "/successScreen";
 
   static FireBaseAuthenticationWebServices fireBaseAuthenticationWebServices =
       FireBaseAuthenticationWebServices();
@@ -40,7 +45,11 @@ class AppRouter {
   static ProfileCubit profileCubit = ProfileCubit(firebaseProfileWebServices);
 
   static GoRouter router = GoRouter(
+<<<<<<< HEAD
     initialLocation: login,
+=======
+    initialLocation: signUp,
+>>>>>>> 3696a2fdd604313c6d47e816bbbdae31c7e9f030
     errorPageBuilder: (context, state) => MaterialPage(
       key: state.pageKey,
       child: Scaffold(
@@ -83,12 +92,25 @@ class AppRouter {
       GoRoute(
         path: jobApplyScreen,
         name: jobApplyScreen,
-        builder: (context, state) => JobApplyScreen(),
+        builder: (context, state) =>
+            JobApplyScreen(job: state.extra as PostedJob),
+      ),
+
+      GoRoute(
+        path: successScreen,
+        name: successScreen,
+        builder: (context, state) => SuccefullScreen(),
       ),
       GoRoute(
         path: jobPostScreen,
         name: jobPostScreen,
         builder: (context, state) => JobPostScreen(),
+      ),
+      GoRoute(
+        path: allApplicantsScreen,
+        name: allApplicantsScreen,
+        builder: (context, state) =>
+            AllApplicantsScreen(jobId: state.extra as String),
       ),
       //bodaSayed
       GoRoute(

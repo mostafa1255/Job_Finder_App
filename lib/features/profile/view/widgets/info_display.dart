@@ -7,15 +7,15 @@ class CustomInfoDisplay extends StatelessWidget {
   final IconData icon;
 
   const CustomInfoDisplay({
-    Key? key,
+    super.key,
     required this.text,
     required this.icon,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
+      padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15.0),
       decoration: BoxDecoration(
         border: Border.all(
             color: const Color.fromARGB(255, 175, 176, 182), width: 2),
@@ -23,15 +23,17 @@ class CustomInfoDisplay extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(icon, color: Colors.grey,size: 30,),
+          Icon(icon, color: MyColor.primaryBlue,size: 30,),
           const SizedBox(width: 10),
-          Text(
-            selectionColor: MyColor.primaryBlue,
-            text,
-            style: const TextStyle(
-                color: Colors.grey,
-                fontSize: 16,
-                fontWeight: FontWeight.bold),
+          Expanded(
+            child: Text(
+              text,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                  color: Colors.grey,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold),
+            ),
           ),
         ],
       ),
@@ -39,33 +41,39 @@ class CustomInfoDisplay extends StatelessWidget {
   }
 }
 
-class CustomInfoTile extends StatelessWidget {
+class CustomBioDisplay extends StatelessWidget {
   final String text;
-  final IconData icon;
-  final Function()? onTap;
 
-  const CustomInfoTile({
+  const CustomBioDisplay({
     super.key,
     required this.text,
-    required this.icon,
-    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onTap: () {
-        onTap?.call();
-      },
-      leading: Icon(icon, color: MyColor.primaryBlue),
-      title: Text(
-        text,
-        style: const TextStyle(color: MyColor.primaryBlue, fontSize: 16, fontWeight: FontWeight.bold),
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15.0),
+      decoration: BoxDecoration(
+        border: Border.all(
+            color: const Color.fromARGB(255, 175, 176, 182), width: 2),
+        borderRadius: BorderRadius.circular(10.0),
       ),
-      shape: RoundedRectangleBorder(
-        side: const BorderSide(
-            color: Color.fromARGB(255, 175, 176, 182), width: 2),
-        borderRadius: BorderRadius.circular(10),
+      child: Row(
+        children: [
+          Icon(Icons.info, color: MyColor.primaryBlue,size: 30,),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              text,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                  color: Colors.grey,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
       ),
     );
   }
