@@ -16,26 +16,34 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
+    _checkRememberMe();
     navigateFromSplash();
     super.initState();
-    _checkRememberMe();
   }
 
   void _checkRememberMe() async {
     final prefs = await SharedPreferences.getInstance();
     bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-
+    bool isGoogleLogin = prefs.getBool('isGoogleLogin') ?? false;
+    // Sharedpreference with google
+    if (isGoogleLogin) {
+      BlocProvider.of<AuthCubit>(context).signInWithGoogle(context);
+    }
+    // Sharedpreference with username and password
     if (isLoggedIn) {
       // Retrieve email and password if you stored them
       String? email = prefs.getString('email');
       String? password = prefs.getString('password');
 
       if (email != null && password != null) {
-        BlocProvider.of<AuthCubit>(context).signIn(
+        BlocProvider.of<AuthCubit>(context)
+            .signIn(
           email: email,
           password: password,
-          context: context,
-        );
+        )
+            .then((value) {
+          GoRouter.of(context).pushReplacementNamed(AppRouter.homeScreen);
+        });
       }
     }
   }

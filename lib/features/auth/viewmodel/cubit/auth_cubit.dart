@@ -20,7 +20,6 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> signIn({
     required String email,
     required String password,
-    required BuildContext context,
     bool rememberMe = false, // Add rememberMe as a parameter
   }) async {
     emit(AuthLoading());
@@ -38,8 +37,6 @@ class AuthCubit extends Cubit<AuthState> {
           await prefs.setString(
               'password', password); // Optionally store password
         }
-
-        GoRouter.of(context).pushReplacementNamed(AppRouter.homeScreen);
         emit(AuthLoaded());
       } else {
         emit(AuthError(errorMessage: result ?? "Failed to sign in"));
@@ -54,7 +51,6 @@ class AuthCubit extends Cubit<AuthState> {
     required String email,
     required String password,
     required String fullName,
-    required BuildContext context,
   }) async {
     emit(AuthLoading());
     try {
@@ -62,10 +58,7 @@ class AuthCubit extends Cubit<AuthState> {
           email: email, password: password, fullName: fullName);
 
       if (result == "User signed up successfully") {
-        await fireBaseAuthenticationWebServices.signOut();
-        GoRouter.of(context).pushReplacementNamed(AppRouter.login);
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(result.toString())));
+        // await fireBaseAuthenticationWebServices.signOut();
         emit(AuthLoaded());
       } else {
         emit(AuthError(errorMessage: result ?? "Failed to sign up"));
@@ -111,9 +104,14 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> signInWithGoogle(BuildContext context) async {
     emit(AuthLoading());
     try {
+      bool rememberMe = true;
       var result = await googleAuthenticationWebServices.signInWithGoogle();
       if (result != null &&
           result == "User signed in successfully with Google") {
+        if (rememberMe) {
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setBool('isGoogleLogin', true);
+        }
         GoRouter.of(context).pushReplacementNamed(AppRouter.homeScreen);
         emit(AuthLoaded());
       } else {
