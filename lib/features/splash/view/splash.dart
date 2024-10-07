@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jop_finder_app/core/utils/app_router.dart';
+import 'package:jop_finder_app/features/auth/viewmodel/cubit/auth_cubit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -15,6 +18,26 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     navigateFromSplash();
     super.initState();
+    _checkRememberMe();
+  }
+
+  void _checkRememberMe() async {
+    final prefs = await SharedPreferences.getInstance();
+    bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+
+    if (isLoggedIn) {
+      // Retrieve email and password if you stored them
+      String? email = prefs.getString('email');
+      String? password = prefs.getString('password');
+
+      if (email != null && password != null) {
+        BlocProvider.of<AuthCubit>(context).signIn(
+          email: email,
+          password: password,
+          context: context,
+        );
+      }
+    }
   }
 
   void navigateFromSplash() async {

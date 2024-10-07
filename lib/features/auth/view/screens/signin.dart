@@ -9,7 +9,6 @@ import 'package:jop_finder_app/features/auth/view/screens/shared/styled_text_nav
 import 'package:jop_finder_app/features/auth/view/screens/shared/text_between_divider.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/welcome_text.dart';
 import 'package:jop_finder_app/features/auth/viewmodel/cubit/auth_cubit.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -24,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
   // Create controllers for the TextFields
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _rememberMe = false;
+  bool _rememberMe = true;
 
   bool validation() {
     if (_formKey.currentState!.validate()) {
@@ -36,26 +35,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    _checkRememberMe();
-  }
-
-  void _checkRememberMe() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-
-    if (isLoggedIn) {
-      // Retrieve email and password if you stored them
-      String? email = prefs.getString('email');
-      String? password = prefs.getString('password');
-
-      if (email != null && password != null) {
-        BlocProvider.of<AuthCubit>(context).signIn(
-          email: email,
-          password: password,
-          context: context,
-        );
-      }
-    }
   }
 
   @override
@@ -94,27 +73,27 @@ class _LoginScreenState extends State<LoginScreen> {
                       controller: _passwordController),
 
                   //remember me button
-                  Row(
-                    children: [
-                      Checkbox(
-                        side: const BorderSide(
-                            color: Color.fromARGB(255, 175, 176, 182)),
-                        activeColor: const Color.fromARGB(255, 53, 104, 153),
-                        value: _rememberMe,
-                        onChanged: (newValue) {
-                          setState(() {
-                            _rememberMe = newValue!;
-                          });
-                        },
-                      ),
-                      const Text(
-                        "Remember Me",
-                        style: TextStyle(
-                            color: Color.fromARGB(255, 175, 176, 182),
-                            fontSize: 14),
-                      ),
-                    ],
-                  ),
+                  // Row(
+                  //   children: [
+                  //     Checkbox(
+                  //       side: const BorderSide(
+                  //           color: Color.fromARGB(255, 175, 176, 182)),
+                  //       activeColor: const Color.fromARGB(255, 53, 104, 153),
+                  //       value: _rememberMe,
+                  //       onChanged: (newValue) {
+                  //         setState(() {
+                  //           _rememberMe = newValue!;
+                  //         });
+                  //       },
+                  //     ),
+                  //     const Text(
+                  //       "Remember Me",
+                  //       style: TextStyle(
+                  //           color: Color.fromARGB(255, 175, 176, 182),
+                  //           fontSize: 14),
+                  //     ),
+                  //   ],
+                  // ),
 
                   const SizedBox(height: 15),
 
@@ -176,9 +155,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                   ),
 
-                  const SizedBox(height: 15),
-
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 30),
 
                   //Forgetpassword Text button
                   TextButton(

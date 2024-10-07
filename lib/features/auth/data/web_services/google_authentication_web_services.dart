@@ -19,8 +19,8 @@ class GoogleAuthenticationWebServices {
 
       // Create a credential from the access token and id token
       final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
       );
 
       // Sign in to Firebase using the credential
