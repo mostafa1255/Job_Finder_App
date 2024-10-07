@@ -72,7 +72,7 @@ class _OnBoardingScreen1State extends State<OnBoardingScreen1> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    backgroundColor: Colors.indigo,
+                    backgroundColor: Color.fromARGB(255, 53, 104, 153),
                   ),
                   child: Text(
                     _currentPage == 3 ? 'Explore' : 'Next',
@@ -84,13 +84,13 @@ class _OnBoardingScreen1State extends State<OnBoardingScreen1> {
                   controller: _controller,
                   count: 4,
                   effect: const ExpandingDotsEffect(
-                    spacing: 6,
-                    radius: 10,
-                    dotWidth: 24,
-                    dotHeight: 16,
+                    spacing: 4,
+                    radius: 8,
+                    dotWidth: 18,
+                    dotHeight: 14,
                     paintStyle: PaintingStyle.fill,
                     dotColor: Colors.grey,
-                    activeDotColor: Colors.indigo,
+                    activeDotColor: Color.fromARGB(255, 53, 104, 153),
                   ),
                 ),
                 const SizedBox(height: 20),
