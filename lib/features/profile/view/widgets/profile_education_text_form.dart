@@ -87,7 +87,6 @@ class _ProfileEducationTextFormState extends State<ProfileEducationTextForm> {
           borderSide: const BorderSide(
               color: Color.fromARGB(255, 13, 13, 38), width: 1),
         ),
-        suffixIcon: const SizedBox(),
         contentPadding:
             const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
       ),
