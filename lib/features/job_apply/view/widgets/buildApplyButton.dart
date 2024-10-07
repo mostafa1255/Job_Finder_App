@@ -9,7 +9,7 @@ import 'package:jop_finder_app/features/auth/data/model/PostedJob_model.dart';
 Widget buildApplyButton(
     {required PostedJob job, required BuildContext context}) {
   return Padding(
-    padding: EdgeInsets.all(16),
+    padding: const EdgeInsets.all(16),
     child: SizedBox(
       width: double.infinity,
       child: ElevatedButton(
@@ -19,7 +19,7 @@ Widget buildApplyButton(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
-          backgroundColor: Color(0xff2C557D),
+          backgroundColor: const Color(0xff2C557D),
         ),
         child: const Text(
           'Apply Now',

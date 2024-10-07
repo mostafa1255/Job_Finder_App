@@ -14,7 +14,7 @@ class GoogleAuthenticationWebServices {
       }
 
       // Obtain the auth details from the Google Sign-In request
-      final GoogleSignInAuthentication? googleAuth =
+      final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
 
       // Create a credential from the access token and id token

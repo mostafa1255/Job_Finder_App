@@ -74,7 +74,7 @@ class HomeScreen extends StatelessWidget {
                       style: TextStyle(fontSize: 16, color: Colors.grey)),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               FutureBuilder<List<PostedJob>>(
                 future: fetchJobs(),
                 builder: (context, snapshot) {

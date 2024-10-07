@@ -7,10 +7,12 @@ class CustomBottomSheet extends StatelessWidget {
   final TextEditingController phoneNumberController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
 
+  CustomBottomSheet({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -19,19 +21,19 @@ class CustomBottomSheet extends StatelessWidget {
             hint: 'New Name', // Corrected from hintText to hint
             icon: Icons.person, // Example icon, adjust as needed
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           StyledTextField(
             controller: phoneNumberController,
             hint: 'New Phone Number', // Corrected from hintText to hint
             icon: Icons.phone, // Example icon, adjust as needed
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           StyledTextField(
             controller: emailController,
             hint: 'New Email', // Corrected from hintText to hint
             icon: Icons.email, // Example icon, adjust as needed
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           StyledButton(
             onPressed: () {
               // Implement the logic to save updates, e.g., to Firebase

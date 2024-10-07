@@ -12,7 +12,7 @@ class SuccefullScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Colors.black),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -59,9 +59,9 @@ class SuccefullScreen extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                backgroundColor: Color(0xff356899),
+                backgroundColor: const Color(0xff356899),
               ),
-              child: Text(
+              child: const Text(
                 'Browse Jobs',
                 style: TextStyle(fontSize: 18, color: Colors.white),
               ),

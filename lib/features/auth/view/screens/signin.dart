@@ -97,9 +97,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   Row(
                     children: [
                       Checkbox(
-                        side: BorderSide(
-                            color: const Color.fromARGB(255, 175, 176, 182)),
-                        activeColor: Color.fromARGB(255, 53, 104, 153),
+                        side: const BorderSide(
+                            color: Color.fromARGB(255, 175, 176, 182)),
+                        activeColor: const Color.fromARGB(255, 53, 104, 153),
                         value: _rememberMe,
                         onChanged: (newValue) {
                           setState(() {
@@ -110,7 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       const Text(
                         "Remember Me",
                         style: TextStyle(
-                            color: const Color.fromARGB(255, 175, 176, 182),
+                            color: Color.fromARGB(255, 175, 176, 182),
                             fontSize: 14),
                       ),
                     ],

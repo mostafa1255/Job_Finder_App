@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:jop_finder_app/features/home/view/pages/home_screen.dart';
 
 class RecommendedJopsCard extends StatelessWidget {
   final String company;
@@ -11,13 +10,13 @@ class RecommendedJopsCard extends StatelessWidget {
   final String companyLogo;
 
   const RecommendedJopsCard({
-    Key? key,
+    super.key,
     required this.company,
     required this.title,
     required this.salary,
     required this.color,
     required this.companyLogo,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -58,12 +57,12 @@ class RecommendedJopsCard extends StatelessWidget {
                 ),
               ),
 
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
 
               // Job Title
               Text(
                 title,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -72,19 +71,19 @@ class RecommendedJopsCard extends StatelessWidget {
               // Company Name
               Text(
                 company,
-                style: TextStyle(color: Colors.white, fontSize: 18),
+                style: const TextStyle(color: Colors.white, fontSize: 18),
               ),
 
-              SizedBox(height: 2),
+              const SizedBox(height: 2),
 
               // Tags (now wrapped to avoid overflow)
 
-              SizedBox(height: 2),
+              const SizedBox(height: 2),
 
               // Salary
               Text(
                 salary,
-                style: TextStyle(color: Colors.white, fontSize: 16),
+                style: const TextStyle(color: Colors.white, fontSize: 16),
               ),
             ],
           ),

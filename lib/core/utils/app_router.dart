@@ -45,11 +45,7 @@ class AppRouter {
   static ProfileCubit profileCubit = ProfileCubit(firebaseProfileWebServices);
 
   static GoRouter router = GoRouter(
-<<<<<<< HEAD
-    initialLocation: login,
-=======
-    initialLocation: signUp,
->>>>>>> 3696a2fdd604313c6d47e816bbbdae31c7e9f030
+    initialLocation: splash,
     errorPageBuilder: (context, state) => MaterialPage(
       key: state.pageKey,
       child: Scaffold(

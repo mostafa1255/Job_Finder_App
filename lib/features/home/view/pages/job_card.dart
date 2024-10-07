@@ -9,14 +9,14 @@ class JobCard extends StatelessWidget {
   final Color color;
 
   const JobCard({
-    Key? key,
+    super.key,
     required this.company,
     required this.title,
     required this.salary,
     required this.location,
     required this.tags,
     required this.color,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -37,20 +37,20 @@ class JobCard extends StatelessWidget {
               // Company Name
               Text(
                 company,
-                style: TextStyle(color: Colors.white, fontSize: 18),
+                style: const TextStyle(color: Colors.white, fontSize: 18),
               ),
-              SizedBox(height: 2),
+              const SizedBox(height: 2),
 
               // Job Title
               Text(
                 title,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 2),
+              const SizedBox(height: 2),
 
               // Tags (now wrapped to avoid overflow)
               Wrap(
@@ -65,7 +65,7 @@ class JobCard extends StatelessWidget {
                         padding: const EdgeInsets.all(10.0),
                         child: Text(
                           tag,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 13,
                           ),
@@ -75,18 +75,18 @@ class JobCard extends StatelessWidget {
                   );
                 }).toList(),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
 
               // Salary
               Text(
                 salary,
-                style: TextStyle(color: Colors.white, fontSize: 16),
+                style: const TextStyle(color: Colors.white, fontSize: 16),
               ),
 
               // Location
               Text(
                 location,
-                style: TextStyle(color: Colors.white, fontSize: 16),
+                style: const TextStyle(color: Colors.white, fontSize: 16),
               ),
             ],
           ),

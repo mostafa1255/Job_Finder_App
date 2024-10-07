@@ -76,7 +76,7 @@ class _OnBoardingScreen1State extends State<OnBoardingScreen1> {
                   ),
                   child: Text(
                     _currentPage == 3 ? 'Explore' : 'Next',
-                    style: TextStyle(fontSize: 18, color: Colors.white),
+                    style: const TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 ),
                 const SizedBox(height: 50),

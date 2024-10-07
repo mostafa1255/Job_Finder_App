@@ -30,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
         body: Container(
             color: Colors.indigo,
-            padding: EdgeInsets.all(100),
+            padding: const EdgeInsets.all(100),
             child: Center(
               child: Image.asset(
                 'assets/images/Group 218.png',

@@ -7,8 +7,8 @@ Widget buildJobHeader(
     {required PostedJob jobApply, required BuildContext context}) {
   return SafeArea(
     child: Container(
-      padding: EdgeInsets.all(16),
-      color: Color(0xff2C557D),
+      padding: const EdgeInsets.all(16),
+      color: const Color(0xff2C557D),
       child: Column(
         children: [
           Row(
