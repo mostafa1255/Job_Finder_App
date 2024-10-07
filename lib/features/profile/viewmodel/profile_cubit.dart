@@ -1,6 +1,7 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jop_finder_app/features/auth/data/model/UserProfile_model.dart';
 import 'package:jop_finder_app/features/auth/data/model/user_model.dart';
 import 'package:jop_finder_app/features/profile/viewmodel/firebase_profile_web_services.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -124,4 +125,44 @@ class ProfileCubit extends Cubit<ProfileState> {
       emit(ProfileError(e.toString()));
     }
   }
+
+  //i need to implement the update name email phone method that is in the profile_web_services.dart
+  Future<void> customUpdateToFirebase(String key, String value) async {
+    emit(ProfileLoading());
+    try {
+      final success = await _profileWebServices.customUpdateToFirebase(key, value);
+      if (success == true) {
+        final user = await _profileWebServices.getUserInfo();
+        if (user != null) {
+          emit(UserUpdated(user));
+        } else {
+          emit(ProfileError("Failed to fetch updated user info"));
+        }
+      } else {
+        emit(ProfileError("Failed to update name, email, and phone number"));
+      }
+    } catch (e) {
+      emit(ProfileError(e.toString()));
+    }
+  }
+  //i need to implement the update education method that is in the profile_web_services.dart
+  Future<void> updateEducation(Education education) async {
+    emit(ProfileLoading());
+    try {
+      final success = await _profileWebServices.updateEducation(education);
+      if (success == true) {
+        final user = await _profileWebServices.getUserInfo();
+        if (user != null) {
+          emit(UserUpdated(user));
+        } else {
+          emit(ProfileError("Failed to fetch updated user info"));
+        }
+      } else {
+        emit(ProfileError("Failed to update education"));
+      }
+    } catch (e) {
+      emit(ProfileError(e.toString()));
+    }
+  }
+
 }

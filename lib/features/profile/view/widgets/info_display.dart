@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jop_finder_app/core/constants/app_colors.dart';
 
 class CustomInfoDisplay extends StatelessWidget {
@@ -32,6 +31,7 @@ class CustomInfoDisplay extends StatelessWidget {
           Expanded(
             child: Text(
               text,
+              maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                   color: Colors.grey,

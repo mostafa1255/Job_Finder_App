@@ -6,8 +6,9 @@ import 'package:go_router/go_router.dart';
 import 'package:jop_finder_app/core/constants/app_colors.dart';
 import 'package:jop_finder_app/features/auth/data/model/UserProfile_model.dart';
 import 'package:jop_finder_app/features/auth/data/model/user_model.dart';
-import 'package:jop_finder_app/features/profile/view/widgets/bottom_sheet.dart';
+import 'package:jop_finder_app/features/profile/view/widgets/edit_info_bottom_sheet.dart';
 import 'package:jop_finder_app/features/profile/view/widgets/edit_bio_bottomsheet.dart';
+import 'package:jop_finder_app/features/profile/view/widgets/education_add_bottomsheet.dart';
 import 'package:jop_finder_app/features/profile/view/widgets/info_display.dart';
 import 'package:jop_finder_app/features/profile/viewmodel/profile_cubit.dart';
 
@@ -163,7 +164,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             );
           }),
           SizedBox(height: 10),
-          CustomBioDisplay(text: user!.profile!.bio ?? 'no Bio'),
+          CustomBioDisplay(text: user!.profile!.bio!),
           SizedBox(height: 24),
           buildSectionHeader('Education', onPressed: () {}),
           ListView.builder(
@@ -171,10 +172,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 true, // This ensures the ListView takes only the necessary height
             physics: NeverScrollableScrollPhysics(),
             itemCount: user!.profile!.education!.length,
-            itemBuilder: (context, index) {
-              return buildEducationItem(
-                  education: user!.profile!.education![index]);
-            },
+            itemBuilder: user!.profile!.education!.isEmpty
+                ? (context, index) => Center(
+                      child: Text('No education added'),
+                    )
+                : (context, index) {
+                    return buildEducationItem(
+                        education: user!.profile!.education![index]);
+                  },
           ),
           SizedBox(height: 20),
           buildSectionHeader('Resume', onPressed: () {
@@ -206,7 +211,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onPressed: () {
               showModalBottomSheet(
                 context: context,
-                builder: (context) => CustomBottomSheet(),
+                builder: (context) => EducationAddBottomSheet(profileCubit!),
               );
             },
             icon: Icon(Icons.edit, color: MyColor.primaryBlue),
@@ -315,19 +320,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onTap: () {
                 // Assuming `profileCubit` has the method `openPdf` to open the URL
                 profileCubit!.openPdf(user!.cvUrl!);
-                
               },
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   SizedBox(width: 4), // Spacing between icon and text
-                  Icon(Icons.file_present,size:30 ,color: MyColor.primaryBlue,), // File icon
+                  Icon(
+                    Icons.file_present,
+                    size: 30,
+                    color: MyColor.primaryBlue,
+                  ), // File icon
                   SizedBox(width: 8), // Spacing between icon and text
                   Expanded(
                     child: Text('${user!.name} CV.pdf',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis
-                        ),
+                        maxLines: 1, overflow: TextOverflow.ellipsis),
                   ), // Displaying the file name extracted from the URL
                 ],
               ),

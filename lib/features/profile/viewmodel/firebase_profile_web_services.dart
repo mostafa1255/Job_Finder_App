@@ -1,6 +1,9 @@
+// ignore_for_file: unused_field
+
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:jop_finder_app/features/auth/data/model/UserProfile_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
@@ -16,7 +19,7 @@ class FirebaseProfileWebServices {
 
   // Get the current user's ID from FirebaseAuth
   String? getCurrentUserId() {
-    return "YVgkl5eBX6N0aPlEY4Pl";
+    return "s2CHfYqeENPEOxHZSHBvER0lrZE3";
   }
   //_authenticationWebServices.getCurrentUser()?.uid
   // Fetch user information from Firestore
@@ -37,21 +40,7 @@ class FirebaseProfileWebServices {
   }
 
   // Update user information in Firestore
-  Future<bool> updateUserInfo(User user) async {
-    String? userId = getCurrentUserId();
-    if (userId == null) return false;
 
-    try {
-      await _firestore
-          .collection('users')
-          .doc(userId)
-          .update(user.toFirestore());
-      return true;
-    } catch (e) {
-      print(e.toString());
-      return false;
-    }
-  }
 
   //  pickImage method
   Future<File?> pickImage() async {
@@ -149,7 +138,10 @@ class FirebaseProfileWebServices {
 
     try {
       await _firestore.collection('users').doc(userId).update({
-        'bio': bio,
+        // Update the bio field in the user's document that in the userprofile map field in the firestore
+        'profile': {
+          'bio': bio,
+        },
       });
       return true;
     } catch (e) {
@@ -157,6 +149,38 @@ class FirebaseProfileWebServices {
       return false;
     }
   }
+  //i want to make a method to update the name and the email and the phone number in the firestore that in the user's document
+  Future<bool> customUpdateToFirebase(String key, String value) async {
+    String? userId = getCurrentUserId();
+    if (userId == null) return false;
+    try {
+      await _firestore.collection('users').doc(userId).update({
+        key: value,
+      });
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+  // i want to make a method to update the user's profile education in the firestore and include the institution, degree, fieldOfStudy, startDate, endDate
+  Future<bool> updateEducation(Education education) async {
+    String? userId = getCurrentUserId();
+    if (userId == null) return false;
+    try {
+      await _firestore.collection('users').doc(userId).update({
+        // Update the education field in the user's document that in the userprofile map field in the firestore
+        'profile': {
+          'education': education.toMap(),
+        },
+      });
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+  
 }
 
 
