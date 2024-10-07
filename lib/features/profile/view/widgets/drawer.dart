@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'custom_alert.dart';
+import 'package:jop_finder_app/features/profile/view/widgets/custom_alert.dart.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});

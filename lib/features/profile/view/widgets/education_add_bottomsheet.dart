@@ -3,6 +3,7 @@ import 'package:jop_finder_app/features/auth/data/model/UserProfile_model.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/styled_button.dart';
 import 'package:jop_finder_app/features/profile/view/widgets/profile_education_text_form.dart';
 import 'package:jop_finder_app/features/profile/viewmodel/profile_cubit.dart';
+import 'package:intl/intl.dart';
 
 class EducationAddBottomSheet extends StatelessWidget {
   final TextEditingController institutionController = TextEditingController();
@@ -16,30 +17,24 @@ class EducationAddBottomSheet extends StatelessWidget {
   DateTime? endDate;
 
   bool validation() {
-    if (_formKey.currentState!.validate()&&startDate != null &&
-        endDate != null) {
+    if (_formKey.currentState!.validate()) {
       return true;
     }
     return false;
   }
 
-  Future<void> _pickDate(BuildContext context, bool isStartDate) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2025),
-    );
-    if (picked != null) {
-      if (isStartDate) {
-        startDate = picked;
-      } else {
-        endDate = picked;
-      }
+  EducationAddBottomSheet(this.profileCubit, {super.key});
+
+  // Helper method to handle setting DateTime
+  void setDate(DateTime date, bool isStartDate) {
+    if (isStartDate) {
+      startDate = date;
+      startDateController.text = DateFormat('yyyy-MM-dd').format(date);
+    } else {
+      endDate = date;
+      endDateController.text = DateFormat('yyyy-MM-dd').format(date);
     }
   }
-
-  EducationAddBottomSheet(this.profileCubit, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -54,9 +49,15 @@ class EducationAddBottomSheet extends StatelessWidget {
           ),
         ),
         padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+        child: ListView(
           children: [
+            Text(
+              "Add Education",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             ProfileEducationTextForm(
               icon: Icons.school,
               controller: institutionController,
@@ -79,7 +80,8 @@ class EducationAddBottomSheet extends StatelessWidget {
               icon: Icons.date_range,
               controller: startDateController,
               hint: "Start Date",
-              
+              isDateField: true,
+              onDatePicked: (date) => setDate(date, true), // Set startDate
             ),
             const SizedBox(height: 16),
             ProfileEducationTextForm(
@@ -87,12 +89,13 @@ class EducationAddBottomSheet extends StatelessWidget {
               controller: endDateController,
               hint: "End Date",
               isDateField: true,
+              onDatePicked: (date) => setDate(date, false), // Set endDate
             ),
             const SizedBox(height: 16),
             StyledButton(
               onPressed: () {
                 if (validation()) {
-                  profileCubit.updateEducation(
+                  profileCubit.addEducation(
                     Education(
                       institution: institutionController.text,
                       degree: degreeController.text,
