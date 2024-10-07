@@ -3,15 +3,16 @@
 import 'package:flutter/material.dart';
 
 class ProposalsScreen extends StatelessWidget {
-
   final List<Proposal> proposals = [
     Proposal('Google', 'Jr Executive', '\$115,000/y', 'Non-Negotiable',
         '13/5/22', 'Los Angeles, US', Colors.redAccent),
-    Proposal('Beats', 'Mid Executive', '\$86,000/y', 'Negotiable',
-        '13/5/22', 'San Jose, US', Colors.greenAccent),
-    Proposal('Spotify', 'Sr Executive', '\$96,000/y', 'Negotiable',
-        '13/5/22', 'San Francisco, US', Colors.greenAccent),
+    Proposal('Beats', 'Mid Executive', '\$86,000/y', 'Negotiable', '13/5/22',
+        'San Jose, US', Colors.greenAccent),
+    Proposal('Spotify', 'Sr Executive', '\$96,000/y', 'Negotiable', '13/5/22',
+        'San Francisco, US', Colors.greenAccent),
   ];
+
+  ProposalsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +77,7 @@ class Proposal {
 class ProposalCard extends StatelessWidget {
   final Proposal proposal;
 
-  const ProposalCard.ProposalCard({required this.proposal});
+  const ProposalCard.ProposalCard({super.key, required this.proposal});
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +124,10 @@ class ProposalCard extends StatelessWidget {
                 Column(
                   children: [
                     Text(proposal.joiningDate,
-                        style: TextStyle(fontSize: 14, color: Colors.black,)),
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                        )),
                     SizedBox(height: 4),
                     Text(proposal.location,
                         style: TextStyle(fontSize: 14, color: Colors.grey)),

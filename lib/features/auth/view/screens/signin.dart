@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jop_finder_app/core/utils/app_router.dart';
+import 'package:jop_finder_app/features/auth/view/screens/shared/google_facebook_sign.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/styled_button.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/styled_textField.dart';
+import 'package:jop_finder_app/features/auth/view/screens/shared/styled_text_navigation_to_from_signin.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/text_between_divider.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/welcome_text.dart';
 import 'package:jop_finder_app/features/auth/viewmodel/cubit/auth_cubit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -22,6 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
   // Create controllers for the TextFields
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _rememberMe = false;
 
   bool validation() {
     if (_formKey.currentState!.validate()) {
@@ -31,17 +34,42 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _checkRememberMe();
+  }
+
+  void _checkRememberMe() async {
+    final prefs = await SharedPreferences.getInstance();
+    bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+
+    if (isLoggedIn) {
+      // Retrieve email and password if you stored them
+      String? email = prefs.getString('email');
+      String? password = prefs.getString('password');
+
+      if (email != null && password != null) {
+        BlocProvider.of<AuthCubit>(context).signIn(
+          email: email,
+          password: password,
+          context: context,
+        );
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => AuthCubit(),
       child: Scaffold(
         backgroundColor: const Color.fromARGB(255, 250, 250, 253),
-        appBar: AppBar(),
         body: Form(
           key: _formKey,
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 100),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -64,7 +92,31 @@ class _LoginScreenState extends State<LoginScreen> {
                       icon: Icons.lock_outlined,
                       isPassword: true,
                       controller: _passwordController),
-                  const SizedBox(height: 30),
+
+                  //remember me button
+                  Row(
+                    children: [
+                      Checkbox(
+                        side: const BorderSide(
+                            color: Color.fromARGB(255, 175, 176, 182)),
+                        activeColor: const Color.fromARGB(255, 53, 104, 153),
+                        value: _rememberMe,
+                        onChanged: (newValue) {
+                          setState(() {
+                            _rememberMe = newValue!;
+                          });
+                        },
+                      ),
+                      const Text(
+                        "Remember Me",
+                        style: TextStyle(
+                            color: Color.fromARGB(255, 175, 176, 182),
+                            fontSize: 14),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 15),
 
                   // cubit builder
                   BlocBuilder<AuthCubit, AuthState>(
@@ -91,12 +143,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                 style: const TextStyle(color: Colors.red),
                               ),
                             ),
+                            const SizedBox(height: 15),
+                            //Button to Login
                             StyledButton(
                                 onPressed: () {
                                   if (validation()) {
                                     BlocProvider.of<AuthCubit>(context).signIn(
                                         email: _emailController.text,
                                         password: _passwordController.text,
+                                        rememberMe: _rememberMe,
                                         context: context);
                                   }
                                 },
@@ -104,23 +159,26 @@ class _LoginScreenState extends State<LoginScreen> {
                           ],
                         );
                       } else {
-                        return StyledButton(
-                            onPressed: () {
-                              if (validation()) {
-                                BlocProvider.of<AuthCubit>(context).signIn(
-                                    email: _emailController.text,
-                                    password: _passwordController.text,
-                                    context: context);
-                              }
-                            },
-                            text: "Login");
+                        return
+                            //Button to Login
+                            StyledButton(
+                                onPressed: () {
+                                  if (validation()) {
+                                    BlocProvider.of<AuthCubit>(context).signIn(
+                                        email: _emailController.text,
+                                        password: _passwordController.text,
+                                        rememberMe: _rememberMe,
+                                        context: context);
+                                  }
+                                },
+                                text: "Login");
                       }
                     },
                   ),
 
-                  //Button to Login
+                  const SizedBox(height: 15),
 
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 15),
 
                   //Forgetpassword Text button
                   TextButton(
@@ -144,60 +202,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 70),
 
                   //Row for the Google and facebook Login
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const SizedBox(),
-                      SvgPicture.asset(
-                        'assets/images/google.svg',
-                        width: 30,
-                        height: 30,
-                      ),
-                      const Icon(
-                        Icons.facebook,
-                        color: Colors.blue,
-                        size: 38,
-                      ),
-                      const SizedBox(),
-                    ],
-                  ),
+                  const GoogleFacebookSign(),
                   const SizedBox(height: 30),
 
                   // Row for Navigating to Sign in Screen contains text and texButton
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(right: 5),
-                        child: Text(
-                          "Haven't an account?",
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 175, 176, 182),
-                            fontSize: 13,
-                          ),
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          // Navigate to register screen
-                          GoRouter.of(context)
-                              .pushReplacementNamed(AppRouter.signUp);
-                        },
-                        style: TextButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                          minimumSize: const Size(0, 0),
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
-                        child: const Text(
-                          "Register",
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 53, 104, 153),
-                            fontSize: 13,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  const StyledTextNavigationToFromSignin(
+                      headText: "Haven't an account?", tailText: 'Register'),
                 ],
               ),
             ),

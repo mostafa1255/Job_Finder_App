@@ -30,13 +30,12 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
       create: (context) => AuthCubit(),
       child: Scaffold(
         backgroundColor: const Color.fromARGB(255, 250, 250, 253),
-        appBar: AppBar(),
         body: Form(
           key: _formKey,
           child: SingleChildScrollView(
             child: Padding(
                 padding: const EdgeInsets.only(
-                    top: 10, left: 20, right: 20, bottom: 40),
+                    top: 100, left: 20, right: 20, bottom: 40),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,

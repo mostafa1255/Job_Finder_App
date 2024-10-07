@@ -19,7 +19,8 @@ class ProfileCubit extends Cubit<ProfileState> {
       final userId = _profileWebServices.getCurrentUserId();
       if (userId == null) {
         emit(ProfileError("User not found"));
-        return User(id: "", name: "error", email: ""); // Add return statement here
+        return User(
+            id: "", name: "error", email: ""); // Add return statement here
       }
       final user = await _profileWebServices.getUserInfo();
       if (user != null) {
@@ -35,13 +36,13 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-
 // i need a implement the pick image method that is in the profile_web_services.dart
   Future<void> pickImageAndUpdateUser() async {
     try {
       final image = await _profileWebServices.pickImage();
       if (image != null) {
-        final success = await _profileWebServices.uploadImageAndUpdateUser(image);
+        final success =
+            await _profileWebServices.uploadImageAndUpdateUser(image);
         if (success == true) {
           final user = await _profileWebServices.getUserInfo();
           if (user != null) {
@@ -51,25 +52,23 @@ class ProfileCubit extends Cubit<ProfileState> {
           }
         } else {
           emit(ProfileError("Failed to upload image "));
-          await 
-          Future.delayed(const Duration(seconds: 5));
+          await Future.delayed(const Duration(seconds: 5));
           final user = await _profileWebServices.getUserInfo();
           if (user != null) {
-            emit(UserUpdated(user));}
+            emit(UserUpdated(user));
+          }
         }
       } else {
         emit(ProfileError("Failed to pick image"));
         final user = await _profileWebServices.getUserInfo();
-          if (user != null) {
-            emit(UserUpdated(user));}
+        if (user != null) {
+          emit(UserUpdated(user));
+        }
       }
     } catch (e) {
       emit(ProfileError(e.toString()));
     }
   }
-
-
-
 
   Future<void> uploadCVAndUpdateUser(FilePickerResult cvPdf) async {
     emit(ProfileLoading());
@@ -92,16 +91,18 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   Future<void> openPdf(String url) async {
-    emit(ProfileLoading()); // Optional: Emit loading state before attempting to launch URL
+    emit(
+        ProfileLoading()); // Optional: Emit loading state before attempting to launch URL
     if (await canLaunch(url)) {
       await launch(url);
       final user = await _profileWebServices.getUserInfo();
-        if (user != null) {
-          emit(UserUpdated(user));
-          }
+      if (user != null) {
+        emit(UserUpdated(user));
+      }
       // Optional: Emit initial state after launching URL successfully
     } else {
-      emit(ProfileError("Could not launch URL")); // Emit error state if URL cannot be launched
+      emit(ProfileError(
+          "Could not launch URL")); // Emit error state if URL cannot be launched
     }
   }
 

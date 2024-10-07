@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:jop_finder_app/core/utils/app_router.dart';
 import 'recommended_jops_card.dart';
 import 'job_card.dart';
 import 'bottom_navigation.dart';
@@ -10,8 +12,11 @@ class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   Future<List<PostedJob>> fetchJobs() async {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('jobs').get();
-    return querySnapshot.docs.map((doc) => PostedJob.fromMap(doc.data() as Map<String, dynamic>)).toList();
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('jobs').get();
+    return querySnapshot.docs
+        .map((doc) => PostedJob.fromMap(doc.data() as Map<String, dynamic>))
+        .toList();
   }
 
   @override
@@ -28,27 +33,27 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   Text('Welcome Back!', style: TextStyle(fontSize: 24)),
                   CircleAvatar(
-                    backgroundImage: AssetImage('assets/profile.jpg'),
                     radius: 20,
                   ),
                 ],
               ),
-              Text('John Lucas 👋',
+              const Text('John Lucas 👋',
                   style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               GestureDetector(
                 onTap: () {},
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 15.h),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 12.w, vertical: 15.h),
                   decoration: BoxDecoration(
                     color: Colors.grey[200],
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.search, color: Colors.grey),
+                      const Icon(Icons.search, color: Colors.grey),
                       SizedBox(width: 10.w),
-                      Expanded(
+                      const Expanded(
                         child: Text(
                           'Search for jobs...',
                           style: TextStyle(color: Colors.grey),
@@ -63,12 +68,13 @@ class HomeScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Featured Jobs',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                   Text('See all',
                       style: TextStyle(fontSize: 16, color: Colors.grey)),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               FutureBuilder<List<PostedJob>>(
                 future: fetchJobs(),
                 builder: (context, snapshot) {
@@ -87,13 +93,20 @@ class HomeScreen extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
-                          return JobCard(
-                            company: jobs[index].companyName ?? '',
-                            title: jobs[index].jobTitle ?? '',
-                            salary: jobs[index].salary ?? '',
-                            location: jobs[index].location ?? '',
-                            tags: jobs[index].jobTags ?? [],
-                            color: Colors.blue,
+                          return GestureDetector(
+                            onTap: () {
+                              GoRouter.of(context).push(
+                                  AppRouter.jobApplyScreen,
+                                  extra: jobs[index]);
+                            },
+                            child: JobCard(
+                              company: jobs[index].companyName ?? '',
+                              title: jobs[index].jobTitle ?? '',
+                              salary: jobs[index].salary ?? '',
+                              location: jobs[index].location ?? '',
+                              tags: jobs[index].jobTags ?? [],
+                              color: Colors.blue,
+                            ),
                           );
                         },
                       ),
@@ -106,7 +119,8 @@ class HomeScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Recommended Jobs',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                   Text('See all',
                       style: TextStyle(fontSize: 16, color: Colors.grey)),
                 ],
@@ -130,12 +144,19 @@ class HomeScreen extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
-                          return RecommendedJopsCard(
-                            company: jobs[index].companyName ?? '',
-                            title: jobs[index].jobTitle ?? '',
-                            salary: jobs[index].salary ?? '',
-                            color: Colors.pinkAccent,
-                            companyLogo: Image.network(jobs[index].imageUrl ?? ''),
+                          return GestureDetector(
+                            onTap: () {
+                              GoRouter.of(context).push(
+                                  AppRouter.jobApplyScreen,
+                                  extra: jobs[index]);
+                            },
+                            child: RecommendedJopsCard(
+                              company: jobs[index].companyName ?? '',
+                              title: jobs[index].jobTitle ?? '',
+                              salary: jobs[index].salary ?? '',
+                              color: Colors.pinkAccent,
+                              companyLogo: jobs[index].imageUrl ?? '',
+                            ),
                           );
                         },
                       ),

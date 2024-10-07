@@ -22,7 +22,11 @@ class CustomInfoDisplay extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(icon, color: MyColor.primaryBlue,size: 30,),
+          Icon(
+            icon,
+            color: MyColor.primaryBlue,
+            size: 30,
+          ),
           const SizedBox(width: 10),
           Expanded(
             child: Text(
@@ -60,7 +64,11 @@ class CustomBioDisplay extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(Icons.info, color: MyColor.primaryBlue,size: 30,),
+          const Icon(
+            Icons.info,
+            color: MyColor.primaryBlue,
+            size: 30,
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Text(

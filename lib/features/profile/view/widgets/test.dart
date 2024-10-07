@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:jop_finder_app/features/auth/data/model/user_model.dart';
@@ -8,23 +7,21 @@ import 'package:jop_finder_app/features/auth/data/model/UserProfile_model.dart';
 import 'package:flutter/material.dart';
 import 'package:jop_finder_app/firebase_options.dart';
 
-void main() async{WidgetsFlutterBinding.ensureInitialized();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp( MaterialApp(
+  runApp(MaterialApp(
       home: Scaffold(
     body: Center(
-      child: TextButton(
-        onPressed:() {
-          createFakeUserDocument();
-        }
-      , child: const Text('post')
-      )
-    ),
+        child: TextButton(
+            onPressed: () {
+              createFakeUserDocument();
+            },
+            child: const Text('post'))),
   )));
 }
-
 
 Future<void> createFakeUserDocument() async {
   // Assuming you have a Firestore instance
@@ -68,14 +65,14 @@ Future<void> createFakeUserDocument() async {
 
   // Create a document in the 'users' collection with the fake user data
   try {
-  await firestore.collection('users').add(userData);
-} catch (e) {
-  if (e is FirebaseException) {
-    // Handle Firebase exceptions here
-    print(e.message);
-  } else {
-    // Other exceptions
-    print(e.toString());
+    await firestore.collection('users').add(userData);
+  } catch (e) {
+    if (e is FirebaseException) {
+      // Handle Firebase exceptions here
+      print(e.message);
+    } else {
+      // Other exceptions
+      print(e.toString());
+    }
   }
-}
 }

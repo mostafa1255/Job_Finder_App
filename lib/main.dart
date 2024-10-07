@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jop_finder_app/core/utils/app_router.dart';
+import 'package:jop_finder_app/features/auth/viewmodel/cubit/auth_cubit.dart';
 import 'package:jop_finder_app/firebase_options.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -10,7 +12,10 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const JopFinderApp());
+  runApp(BlocProvider(
+    create: (context) => AuthCubit(),
+    child: const JopFinderApp(),
+  ));
 }
 
 class JopFinderApp extends StatelessWidget {
