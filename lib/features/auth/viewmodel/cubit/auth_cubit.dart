@@ -54,11 +54,19 @@ class AuthCubit extends Cubit<AuthState> {
   }) async {
     emit(AuthLoading());
     try {
+      bool rememberMe = true;
       var result = await fireBaseAuthenticationWebServices.signUp(
           email: email, password: password, fullName: fullName);
 
       if (result == "User signed up successfully") {
         // await fireBaseAuthenticationWebServices.signOut();
+        if (rememberMe) {
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setBool('isLoggedIn', true); // Store login status
+          await prefs.setString('email', email); // Store email
+          await prefs.setString(
+              'password', password); // Optionally store password
+        }
         emit(AuthLoaded());
       } else {
         emit(AuthError(errorMessage: result ?? "Failed to sign up"));
@@ -80,17 +88,13 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   // Reset Password
-  Future<void> resetPassword(
-      {required String email, required BuildContext context}) async {
+  Future<void> resetPassword({required String email}) async {
     emit(AuthLoading());
     try {
       var result =
           await fireBaseAuthenticationWebServices.resetPassword(email: email);
 
       if (result == "Password reset email sent") {
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Email password reset link sent!')));
-        GoRouter.of(context).pushReplacementNamed(AppRouter.login);
         emit(AuthLoaded());
       } else {
         emit(AuthError(errorMessage: result ?? "Failed to send reset email"));
