@@ -23,7 +23,6 @@ class _LoginScreenState extends State<LoginScreen> {
   // Create controllers for the TextFields
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _rememberMe = true;
 
   bool validation() {
     if (_formKey.currentState!.validate()) {
