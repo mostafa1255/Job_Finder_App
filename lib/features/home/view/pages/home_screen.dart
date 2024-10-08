@@ -67,7 +67,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  GoRouter.of(context).push(AppRouter.jobSearchScreen);
+                },
                 child: Container(
                   padding:
                       EdgeInsets.symmetric(horizontal: 12.w, vertical: 15.h),

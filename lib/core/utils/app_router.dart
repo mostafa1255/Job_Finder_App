@@ -22,6 +22,8 @@ import 'package:jop_finder_app/features/profile/viewmodel/profile_cubit.dart';
 import 'package:jop_finder_app/features/splash/view/splash.dart';
 import 'package:jop_finder_app/features/splash/view/splash/OnboardingScreen1.dart';
 
+import '../../features/job_search/view/pages/job_search.dart';
+
 class AppRouter {
   static const splash = "/splash";
   static const onBoardingScreens = "/onBoardingScreens";
@@ -39,6 +41,9 @@ class AppRouter {
   static const allApplicantsScreen = "/allApplicantsScreen";
   static const myPostedJob = "/myPostedJob";
   static const successScreen = "/successScreen";
+  static const jobSearchScreen = "/jobSearchScreen";
+
+
 
   static FireBaseAuthenticationWebServices fireBaseAuthenticationWebServices =
       FireBaseAuthenticationWebServices();
@@ -86,6 +91,11 @@ class AppRouter {
         path: homeScreen,
         name: homeScreen,
         builder: (context, state) => HomeScreen(),
+      ),
+      GoRoute(
+        path: jobSearchScreen,
+        name: jobSearchScreen,
+        builder: (context, state) =>const JobSearchScreen(),
       ),
       GoRoute(
         path: jobApplyScreen,
