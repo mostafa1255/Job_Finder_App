@@ -11,6 +11,7 @@ import 'package:jop_finder_app/features/job_apply/view/pages/job_apply.dart';
 import 'package:jop_finder_app/features/job_apply/view/pages/succefull_Screen.dart';
 import 'package:jop_finder_app/features/job_post/view/pages/all_applicants_screen.dart';
 import 'package:jop_finder_app/features/job_post/view/pages/job_post.dart';
+import 'package:jop_finder_app/features/job_post/view/pages/my_postedJob.dart';
 import 'package:jop_finder_app/features/profile/view/pages/applications.dart';
 import 'package:jop_finder_app/features/profile/view/pages/profile.dart';
 import 'package:jop_finder_app/features/profile/view/pages/proposals.dart';
@@ -36,6 +37,7 @@ class AppRouter {
   static const applicationsScreen = "/applicationsScreen";
   static const proposalsScreen = "/proposalsScreen";
   static const allApplicantsScreen = "/allApplicantsScreen";
+  static const myPostedJob = "/myPostedJob";
   static const successScreen = "/successScreen";
 
   static FireBaseAuthenticationWebServices fireBaseAuthenticationWebServices =
@@ -101,6 +103,11 @@ class AppRouter {
         path: jobPostScreen,
         name: jobPostScreen,
         builder: (context, state) => JobPostScreen(),
+      ),
+      GoRoute(
+        path: myPostedJob,
+        name: myPostedJob,
+        builder: (context, state) => const MyPostedJob(),
       ),
       GoRoute(
         path: allApplicantsScreen,
