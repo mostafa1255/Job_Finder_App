@@ -5,8 +5,7 @@ import 'package:jop_finder_app/features/job_search/models/mock_data.dart';
 import 'package:jop_finder_app/features/job_search/viewmodel/job_search_cubit.dart';
 
 class ExperienceLevelFilterWidget extends StatelessWidget {
-  const ExperienceLevelFilterWidget({super.key, required this.isSelected,});
-  final bool isSelected;
+  const ExperienceLevelFilterWidget({super.key});
   @override
   Widget build(BuildContext context) {
     final experienceLevelFilter =
@@ -15,7 +14,7 @@ class ExperienceLevelFilterWidget extends StatelessWidget {
     return Wrap(
       spacing: 8.0,
       children: experienceLevelFilter.experienceLevels.map((experienceLevel) {
-        final isSelected = context.read<JobSearchCubit>().isFilterSelected(experienceLevel);
+        final isSelected = context.watch<JobSearchCubit>().isFilterSelected(experienceLevel);
 
         return ChoiceChip(
           label: Text(experienceLevel),

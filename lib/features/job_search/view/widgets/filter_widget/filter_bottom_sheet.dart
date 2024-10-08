@@ -42,30 +42,17 @@ class FilterBottomSheet extends StatelessWidget {
                   height: 200,
                   child: BlocBuilder<JobSearchCubit, JobSearchState>(
                     builder: (context, state) {
-                      if (state is JobSearchInitial) {
                         return const TabBarView(
                           children: [
-                            CompaniesFilterWidget(isSelected: false,),
-                            RolesFilterWidget(isSelected: false,),
-                            JobTypesFilterWidget(isSelected: false,),
-                            ExperienceLevelFilterWidget(isSelected: false,),
-                            JobLocationFilterWidget(isSelected: false,),
+                            CompaniesFilterWidget(),
+                            RolesFilterWidget(),
+                            JobTypesFilterWidget(),
+                            ExperienceLevelFilterWidget(),
+                            JobLocationFilterWidget(),
                             SalaryRangeFilterWidget(),
                           ],
                         );
-                      } else if (state is JobFilterIsSelected) {
-                         return const TabBarView(
-                          children: [
-                            CompaniesFilterWidget(isSelected: true,),
-                            RolesFilterWidget(isSelected: true,),
-                            JobTypesFilterWidget(isSelected: true,),
-                            ExperienceLevelFilterWidget(isSelected: true,),
-                            JobLocationFilterWidget(isSelected: true,),
-                            SalaryRangeFilterWidget(),
-                          ],
-                         );
-                      } 
-                      return Container();
+                      
                     },
                   ),
                 ),

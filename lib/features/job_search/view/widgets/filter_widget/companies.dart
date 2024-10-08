@@ -6,8 +6,7 @@ import 'package:jop_finder_app/features/job_search/viewmodel/job_search_cubit.da
 
 class CompaniesFilterWidget extends StatelessWidget {
 
-  const CompaniesFilterWidget({super.key, required this.isSelected});
-  final bool isSelected;
+  const CompaniesFilterWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +15,7 @@ class CompaniesFilterWidget extends StatelessWidget {
     return Wrap(
       spacing: 8.0,
       children: companiesFilter.companies.map((company) {
-        final isSelected = context.read<JobSearchCubit>().isFilterSelected(company);
+        final isSelected = context.watch<JobSearchCubit>().isFilterSelected(company);
 
         return ChoiceChip(
           label: Text(company),

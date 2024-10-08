@@ -10,6 +10,7 @@ class JobSearchCubit extends Cubit<JobSearchState> {
 
   Timer? _debounce;
   Set<String> _filters = {};
+  List<Job> _result = [];
 
   void setFilters(Set<String> filters) {
     _filters = filters;
@@ -46,9 +47,31 @@ class JobSearchCubit extends Cubit<JobSearchState> {
               job.jobTitle.trim().toLowerCase().contains(query.toLowerCase()))
           .toList();
 
+      final List<String> uniqueJobTitles =
+          result.map((job) => job.jobTitle).toSet().toList();
+
+      if (result.isNotEmpty) {
+        emit(JobSearchSuccess(result, uniqueJobTitles));
+        _result = result;
+      } else {
+        emit(JobSearchNoResult());
+      }
+    } catch (e) {
+      emit(JobSearchError("Error occurred while searching for jobs: $e"));
+    }
+  }
+
+  void searchResult(List<Job> result) { 
+
+    try{
+      if (result.isEmpty) {
+        emit(JobSearchNoResult());
+        return;
+      }
+
       print("Filters: $_filters");
       if (_filters.isNotEmpty) {
-        result = result.where((job) {
+        result = _result.where((job) {
           bool matchesCompany = _filters.contains(job.companyName);
           bool matchesLocation = _filters.contains(job.location);
           bool matchesExperienceLevel = _filters.contains(job.experienceLevel);
@@ -62,18 +85,12 @@ class JobSearchCubit extends Cubit<JobSearchState> {
               matchesRole;
         }).toList();
       }
-
-      final List<String> uniqueJobTitles =
-          result.map((job) => job.jobTitle).toSet().toList();
-
-      if (result.isNotEmpty) {
-        emit(JobSearchSuccess(result, uniqueJobTitles));
-      } else {
-        emit(JobSearchNoResult());
-      }
-    } catch (e) {
+      emit(JobSearchSuccess(result, result.map((job) => job.jobTitle).toSet().toList()));
+    }catch(e){
       emit(JobSearchError("Error occurred while searching for jobs: $e"));
     }
+
+    
   }
 
   Set<String> get selectedFilters => _selectedFilters;
