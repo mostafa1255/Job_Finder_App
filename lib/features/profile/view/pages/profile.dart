@@ -115,7 +115,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      user!.jobTitle ?? 'No job title',
+                      user!.profile!.jobTitle ?? 'No job title',
                       style: TextStyle(color: Colors.grey),
                     ),
                     Icon(
