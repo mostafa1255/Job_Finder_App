@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jop_finder_app/core/utils/app_router.dart';
 import 'package:jop_finder_app/features/auth/viewmodel/cubit/auth_cubit.dart';
+import 'package:jop_finder_app/features/home/view/pages/home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -16,42 +17,22 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    _checkRememberMe();
     navigateFromSplash();
     super.initState();
   }
 
-  void _checkRememberMe() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-    bool isGoogleLogin = prefs.getBool('isGoogleLogin') ?? false;
-    // Sharedpreference with google
-    if (isGoogleLogin) {
-      BlocProvider.of<AuthCubit>(context).signInWithGoogle(context);
-    }
-    // Sharedpreference with username and password
-    if (isLoggedIn) {
-      // Retrieve email and password if you stored them
-      String? email = prefs.getString('email');
-      String? password = prefs.getString('password');
-
-      if (email != null && password != null) {
-        BlocProvider.of<AuthCubit>(context)
-            .signIn(
-          email: email,
-          password: password,
-        )
-            .then((value) {
-          GoRouter.of(context).pushReplacementNamed(AppRouter.homeScreen);
-        });
-      }
-    }
-  }
-
   void navigateFromSplash() async {
-    await Future.delayed(const Duration(seconds: 3), () {
-      if (mounted) {
-        GoRouter.of(context).pushReplacementNamed(AppRouter.onBoardingScreens);
+    await Future.delayed(const Duration(seconds: 3), () async {
+      final prefs = await SharedPreferences.getInstance();
+      String? userToken = prefs.getString(userTokenKey);
+
+      if (userToken != null) {
+        GoRouter.of(context).pushReplacementNamed(AppRouter.homeScreen);
+      } else {
+        if (mounted) {
+          GoRouter.of(context)
+              .pushReplacementNamed(AppRouter.onBoardingScreens);
+        }
       }
     });
   }

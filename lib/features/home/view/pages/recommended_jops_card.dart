@@ -39,21 +39,24 @@ class RecommendedJopsCard extends StatelessWidget {
                 radius: 30,
                 backgroundColor: Colors.grey.shade200,
                 child: ClipOval(
-                  child: CachedNetworkImage(
-                    imageUrl: companyLogo,
-                    fit: BoxFit.cover,
-                    width: 60,
-                    height: 60,
-                    progressIndicatorBuilder: (context, url, progress) =>
-                        Center(
-                      child: CircularProgressIndicator(
-                        value: progress.progress,
-                      ),
-                    ),
-                    errorWidget: (context, url, error) => const Center(
-                      child: Icon(Icons.error),
-                    ),
-                  ),
+                  child:
+                 Uri.parse(companyLogo ?? "").hasAbsolutePath ?  
+                  CachedNetworkImage(
+                          imageUrl: companyLogo,
+                          fit: BoxFit.cover,
+                          width: 60,
+                          height: 60,
+                          progressIndicatorBuilder: (context, url, progress) =>
+                              Center(
+                            child: CircularProgressIndicator(
+                              value: progress.progress,
+                            ),
+                          ),
+                          errorWidget: (context, url, error) => const Center(
+                            child: Icon(Icons.error),
+                          ),
+                        )
+                      : const Icon(Icons.person),
                 ),
               ),
 

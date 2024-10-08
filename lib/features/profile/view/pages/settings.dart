@@ -12,7 +12,6 @@ class SettingsScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
@@ -32,7 +31,6 @@ class SettingsScreen extends StatelessWidget {
           buildListItem(Icons.notifications_outlined, 'Notification'),
           buildListItem(Icons.lock_outline, 'Change Password'),
           buildListItem(Icons.email_outlined, 'Change E-mail'),
-          buildListItem(Icons.language_outlined, 'Language'),
           buildListItem(Icons.color_lens_outlined, 'Theme'),
           buildListItem(Icons.delete_outline, 'Delete Account',
               color: Colors.red),
@@ -40,8 +38,6 @@ class SettingsScreen extends StatelessWidget {
           buildSectionTitle('About'),
           buildListItem(Icons.privacy_tip_outlined, 'Privacy'),
           buildListItem(Icons.description_outlined, 'Terms and conditions'),
-          buildListItem(Icons.help_outline, 'Help Center'),
-          buildListItem(Icons.support_outlined, 'Support'),
           buildListItem(Icons.info_outline, 'About'),
         ],
       ),

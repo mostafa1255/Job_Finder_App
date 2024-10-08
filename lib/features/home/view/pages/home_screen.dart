@@ -1,15 +1,35 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jop_finder_app/core/utils/app_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'recommended_jops_card.dart';
 import 'job_card.dart';
 import 'bottom_navigation.dart';
 import 'package:jop_finder_app/features/auth/data/model/PostedJob_model.dart';
 
-class HomeScreen extends StatelessWidget {
+const String userTokenKey = 'userToken';
+
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  initState() {
+    saveUserToken();
+    super.initState();
+  }
+
+  void saveUserToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString(userTokenKey, FirebaseAuth.instance.currentUser!.uid );
+  }
 
   Future<List<PostedJob>> fetchJobs() async {
     QuerySnapshot querySnapshot =

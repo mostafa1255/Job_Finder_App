@@ -1,6 +1,7 @@
 // ignore_for_file: unused_field
 
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jop_finder_app/features/auth/data/model/UserProfile_model.dart';
@@ -175,6 +176,85 @@ class FirebaseProfileWebServices {
       return false;
     }
   }
+<<<<<<< HEAD
+=======
+
+  Future<bool> removeEducation(String userId, Education education) async {
+    try {
+      await _firestore.collection('users').doc(userId).update({
+        // Remove the specified education from the list of educations in the user's document
+        'profile.education': FieldValue.arrayRemove([education.toMap()]),
+      });
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+
+
+  // i need to add a function to change the password of the authenticated user by sending an email to the user to reset the password
+  Future<bool> changeUserPassword(String newPassword) async {
+    try {
+      // Get the current user
+      User? user = FirebaseAuth.instance.currentUser;
+      // Update the password
+      await user!.updatePassword(newPassword);
+      await _firestore.collection('users').doc(user.uid).update({
+        'email': user.email,
+      });
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+  Future<bool> updateEmailIfVerified(String newEmail) async {
+  try {
+    User? user = FirebaseAuth.instance.currentUser;
+    await user!.reload(); // Refresh user data to get the latest emailVerified status
+    if (user.emailVerified) {
+      // Proceed with updating the email if the current email is verified
+      await user.verifyBeforeUpdateEmail(newEmail);
+      // Optionally, send a verification email for the new email
+      await user.sendEmailVerification();
+      return true;
+    } else {
+      print("Email is not verified. Cannot update email.");
+      return false;
+    }
+  } catch (e) {
+    print(e.toString());
+    return false;
+  }
+}
+
+Future<bool> deleteUser() async {
+  User? user = FirebaseAuth.instance.currentUser;
+  if (user == null) {
+    print("No user signed in.");
+    return false;
+  }
+  final uid = user.uid;
+  try {
+    // Deletes the user account
+    await user.delete();
+    // Delete the Firestore document associated with the user
+    await FirebaseFirestore.instance.collection('users').doc(uid).delete();
+    return true;
+  } catch (e) {
+    print(e.toString());
+    // Handle errors, possibly including re-authentication before deletion
+    return false;
+  }
+}
+
+
+
+
+
+>>>>>>> 7993f8927cacfad25b848be6ff4226028f378b7f
 }
 
 

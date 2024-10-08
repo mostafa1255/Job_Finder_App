@@ -1,4 +1,5 @@
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jop_finder_app/features/auth/data/model/UserProfile_model.dart';
@@ -28,6 +29,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         return user;
       } else {
         emit(ProfileError("User profile not found "));
+<<<<<<< HEAD
         return UserModel(
             id: "", name: "", email: ""); // Add return statement here
       }
@@ -35,6 +37,13 @@ class ProfileCubit extends Cubit<ProfileState> {
       emit(ProfileError(e.toString()));
       return UserModel(
           id: "", name: "", email: ""); // Add return statement here
+=======
+        return UserModel(id: "", name: "", email: ""); // Add return statement here
+      }
+    } catch (e) {
+      emit(ProfileError(e.toString()));
+      return UserModel(id: "", name: "", email: ""); // Add return statement here
+>>>>>>> 7993f8927cacfad25b848be6ff4226028f378b7f
     }
   }
 
@@ -169,4 +178,75 @@ class ProfileCubit extends Cubit<ProfileState> {
       emit(ProfileError(e.toString()));
     }
   }
+<<<<<<< HEAD
+=======
+  Future<void> removeEducation(Education education) async {
+    emit(ProfileLoading());
+    try {
+      final userId = FirebaseAuth.instance.currentUser?.uid; // Assuming you have the user's ID
+      final success = await _profileWebServices.removeEducation(userId!, education);
+      if (success == true) {
+        final user = await _profileWebServices.getUserInfo();
+        if (user != null) {
+          emit(UserUpdated(user)); // Update the UI with the new user data
+        } else {
+          emit(ProfileError("Failed to fetch updated user info"));
+        }
+      } else {
+        emit(ProfileError("Failed to remove education"));
+      }
+    } catch (e) {
+      emit(ProfileError(e.toString()));
+    }
+  }
+
+//i want to implement the changeUserPassword from the firebase profile web services
+  Future<void> changeUserPassword(String password) async {
+    emit(ProfileLoading());
+    try {
+      final success = await _profileWebServices.changeUserPassword(password);
+      if (success == true) {
+        emit(PasswordChanged());
+      } else {
+        emit(ProfileError("Failed to change password"));
+      }
+    } catch (e) {
+      emit(ProfileError(e.toString()));
+    }
+  }
+  //i want to implement the updateEmailIfVerified from the firebase profile web services  
+  Future<void> updateEmailIfVerified(String email) async {
+    emit(ProfileLoading());
+    try {
+      final success = await _profileWebServices.updateEmailIfVerified(email);
+      if (success == true) {
+        final user = await _profileWebServices.getUserInfo();
+        if (user != null) {
+          emit(UserUpdated(user));
+        } else {
+          emit(ProfileError("Failed to fetch updated user info"));
+        }
+      } else {
+        emit(ProfileError("Failed to update email"));
+      }
+    } catch (e) {
+      emit(ProfileError(e.toString()));
+    }
+  }
+  // i want to implement the deleteUser method from the firebase profile web services
+  
+  Future<void> deleteUser() async {
+    emit(ProfileLoading());
+    try {
+      final success = await _profileWebServices.deleteUser();
+      if (success == true) {
+        emit(ProfileInitial());
+      } else {
+        emit(ProfileError("Failed to delete user"));
+      }
+    } catch (e) {
+      emit(ProfileError(e.toString()));
+    }
+  }
+>>>>>>> 7993f8927cacfad25b848be6ff4226028f378b7f
 }

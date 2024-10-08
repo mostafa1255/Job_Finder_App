@@ -18,7 +18,12 @@ class ResumeUploadScreen extends StatefulWidget {
 class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
   ProfileCubit? profileCubit;
   String fileName = '';
+<<<<<<< HEAD
   UserModel? user;
+=======
+  UserModel? user ;
+
+>>>>>>> 7993f8927cacfad25b848be6ff4226028f378b7f
 
   @override
   void initState() {

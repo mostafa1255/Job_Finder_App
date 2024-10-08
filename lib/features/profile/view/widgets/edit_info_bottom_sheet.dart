@@ -11,7 +11,11 @@ class EditInfoBottomSheet extends StatelessWidget {
   final TextEditingController phoneNumberController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final ProfileCubit profileCubit;
+<<<<<<< HEAD
   final UserModel? user;
+=======
+  final UserModel? user ;
+>>>>>>> 7993f8927cacfad25b848be6ff4226028f378b7f
   EditInfoBottomSheet(this.profileCubit, this.user, {super.key});
 
   bool isNameValid() {
