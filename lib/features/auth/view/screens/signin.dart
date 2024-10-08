@@ -137,7 +137,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                           .signIn(
                                         email: _emailController.text,
                                         password: _passwordController.text,
-                                        rememberMe: _rememberMe,
                                       );
                                     }
                                   },
@@ -154,7 +153,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                           .signIn(
                                         email: _emailController.text,
                                         password: _passwordController.text,
-                                        rememberMe: _rememberMe,
                                       );
                                     }
                                   },

@@ -24,24 +24,23 @@ Widget buildJobHeader(
                 radius: 50,
                 backgroundColor: Colors.grey.shade200,
                 child: ClipOval(
-                  child: CachedNetworkImage(
-                    imageUrl: (jobApply.imageUrl != null &&
-                            jobApply.imageUrl!.trim().isNotEmpty)
-                        ? jobApply.imageUrl!
-                        : 'https://logo.clearbit.com/google.com',
-                    fit: BoxFit.cover,
-                    width: 70,
-                    height: 70,
-                    progressIndicatorBuilder: (context, url, progress) =>
-                        Center(
-                      child: CircularProgressIndicator(
-                        value: progress.progress,
-                      ),
-                    ),
-                    errorWidget: (context, url, error) => const Center(
-                      child: Icon(Icons.error),
-                    ),
-                  ),
+                  child: jobApply.imageUrl != null
+                      ? CachedNetworkImage(
+                          imageUrl: jobApply.imageUrl!,
+                          fit: BoxFit.cover,
+                          width: 70,
+                          height: 70,
+                          progressIndicatorBuilder: (context, url, progress) =>
+                              Center(
+                            child: CircularProgressIndicator(
+                              value: progress.progress,
+                            ),
+                          ),
+                          errorWidget: (context, url, error) => const Center(
+                            child: Icon(Icons.error),
+                          ),
+                        )
+                      : const Icon(Icons.person),
                 ),
               ),
               const SizedBox(width: 60),
