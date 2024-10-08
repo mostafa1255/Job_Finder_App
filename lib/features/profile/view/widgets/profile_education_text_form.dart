@@ -23,6 +23,7 @@ class ProfileEducationTextForm extends StatefulWidget {
 }
 
 class _ProfileEducationTextFormState extends State<ProfileEducationTextForm> {
+  // ignore: unused_field
   final _formKey = GlobalKey<FormState>();
 
   Future<void> _selectDate(BuildContext context) async {

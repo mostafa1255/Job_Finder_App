@@ -5,6 +5,7 @@ import 'package:jop_finder_app/features/profile/view/widgets/profile_education_t
 import 'package:jop_finder_app/features/profile/viewmodel/profile_cubit.dart';
 import 'package:intl/intl.dart';
 
+// ignore: must_be_immutable
 class EducationAddBottomSheet extends StatelessWidget {
   final TextEditingController institutionController = TextEditingController();
   final TextEditingController degreeController = TextEditingController();
@@ -51,13 +52,6 @@ class EducationAddBottomSheet extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         child: ListView(
           children: [
-            Text(
-              "Add Education",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
             ProfileEducationTextForm(
               icon: Icons.school,
               controller: institutionController,
