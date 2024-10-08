@@ -5,8 +5,7 @@ import 'package:jop_finder_app/features/job_search/models/mock_data.dart';
 import 'package:jop_finder_app/features/job_search/viewmodel/job_search_cubit.dart';
 
 class JobLocationFilterWidget extends StatelessWidget{
-  const JobLocationFilterWidget({super.key, required this.isSelected,});
-  final bool isSelected;
+  const JobLocationFilterWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +14,7 @@ class JobLocationFilterWidget extends StatelessWidget{
     return Wrap(
       spacing: 8.0,
       children: jobLocationFilter.locations.map((jobLocation) {
-        final isSelected = context.read<JobSearchCubit>().isFilterSelected(jobLocation);
+        final isSelected = context.watch<JobSearchCubit>().isFilterSelected(jobLocation);
 
         return ChoiceChip(
           label: Text(jobLocation),

@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jop_finder_app/features/job_search/view/pages/job_list.dart';
 import 'package:jop_finder_app/features/job_search/view/widgets/filter_widget/filter_bottom_sheet.dart';
-import 'package:jop_finder_app/features/job_search/view/widgets/jobs_card.dart';
 import 'package:jop_finder_app/features/job_search/view/widgets/recent_searches.dart';
 import 'package:jop_finder_app/features/job_search/view/widgets/search_filter.dart';
 import 'package:jop_finder_app/features/job_search/viewmodel/job_search_state.dart';
-import 'package:provider/provider.dart';
 
 import '../../viewmodel/job_search_cubit.dart';
 
@@ -56,7 +54,7 @@ class JobSearchBody extends StatelessWidget {
                                   .where(
                                       (job) => job.jobTitle == selectedJobTitle)
                                   .toList();
-
+                                  
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -100,26 +98,6 @@ class JobSearchBody extends StatelessWidget {
                         },
                       ),
                     ),
-                    // const SizedBox(height: 24),
-                    // const Text('Recently viewed'),
-                    // const SizedBox(height: 10),
-                    // SizedBox(
-                    //   height: 300,
-                    //   child: ListView.builder(
-                    //     physics: const NeverScrollableScrollPhysics(),
-                    //     itemCount: 3,
-                    //     itemBuilder: (context, index) {
-                    //       return const JobsCard(
-                    //         jobTitle: 'Mobile Developer',
-                    //         salary: '1000',
-                    //         companyName: 'Google',
-                    //         location: 'florida',
-                    //         imageUrl:
-                    //             'https://th.bing.com/th/id/R.18dd7e4777025dffac41c405e9992df0?rik=H5NFH0XdfAD4vg&pid=ImgRaw&r=0',
-                    //       );
-                    //     },
-                    //   ),
-                    // ),
                   ],
                 );
               },
