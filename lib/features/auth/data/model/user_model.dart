@@ -7,7 +7,6 @@ class UserModel {
   final String id;
   final String name;
   final String email;
-  final String? jobTitle;
   final String? phoneNumber;
   final String? profileImageUrl;
   final List<AppliedJob>? appliedJobs;
@@ -27,7 +26,6 @@ class UserModel {
     this.cvUrl,
     this.additionalInfo,
     this.profile,
-    this.jobTitle,
   });
 
   factory UserModel.fromFirestore(DocumentSnapshot doc) {
@@ -48,7 +46,6 @@ class UserModel {
       additionalInfo: data['additionalInfo'] as Map<String, dynamic>? ?? {},
       profile:
           data['profile'] != null ? UserProfile.fromMap(data['profile']) : null,
-      jobTitle: data['jobTitle'] as String?,    
           
     );
   }
@@ -64,7 +61,6 @@ class UserModel {
       'cvUrl': cvUrl,
       'additionalInfo': additionalInfo ?? {},
       'profile': profile?.toMap(),
-      'jobTitle': jobTitle,
     };
   }
 }

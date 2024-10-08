@@ -75,7 +75,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               CircleAvatar(
                 radius: 60.sp,
-                backgroundImage: NetworkImage(user!.profileImageUrl!),
+                backgroundImage: NetworkImage(user!.profileImageUrl??'https://via.placeholder.com/150'),
                 // Replace with actual image URL
               ),
               Positioned(
@@ -131,7 +131,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           SizedBox(height: 16),
           Center(
             child: Text(
-              user!.appliedJobs!.length.toString(),
+              user!.appliedJobs!.length.toString()??'0',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
             ),
           ),
@@ -150,7 +150,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               SizedBox(width: 10.w), // Adjust spacing based on your layout
               Expanded(
                 child: CustomInfoDisplay(
-                    text: user!.phoneNumber!,
+                    text: user!.phoneNumber ??'No phone number',
                     icon: Icons.phone_android_outlined),
               ),
             ],
@@ -163,7 +163,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             );
           }),
           SizedBox(height: 10),
-          CustomBioDisplay(text: user!.profile!.bio!),
+          CustomBioDisplay(text: user!.profile!.bio??'No bio added'),
           SizedBox(height: 24),
           buildSectionHeader('Education', onPressed: () {
             showModalBottomSheet(
@@ -175,7 +175,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             shrinkWrap:
                 true, // This ensures the ListView takes only the necessary height
             physics: NeverScrollableScrollPhysics(),
-            itemCount: user!.profile!.education!.length,
+            itemCount: user!.profile!.education!.length ?? 0,
             itemBuilder: user!.profile!.education!.isEmpty
                 ? (context, index) => Center(
                       child: Text('No education added'),

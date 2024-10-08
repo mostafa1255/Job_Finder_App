@@ -3,32 +3,34 @@ import 'package:go_router/go_router.dart';
 import 'package:jop_finder_app/core/constants/app_colors.dart';
 
 class CustomAlertDialog extends StatelessWidget {
-  const CustomAlertDialog( 
+  const CustomAlertDialog(
       {super.key,
       required this.title,
       required this.body,
       required this.actionButtonTitle,
-      required this.route});
+      this.route});
 
   final String title;
   final String body;
   final String actionButtonTitle;
-  final String route;
+  final String? route;
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title:  Text(
-         title,
+      title: Text(
+        title,
         style: const TextStyle(
             fontWeight: FontWeight.bold,
             color: MyColor.primaryBlue,
             fontSize: 24),
         textAlign: TextAlign.center,
       ),
-      content:  Text(
-         body,
-        textAlign: TextAlign.center,
+      content: SingleChildScrollView(
+        child: Text(
+          body,
+          textAlign: TextAlign.center,
+        ),
       ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       actions: <Widget>[
@@ -54,14 +56,16 @@ class CustomAlertDialog extends StatelessWidget {
                     borderRadius: BorderRadius.circular(4.0),
                   ),
                 ),
-                child:  Text(
+                child: Text(
                   actionButtonTitle,
                   style: const TextStyle(color: Colors.white, fontSize: 16),
                 ),
                 onPressed: () {
                   // Handle logout logic
                   Navigator.of(context).pop();
-                  GoRouter.of(context).pushNamed(route);
+                  if (route != null) {
+                    GoRouter.of(context).go(route!);
+                  }
                 },
               ),
             ),
