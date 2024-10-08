@@ -1,6 +1,7 @@
 // ignore_for_file: unused_field
 
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jop_finder_app/features/auth/data/model/UserProfile_model.dart';
@@ -21,6 +22,7 @@ class FirebaseProfileWebServices {
   String? getCurrentUserId() {
     return "Mr4pDkFG7tyok2tXHQO3";
   }
+
   //_authenticationWebServices.getCurrentUser()?.uid
   // Fetch user information from Firestore
   Future<UserModel?> getUserInfo() async {
@@ -40,7 +42,6 @@ class FirebaseProfileWebServices {
   }
 
   // Update user information in Firestore
-
 
   //  pickImage method
   Future<File?> pickImage() async {
@@ -83,7 +84,6 @@ class FirebaseProfileWebServices {
     }
   }
 
-  
   Future<bool?> uploadFileAndUpdateUser(FilePickerResult cvPdf) async {
     String? userId = getCurrentUserId();
     if (userId == null) return false;
@@ -107,7 +107,6 @@ class FirebaseProfileWebServices {
             ref.putFile(file, SettableMetadata(contentType: 'application/pdf'));
       }
       final snapshot = await uploadTask.whenComplete(() {
-        
         // Perform any actions after the file is uploaded
       });
       final cvUrl = await snapshot.ref.getDownloadURL();
@@ -121,7 +120,6 @@ class FirebaseProfileWebServices {
       return false;
     }
   }
-
 
   Future<void> openPdf(String url) async {
     if (await canLaunch(url)) {
@@ -147,6 +145,7 @@ class FirebaseProfileWebServices {
       return false;
     }
   }
+
   //i want to make a method to update the name and the email and the phone number in the firestore that in the user's document
   Future<bool> customUpdateToFirebase(String key, String value) async {
     String? userId = getCurrentUserId();
@@ -161,7 +160,6 @@ class FirebaseProfileWebServices {
       return false;
     }
   }
-
 
   //the previous method to update the education in the firestore but i want it not to update the whole userprofile map field but just the education field and not to update i need it to add a new education to the list of educations in the education field
   Future<bool> addEducation(Education education) async {
@@ -178,7 +176,82 @@ class FirebaseProfileWebServices {
       return false;
     }
   }
-  
+
+  Future<bool> removeEducation(String userId, Education education) async {
+    try {
+      await _firestore.collection('users').doc(userId).update({
+        // Remove the specified education from the list of educations in the user's document
+        'profile.education': FieldValue.arrayRemove([education.toMap()]),
+      });
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+
+
+  // i need to add a function to change the password of the authenticated user by sending an email to the user to reset the password
+  Future<bool> changeUserPassword(String newPassword) async {
+    try {
+      // Get the current user
+      User? user = FirebaseAuth.instance.currentUser;
+      // Update the password
+      await user!.updatePassword(newPassword);
+      await _firestore.collection('users').doc(user.uid).update({
+        'email': user.email,
+      });
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+  Future<bool> updateEmailIfVerified(String newEmail) async {
+  try {
+    User? user = FirebaseAuth.instance.currentUser;
+    await user!.reload(); // Refresh user data to get the latest emailVerified status
+    if (user.emailVerified) {
+      // Proceed with updating the email if the current email is verified
+      await user.verifyBeforeUpdateEmail(newEmail);
+      // Optionally, send a verification email for the new email
+      await user.sendEmailVerification();
+      return true;
+    } else {
+      print("Email is not verified. Cannot update email.");
+      return false;
+    }
+  } catch (e) {
+    print(e.toString());
+    return false;
+  }
+}
+
+Future<bool> deleteUser() async {
+  User? user = FirebaseAuth.instance.currentUser;
+  if (user == null) {
+    print("No user signed in.");
+    return false;
+  }
+  final uid = user.uid;
+  try {
+    // Deletes the user account
+    await user.delete();
+    // Delete the Firestore document associated with the user
+    await FirebaseFirestore.instance.collection('users').doc(uid).delete();
+    return true;
+  } catch (e) {
+    print(e.toString());
+    // Handle errors, possibly including re-authentication before deletion
+    return false;
+  }
+}
+
+
+
+
+
 }
 
 
