@@ -164,7 +164,7 @@ class EditInfoTextFiled extends StatelessWidget {
               color: Color.fromARGB(255, 175, 176, 182), fontSize: 14),
           prefixIcon: Icon(
             icon,
-            color: MyColor.primaryBlue,
+            color: AppColors.primaryBlue,
             size: 20,
           ),
           enabledBorder: OutlineInputBorder(
