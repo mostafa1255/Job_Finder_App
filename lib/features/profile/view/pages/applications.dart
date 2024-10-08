@@ -14,7 +14,7 @@ class ApplicationsScreen extends StatefulWidget {
 }
 
 class _ApplicationsScreenState extends State<ApplicationsScreen> {
-  User? user;
+  UserModel? user;
   ProfileCubit? profileCubit;
 
   @override
@@ -143,7 +143,7 @@ class ApplicationCard extends StatelessWidget {
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         SizedBox(height: 4),
-                        Text( 
+                        Text(
                           appliedJob.companyName ?? 'No Company',
                           style:
                               TextStyle(fontSize: 16, color: Colors.grey[600]),
@@ -166,7 +166,7 @@ class ApplicationCard extends StatelessWidget {
                 Column(
                   children: [
                     Container(
-                      margin: EdgeInsets.only(top: 16), 
+                      margin: EdgeInsets.only(top: 16),
                       child: Text(appliedJob.jobType ?? 'No Type',
                           style: TextStyle(
                               fontSize: 14,

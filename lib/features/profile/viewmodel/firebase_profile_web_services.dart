@@ -21,16 +21,17 @@ class FirebaseProfileWebServices {
   String? getCurrentUserId() {
     return "Mr4pDkFG7tyok2tXHQO3";
   }
+
   //_authenticationWebServices.getCurrentUser()?.uid
   // Fetch user information from Firestore
-  Future<User?> getUserInfo() async {
+  Future<UserModel?> getUserInfo() async {
     String? userId = getCurrentUserId();
     if (userId == null) return null;
     try {
       DocumentSnapshot userDoc =
           await _firestore.collection('users').doc(userId).get();
       if (userDoc.exists) {
-        return User.fromFirestore(userDoc);
+        return UserModel.fromFirestore(userDoc);
       }
       return null;
     } catch (e) {
@@ -40,7 +41,6 @@ class FirebaseProfileWebServices {
   }
 
   // Update user information in Firestore
-
 
   //  pickImage method
   Future<File?> pickImage() async {
@@ -83,7 +83,6 @@ class FirebaseProfileWebServices {
     }
   }
 
-  
   Future<bool?> uploadFileAndUpdateUser(FilePickerResult cvPdf) async {
     String? userId = getCurrentUserId();
     if (userId == null) return false;
@@ -107,7 +106,6 @@ class FirebaseProfileWebServices {
             ref.putFile(file, SettableMetadata(contentType: 'application/pdf'));
       }
       final snapshot = await uploadTask.whenComplete(() {
-        
         // Perform any actions after the file is uploaded
       });
       final cvUrl = await snapshot.ref.getDownloadURL();
@@ -121,7 +119,6 @@ class FirebaseProfileWebServices {
       return false;
     }
   }
-
 
   Future<void> openPdf(String url) async {
     if (await canLaunch(url)) {
@@ -147,6 +144,7 @@ class FirebaseProfileWebServices {
       return false;
     }
   }
+
   //i want to make a method to update the name and the email and the phone number in the firestore that in the user's document
   Future<bool> customUpdateToFirebase(String key, String value) async {
     String? userId = getCurrentUserId();
@@ -161,7 +159,6 @@ class FirebaseProfileWebServices {
       return false;
     }
   }
-
 
   //the previous method to update the education in the firestore but i want it not to update the whole userprofile map field but just the education field and not to update i need it to add a new education to the list of educations in the education field
   Future<bool> addEducation(Education education) async {
@@ -178,7 +175,6 @@ class FirebaseProfileWebServices {
       return false;
     }
   }
-  
 }
 
 

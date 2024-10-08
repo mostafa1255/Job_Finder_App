@@ -16,10 +16,9 @@ class ResumeUploadScreen extends StatefulWidget {
 }
 
 class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
-  ProfileCubit? profileCubit ;
+  ProfileCubit? profileCubit;
   String fileName = '';
-  User? user ;
-
+  UserModel? user;
 
   @override
   void initState() {
@@ -39,7 +38,6 @@ class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
       user = fetchedUser;
     });
   }
-
 
   // Method to pick a PDF file
   Future<FilePickerResult?> pickPDF() async {
@@ -63,7 +61,7 @@ class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
     }
   }
 
-  Widget  buildBlock(){
+  Widget buildBlock() {
     return BlocBuilder<ProfileCubit, ProfileState>(
       builder: (context, state) {
         if (state is ProfileLoading) {
@@ -82,7 +80,6 @@ class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
       },
     );
   }
-    
 
   @override
   Widget build(BuildContext context) {

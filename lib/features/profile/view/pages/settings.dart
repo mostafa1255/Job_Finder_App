@@ -2,8 +2,6 @@
 
 import 'package:flutter/material.dart';
 
-
-
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
@@ -36,7 +34,8 @@ class SettingsScreen extends StatelessWidget {
           buildListItem(Icons.email_outlined, 'Change E-mail'),
           buildListItem(Icons.language_outlined, 'Language'),
           buildListItem(Icons.color_lens_outlined, 'Theme'),
-          buildListItem(Icons.delete_outline, 'Delete Account', color: Colors.red),
+          buildListItem(Icons.delete_outline, 'Delete Account',
+              color: Colors.red),
           SizedBox(height: 20),
           buildSectionTitle('About'),
           buildListItem(Icons.privacy_tip_outlined, 'Privacy'),
@@ -51,7 +50,7 @@ class SettingsScreen extends StatelessWidget {
 
   Padding buildSectionTitle(String title) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6.0,horizontal: 18),
+      padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 18),
       child: Text(
         title,
         style: TextStyle(
@@ -62,7 +61,8 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  ListTile buildListItem(IconData icon, String title, {Color color = Colors.black}) {
+  ListTile buildListItem(IconData icon, String title,
+      {Color color = Colors.black}) {
     return ListTile(
       leading: Icon(icon, color: color),
       title: Text(

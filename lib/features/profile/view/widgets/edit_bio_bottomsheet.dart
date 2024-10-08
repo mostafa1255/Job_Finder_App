@@ -30,7 +30,7 @@ class EditBioBottomSheet extends StatelessWidget {
               //i need to check if the bioController is not empty
               if (bioController.text.isNotEmpty) {
                 profileCubit.updateBio(bioController.text);
-              Navigator.pop(context);
+                Navigator.pop(context);
               } else {
                 //i need to show a snackbar with a message "Bio can't be empty"
                 ScaffoldMessenger.of(context).showSnackBar(

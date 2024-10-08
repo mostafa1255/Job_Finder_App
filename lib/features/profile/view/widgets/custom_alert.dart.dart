@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:jop_finder_app/core/constants/app_colors.dart';
 
 class CustomAlertDialog extends StatelessWidget {
-  const CustomAlertDialog( 
+  const CustomAlertDialog(
       {super.key,
       required this.title,
       required this.body,
@@ -18,16 +18,16 @@ class CustomAlertDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title:  Text(
-         title,
+      title: Text(
+        title,
         style: const TextStyle(
             fontWeight: FontWeight.bold,
             color: MyColor.primaryBlue,
             fontSize: 24),
         textAlign: TextAlign.center,
       ),
-      content:  Text(
-         body,
+      content: Text(
+        body,
         textAlign: TextAlign.center,
       ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
@@ -54,7 +54,7 @@ class CustomAlertDialog extends StatelessWidget {
                     borderRadius: BorderRadius.circular(4.0),
                   ),
                 ),
-                child:  Text(
+                child: Text(
                   actionButtonTitle,
                   style: const TextStyle(color: Colors.white, fontSize: 16),
                 ),

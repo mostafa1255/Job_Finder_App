@@ -16,7 +16,7 @@ class ProposalsScreen extends StatefulWidget {
 }
 
 class _ProposalsScreenState extends State<ProposalsScreen> {
-  User? user;
+  UserModel? user;
   ProfileCubit? profileCubit;
 
   @override
@@ -86,7 +86,7 @@ class _ProposalsScreenState extends State<ProposalsScreen> {
     return Scaffold(
         backgroundColor: const Color.fromARGB(240, 255, 255, 255),
         appBar: AppBar(
-          backgroundColor:  Color.fromARGB(240, 255, 255, 255),
+          backgroundColor: Color.fromARGB(240, 255, 255, 255),
           title: Text('Proposals'),
           centerTitle: true,
           leading: IconButton(
@@ -145,7 +145,7 @@ class PostedJobCard extends StatelessWidget {
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         SizedBox(height: 4),
-                        Text( 
+                        Text(
                           postedJob.companyName ?? 'No Company',
                           style:
                               TextStyle(fontSize: 16, color: Colors.grey[600]),
@@ -169,16 +169,15 @@ class PostedJobCard extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                        color: MyColor.primaryBlue,
-                        width: 1),
+                    border: Border.all(color: MyColor.primaryBlue, width: 1),
                   ),
                   child: Text(
                     postedJob.applicantIds!.length.toString(),
                     style: TextStyle(
-                        color: MyColor.primaryBlue,fontSize: 16,),
+                      color: MyColor.primaryBlue,
+                      fontSize: 16,
+                    ),
                   ),
-                  
                 ),
                 const SizedBox(height: 26),
                 Column(
@@ -186,7 +185,7 @@ class PostedJobCard extends StatelessWidget {
                     Text(postedJob.location ?? 'No Location',
                         style: TextStyle(fontSize: 14, color: Colors.grey)),
                     SizedBox(height: 6),
-                    Text(DateFormat('d/M/y').format(postedJob.postedDate!) ,
+                    Text(DateFormat('d/M/y').format(postedJob.postedDate!),
                         style: TextStyle(
                             fontSize: 14,
                             color: Colors.black,

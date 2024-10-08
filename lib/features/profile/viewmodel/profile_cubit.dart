@@ -13,13 +13,13 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   ProfileCubit(this._profileWebServices) : super(ProfileInitial());
 
-  Future<User> getUserInfo() async {
+  Future<UserModel> getUserInfo() async {
     emit(ProfileLoading());
     try {
       final userId = _profileWebServices.getCurrentUserId();
       if (userId == null) {
         emit(ProfileError("User not found BY ID"));
-        return User(
+        return UserModel(
             id: "", name: "error", email: ""); // Add return statement here
       }
       final user = await _profileWebServices.getUserInfo();
@@ -28,11 +28,13 @@ class ProfileCubit extends Cubit<ProfileState> {
         return user;
       } else {
         emit(ProfileError("User profile not found "));
-        return User(id: "", name: "", email: ""); // Add return statement here
+        return UserModel(
+            id: "", name: "", email: ""); // Add return statement here
       }
     } catch (e) {
       emit(ProfileError(e.toString()));
-      return User(id: "", name: "", email: ""); // Add return statement here
+      return UserModel(
+          id: "", name: "", email: ""); // Add return statement here
     }
   }
 
@@ -130,7 +132,8 @@ class ProfileCubit extends Cubit<ProfileState> {
   Future<void> customUpdateToFirebase(String key, String value) async {
     emit(ProfileLoading());
     try {
-      final success = await _profileWebServices.customUpdateToFirebase(key, value);
+      final success =
+          await _profileWebServices.customUpdateToFirebase(key, value);
       if (success == true) {
         final user = await _profileWebServices.getUserInfo();
         if (user != null) {
@@ -166,5 +169,4 @@ class ProfileCubit extends Cubit<ProfileState> {
       emit(ProfileError(e.toString()));
     }
   }
-
 }
