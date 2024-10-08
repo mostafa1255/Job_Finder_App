@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void saveUserToken() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString(userTokenKey, FirebaseAuth.instance.currentUser!.uid );
+    prefs.setString(userTokenKey, FirebaseAuth.instance.currentUser!.uid);
   }
 
   Future<List<PostedJob>> fetchJobs() async {
@@ -42,18 +42,24 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 30.h, horizontal: 15.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Welcome Back!', style: TextStyle(fontSize: 24)),
-                  CircleAvatar(
-                    radius: 20,
+                  const Text('Welcome Back!', style: TextStyle(fontSize: 24)),
+                  GestureDetector(
+                    onTap: () {
+                      GoRouter.of(context).push(AppRouter.profileScreen);
+                    },
+                    child:const CircleAvatar(
+                      radius: 20,
+                    ),
                   ),
                 ],
               ),
@@ -188,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigation(), // Custom widget for navigation
+      bottomNavigationBar:const BottomNavigation(), // Custom widget for navigation
     );
   }
 }
