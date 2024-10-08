@@ -22,7 +22,7 @@ class CustomAlertDialog extends StatelessWidget {
          title,
         style: const TextStyle(
             fontWeight: FontWeight.bold,
-            color: MyColor.primaryBlue,
+            color: AppColors.primaryBlue,
             fontSize: 24),
         textAlign: TextAlign.center,
       ),
@@ -49,7 +49,7 @@ class CustomAlertDialog extends StatelessWidget {
             Expanded(
               child: TextButton(
                 style: TextButton.styleFrom(
-                  backgroundColor: MyColor.primaryBlue,
+                  backgroundColor: AppColors.primaryBlue,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4.0),
                   ),

@@ -85,7 +85,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Container(
                   padding: EdgeInsets.all(5), // Adjust padding if necessary
                   decoration: BoxDecoration(
-                    color: MyColor.primaryBlue,
+                    color: AppColors.primaryBlue,
                     shape: BoxShape.circle,
                   ),
                   child: IconButton(
@@ -120,7 +120,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     Icon(
                       Icons.verified,
-                      color: MyColor.primaryBlue,
+                      color: AppColors.primaryBlue,
                       size: 16,
                     )
                   ],
@@ -204,7 +204,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: const Color.fromARGB(230, 255, 255, 255),
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: MyColor.primaryBlue),
+          icon: Icon(Icons.arrow_back, color: AppColors.primaryBlue),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -218,13 +218,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 builder: (context) => EditInfoBottomSheet(profileCubit!, user!),
               );
             },
-            icon: Icon(Icons.edit, color: MyColor.primaryBlue),
+            icon: Icon(Icons.edit, color: AppColors.primaryBlue),
           ),
           IconButton(
             onPressed: () {
               GoRouter.of(context).pushNamed('/settingsScreen');
             },
-            icon: Icon(Icons.settings, color: MyColor.primaryBlue),
+            icon: Icon(Icons.settings, color: AppColors.primaryBlue),
           )
         ],
       ),
@@ -245,7 +245,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           onPressed: onPressed,
           child: Text(
             'Add',
-            style: TextStyle(color: MyColor.primaryBlue),
+            style: TextStyle(color: AppColors.primaryBlue),
           ),
         )
       ],
@@ -265,7 +265,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           onPressed: onPressed,
           child: Text(
             'Edit',
-            style: TextStyle(color: MyColor.primaryBlue),
+            style: TextStyle(color: AppColors.primaryBlue),
           ),
         )
       ],
@@ -284,7 +284,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       child: Row(
         children: [
-          Icon(Icons.school, size: 40, color: MyColor.primaryBlue),
+          Icon(Icons.school, size: 40, color: AppColors.primaryBlue),
           SizedBox(width: 16),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -332,7 +332,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Icon(
                     Icons.file_present,
                     size: 30,
-                    color: MyColor.primaryBlue,
+                    color: AppColors.primaryBlue,
                   ), // File icon
                   SizedBox(width: 8), // Spacing between icon and text
                   Expanded(
