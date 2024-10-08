@@ -16,7 +16,7 @@ class ProposalsScreen extends StatefulWidget {
 }
 
 class _ProposalsScreenState extends State<ProposalsScreen> {
-  User? user;
+  UserModel? user;
   ProfileCubit? profileCubit;
 
   @override

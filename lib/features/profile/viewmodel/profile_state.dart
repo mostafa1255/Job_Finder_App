@@ -8,12 +8,12 @@ class ProfileLoading extends ProfileState {}
 
 
 class UserLoaded extends ProfileState {
-  final User user;
+  final UserModel user;
   UserLoaded(this.user);
 }
 
 class UserUpdated extends ProfileState {
-  final User user;
+  final UserModel user;
   UserUpdated(this.user);
 }
 

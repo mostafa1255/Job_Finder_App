@@ -31,7 +31,7 @@ Future<void> createFakeUserDocument() async {
   String fakeUserId = "fakeUserId1234";
 
   // Create fake data for the User model
-  User fakeUser = User(
+  UserModel fakeUser = UserModel(
     id: fakeUserId,
     name: "John Doe",
     email: "johndoe@example.com",

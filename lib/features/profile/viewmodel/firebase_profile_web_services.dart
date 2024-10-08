@@ -23,14 +23,14 @@ class FirebaseProfileWebServices {
   }
   //_authenticationWebServices.getCurrentUser()?.uid
   // Fetch user information from Firestore
-  Future<User?> getUserInfo() async {
+  Future<UserModel?> getUserInfo() async {
     String? userId = getCurrentUserId();
     if (userId == null) return null;
     try {
       DocumentSnapshot userDoc =
           await _firestore.collection('users').doc(userId).get();
       if (userDoc.exists) {
-        return User.fromFirestore(userDoc);
+        return UserModel.fromFirestore(userDoc);
       }
       return null;
     } catch (e) {

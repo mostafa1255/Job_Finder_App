@@ -14,7 +14,7 @@ class ApplicationsScreen extends StatefulWidget {
 }
 
 class _ApplicationsScreenState extends State<ApplicationsScreen> {
-  User? user;
+  UserModel? user;
   ProfileCubit? profileCubit;
 
   @override
