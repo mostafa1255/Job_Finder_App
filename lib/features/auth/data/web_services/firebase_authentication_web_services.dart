@@ -4,6 +4,7 @@ import 'package:jop_finder_app/features/auth/data/web_services/firebase_firestor
 
 class FireBaseAuthenticationWebServices {
   final FirebaseAuth _fireBaseAuth = FirebaseAuth.instance;
+  FirebaseFirestoreUserModel fireStore = FirebaseFirestoreUserModel();
 
   // Method to get the current user
   User? getCurrentUser() {
@@ -27,9 +28,9 @@ class FireBaseAuthenticationWebServices {
 
         UserModel user = UserModel(
             id: credential.user!.uid.toString(),
-            name: credential.user!.displayName.toString(),
+            name: fullName.toString(),
             email: credential.user!.email.toString());
-        FirebaseFirestoreUserModel fireStore = FirebaseFirestoreUserModel();
+
         try {
           await fireStore.saveUserToFirestore(user);
         } catch (e) {

@@ -54,7 +54,7 @@ class AuthCubit extends Cubit<AuthState> {
   }) async {
     emit(AuthLoading());
     try {
-      bool rememberMe = true;
+      bool rememberMe = false;
       var result = await fireBaseAuthenticationWebServices.signUp(
           email: email, password: password, fullName: fullName);
 
