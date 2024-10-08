@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:jop_finder_app/features/auth/model/AppliedJob_model.dart';
-import 'package:jop_finder_app/features/auth/model/PostedJob_model.dart';
-import 'package:jop_finder_app/features/auth/model/UserProfile_model.dart';
+import 'package:jop_finder_app/features/auth/data/model/AppliedJob_model.dart';
+import 'package:jop_finder_app/features/auth/data/model/PostedJob_model.dart';
+import 'package:jop_finder_app/features/auth/data/model/UserProfile_model.dart';
 
-class User {
+class UserModel {
   final String id;
   final String name;
   final String email;
+  final String? jobTitle;
   final String? phoneNumber;
   final String? profileImageUrl;
   final List<AppliedJob>? appliedJobs;
@@ -15,7 +16,7 @@ class User {
   final Map<String, dynamic>? additionalInfo;
   final UserProfile? profile;
 
-  User({
+  UserModel({
     required this.id,
     required this.name,
     required this.email,
@@ -26,11 +27,12 @@ class User {
     this.cvUrl,
     this.additionalInfo,
     this.profile,
+    this.jobTitle,
   });
 
-  factory User.fromFirestore(DocumentSnapshot doc) {
+  factory UserModel.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-    return User(
+    return UserModel(
       id: doc.id,
       name: data['name'] ?? '',
       email: data['email'] ?? '',
@@ -46,6 +48,8 @@ class User {
       additionalInfo: data['additionalInfo'] as Map<String, dynamic>? ?? {},
       profile:
           data['profile'] != null ? UserProfile.fromMap(data['profile']) : null,
+      jobTitle: data['jobTitle'] as String?,    
+          
     );
   }
 
@@ -60,6 +64,7 @@ class User {
       'cvUrl': cvUrl,
       'additionalInfo': additionalInfo ?? {},
       'profile': profile?.toMap(),
+      'jobTitle': jobTitle,
     };
   }
 }

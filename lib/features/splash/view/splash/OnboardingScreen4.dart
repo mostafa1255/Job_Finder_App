@@ -1,8 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:jop_finder_app/features/auth/view/pages/signin.dart';
-import 'package:jop_finder_app/main.dart';
 
 class FourthScreen extends StatelessWidget {
   const FourthScreen({super.key});

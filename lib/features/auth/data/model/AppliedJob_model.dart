@@ -6,6 +6,10 @@ class AppliedJob {
   final String? jobTitle;
   final DateTime? appliedDate;
   final String? status;
+  final String? salary;
+  final String? companyImageURL;
+  final String? location;
+  final String? jobType;
 
   AppliedJob({
     this.jobId,
@@ -13,6 +17,10 @@ class AppliedJob {
     this.jobTitle,
     this.appliedDate,
     this.status,
+    this.salary,
+    this.companyImageURL,
+    this.location,
+    this.jobType,
   });
 
   factory AppliedJob.fromMap(Map<String, dynamic> map) {
@@ -22,6 +30,10 @@ class AppliedJob {
       jobTitle: map['jobTitle'] as String?,
       appliedDate: (map['appliedDate'] as Timestamp?)?.toDate(),
       status: map['status'] as String?,
+      salary: map['salary'] as String?,
+      companyImageURL: map['jobImageURL'] as String?,
+      location: map['location'] as String?,
+      jobType: map['jobType'] as String?,
     );
   }
 
@@ -33,6 +45,10 @@ class AppliedJob {
       'appliedDate':
           appliedDate != null ? Timestamp.fromDate(appliedDate!) : null,
       'status': status,
+      'salary': salary,
+      'companyImageURL': companyImageURL,
+      'location': location,
+      'jobType': jobType,
     };
   }
 }

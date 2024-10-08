@@ -1,7 +1,6 @@
 name: jop_finder_app
 description: "A new Flutter project."
-publish_to: 'none'
-
+publish_to: "none"
 
 version: 1.0.0+1
 
@@ -13,9 +12,8 @@ dependencies:
     sdk: flutter
   smooth_page_indicator: ^1.0.0+2
 
-
   flutter_svg: ^1.0.3
-
+  intl: ^0.17.0 
 
   cupertino_icons: ^1.0.8
   flutter_bloc: ^8.1.6
@@ -23,28 +21,26 @@ dependencies:
   firebase_core: ^3.6.0
   flutter_screenutil: ^5.9.3
   cloud_firestore: ^5.4.3
+  file_picker: ^4.0.0
   image_picker: ^1.1.2
   firebase_storage: ^12.3.2
+  firebase_auth: ^5.3.1
+  url_launcher: ^6.0.12
+  cached_network_image: ^3.3.1
+  shared_preferences: ^2.3.1
+  google_sign_in: ^6.2.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
- 
   flutter_lints: ^4.0.0
 
-
-
 flutter:
-
-  
   uses-material-design: true
 
   assets:
     - assets/images/
-
-  
-
 
   fonts:
     - family: Poppins
