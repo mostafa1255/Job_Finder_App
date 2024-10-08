@@ -140,7 +140,10 @@ class AppRouter {
       GoRoute(
         path: proposalsScreen,
         name: proposalsScreen,
-        builder: (context, state) => ProposalsScreen(),
+        builder: (context, state) => BlocProvider.value(
+          value: profileCubit,
+          child: ProposalsScreen(),
+        ),
       ),
       //end bodaSayed
     ],

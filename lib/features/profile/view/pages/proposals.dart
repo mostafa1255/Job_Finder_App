@@ -1,84 +1,116 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:jop_finder_app/core/constants/app_colors.dart';
+import 'package:jop_finder_app/features/auth/data/model/PostedJob_model.dart';
+import 'package:jop_finder_app/features/auth/data/model/user_model.dart';
+import 'package:jop_finder_app/features/profile/viewmodel/profile_cubit.dart';
 
-class ProposalsScreen extends StatelessWidget {
-  final List<Proposal> proposals = [
-    Proposal('Google', 'Jr Executive', '\$115,000/y', 'Non-Negotiable',
-        '13/5/22', 'Los Angeles, US', Colors.redAccent),
-    Proposal('Beats', 'Mid Executive', '\$86,000/y', 'Negotiable', '13/5/22',
-        'San Jose, US', Colors.greenAccent),
-    Proposal('Spotify', 'Sr Executive', '\$96,000/y', 'Negotiable', '13/5/22',
-        'San Francisco, US', Colors.greenAccent),
-  ];
+class ProposalsScreen extends StatefulWidget {
+  const ProposalsScreen({super.key});
 
-  ProposalsScreen({super.key});
+  @override
+  State<ProposalsScreen> createState() => _ProposalsScreenState();
+}
+
+class _ProposalsScreenState extends State<ProposalsScreen> {
+  User? user;
+  ProfileCubit? profileCubit;
+
+  @override
+  void initState() {
+    super.initState();
+    profileCubit = BlocProvider.of<ProfileCubit>(context);
+    // Schedule the asynchronous operation to fetch user information
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchUserInfo();
+    });
+  }
+
+  Future<void> _fetchUserInfo() async {
+    // Fetch user information from Firestore using the cubit method
+    var fetchedUser =
+        await BlocProvider.of<ProfileCubit>(context).getUserInfo();
+    if (mounted) {
+      setState(() {
+        user = fetchedUser;
+      });
+    }
+  }
+
+  Widget buildBlock() {
+    return BlocBuilder<ProfileCubit, ProfileState>(
+      builder: (context, state) {
+        if (state is ProfileLoading) {
+          return Center(child: CircularProgressIndicator());
+        } else if (state is UserLoaded) {
+          user = state.user;
+          return buildApplicationsScreen();
+        } else if (state is ProfileError) {
+          return Center(child: Text(state.errorMessage));
+        } else {
+          return Center(child: Text('Error occurred'));
+        }
+      },
+    );
+  }
+
+  Widget buildApplicationsScreen() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'You have ${user?.postedJobs?.length ?? 0} Jobs Posted',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 16),
+          Expanded(
+            child: ListView.builder(
+              itemCount: user!.postedJobs!.length,
+              itemBuilder: (context, index) {
+                return PostedJobCard(postedJob: user!.postedJobs![index]);
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(227, 255, 255, 255),
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(227, 255, 255, 255),
-        title: Text('Proposals'),
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        actions: [
-          CircleAvatar(
-            backgroundImage: NetworkImage(
-                'https://picsum.photos/200/300'), // Placeholder for profile image
+        backgroundColor: const Color.fromARGB(240, 255, 255, 255),
+        appBar: AppBar(
+          backgroundColor:  Color.fromARGB(240, 255, 255, 255),
+          title: Text('Proposals'),
+          centerTitle: true,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
           ),
-          SizedBox(width: 10),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'You have ${proposals.length} Proposals ',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 16),
-            Expanded(
-              child: ListView.builder(
-                itemCount: proposals.length,
-                itemBuilder: (context, index) {
-                  return ProposalCard.ProposalCard(proposal: proposals[index]);
-                },
+          actions: [
+            if (user != null)
+              CircleAvatar(
+                backgroundImage: NetworkImage(user!.profileImageUrl!),
               ),
-            ),
+            SizedBox(width: 10),
           ],
         ),
-      ),
-    );
+        body: buildBlock());
   }
 }
 
-class Proposal {
-  final String company;
-  final String title;
-  final String salary;
-  final String status;
-  final String joiningDate;
-  final String location;
-  final Color statusColor;
+class PostedJobCard extends StatelessWidget {
+  final PostedJob postedJob;
 
-  Proposal(this.company, this.title, this.salary, this.status, this.joiningDate,
-      this.location, this.statusColor);
-}
-
-class ProposalCard extends StatelessWidget {
-  final Proposal proposal;
-
-  const ProposalCard.ProposalCard({super.key, required this.proposal});
-
+  const PostedJobCard({super.key, required this.postedJob});
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -87,33 +119,34 @@ class ProposalCard extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
+            Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
-                    // Placeholder for company logos
                     CircleAvatar(
                       radius: 35,
                       foregroundImage: NetworkImage(
-                        'https://picsum.photos/200/300', // Replace with actual company logo URL
+                        postedJob.imageUrl ??
+                            'https://picsum.photos/200/300', // Replace with actual company logo URL
                       ),
                     ),
-                    SizedBox(width: 16),
+                    SizedBox(width: 14),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          proposal.title,
+                          postedJob.jobTitle ?? 'No Title',
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         SizedBox(height: 4),
-                        Text(
-                          proposal.company,
+                        Text( 
+                          postedJob.companyName ?? 'No Company',
                           style:
                               TextStyle(fontSize: 16, color: Colors.grey[600]),
                         ),
@@ -121,35 +154,44 @@ class ProposalCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                Column(
-                  children: [
-                    Text(proposal.joiningDate,
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.black,
-                        )),
-                    SizedBox(height: 4),
-                    Text(proposal.location,
-                        style: TextStyle(fontSize: 14, color: Colors.grey)),
-                  ],
+                SizedBox(height: 20),
+                Container(
+                  margin: EdgeInsets.only(left: 4),
+                  child: Text(postedJob.salary ?? 'No salary',
+                      style: TextStyle(fontSize: 16)),
                 ),
               ],
             ),
-            SizedBox(height: 16),
-            Row(
+            Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(proposal.salary, style: TextStyle(fontSize: 16)),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                   decoration: BoxDecoration(
-                    color: proposal.statusColor.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                        color: MyColor.primaryBlue,
+                        width: 1),
                   ),
                   child: Text(
-                    proposal.status,
-                    style: TextStyle(color: proposal.statusColor),
+                    postedJob.applicantIds!.length.toString(),
+                    style: TextStyle(
+                        color: MyColor.primaryBlue,fontSize: 16,),
                   ),
+                  
+                ),
+                const SizedBox(height: 26),
+                Column(
+                  children: [
+                    Text(postedJob.location ?? 'No Location',
+                        style: TextStyle(fontSize: 14, color: Colors.grey)),
+                    SizedBox(height: 6),
+                    Text(DateFormat('d/M/y').format(postedJob.postedDate!) ,
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold)),
+                  ],
                 ),
               ],
             ),

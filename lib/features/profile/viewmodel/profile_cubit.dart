@@ -18,7 +18,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     try {
       final userId = _profileWebServices.getCurrentUserId();
       if (userId == null) {
-        emit(ProfileError("User not found"));
+        emit(ProfileError("User not found BY ID"));
         return User(
             id: "", name: "error", email: ""); // Add return statement here
       }
@@ -27,7 +27,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         emit(UserLoaded(user));
         return user;
       } else {
-        emit(ProfileError("Error loading User profile not found"));
+        emit(ProfileError("User profile not found "));
         return User(id: "", name: "", email: ""); // Add return statement here
       }
     } catch (e) {
@@ -145,11 +145,13 @@ class ProfileCubit extends Cubit<ProfileState> {
       emit(ProfileError(e.toString()));
     }
   }
-  //i need to implement the update education method that is in the profile_web_services.dart
-  Future<void> updateEducation(Education education) async {
+
+  //i need to implement the add education method that is in the profile_web_services.dart
+
+  Future<void> addEducation(Education education) async {
     emit(ProfileLoading());
     try {
-      final success = await _profileWebServices.updateEducation(education);
+      final success = await _profileWebServices.addEducation(education);
       if (success == true) {
         final user = await _profileWebServices.getUserInfo();
         if (user != null) {
@@ -158,7 +160,7 @@ class ProfileCubit extends Cubit<ProfileState> {
           emit(ProfileError("Failed to fetch updated user info"));
         }
       } else {
-        emit(ProfileError("Failed to update education"));
+        emit(ProfileError("Failed to add education"));
       }
     } catch (e) {
       emit(ProfileError(e.toString()));

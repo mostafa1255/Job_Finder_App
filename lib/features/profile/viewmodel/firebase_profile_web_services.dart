@@ -19,7 +19,7 @@ class FirebaseProfileWebServices {
 
   // Get the current user's ID from FirebaseAuth
   String? getCurrentUserId() {
-    return "s2CHfYqeENPEOxHZSHBvER0lrZE3";
+    return "Mr4pDkFG7tyok2tXHQO3";
   }
   //_authenticationWebServices.getCurrentUser()?.uid
   // Fetch user information from Firestore
@@ -138,10 +138,8 @@ class FirebaseProfileWebServices {
 
     try {
       await _firestore.collection('users').doc(userId).update({
-        // Update the bio field in the user's document that in the userprofile map field in the firestore
-        'profile': {
-          'bio': bio,
-        },
+        // Update the bio in the user's document that in the userprofile map field in the firestore and not to update the whole userprofile map field but just the bio field
+        'profile.bio': bio,
       });
       return true;
     } catch (e) {
@@ -163,16 +161,16 @@ class FirebaseProfileWebServices {
       return false;
     }
   }
-  // i want to make a method to update the user's profile education in the firestore and include the institution, degree, fieldOfStudy, startDate, endDate
-  Future<bool> updateEducation(Education education) async {
+
+
+  //the previous method to update the education in the firestore but i want it not to update the whole userprofile map field but just the education field and not to update i need it to add a new education to the list of educations in the education field
+  Future<bool> addEducation(Education education) async {
     String? userId = getCurrentUserId();
     if (userId == null) return false;
     try {
       await _firestore.collection('users').doc(userId).update({
-        // Update the education field in the user's document that in the userprofile map field in the firestore
-        'profile': {
-          'education': education.toMap(),
-        },
+        // Add the new education to the list of educations in the user's document that in the userprofile map field in the firestore
+        'profile.education': FieldValue.arrayUnion([education.toMap()]),
       });
       return true;
     } catch (e) {

@@ -166,7 +166,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           SizedBox(height: 10),
           CustomBioDisplay(text: user!.profile!.bio!),
           SizedBox(height: 24),
-          buildSectionHeader('Education', onPressed: () {}),
+          buildSectionHeader('Education', onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              builder: (context) => EducationAddBottomSheet(profileCubit!),
+            );
+          }),
           ListView.builder(
             shrinkWrap:
                 true, // This ensures the ListView takes only the necessary height
@@ -211,7 +216,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onPressed: () {
               showModalBottomSheet(
                 context: context,
-                builder: (context) => EducationAddBottomSheet(profileCubit!),
+                builder: (context) => EditInfoBottomSheet(profileCubit!, user!),
               );
             },
             icon: Icon(Icons.edit, color: MyColor.primaryBlue),
