@@ -1,0 +1,8 @@
+change Navigator to AppRouter
+make use of the Full name TextField
+
+rememer me button
+
+
+
+
