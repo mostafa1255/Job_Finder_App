@@ -99,13 +99,7 @@ class EducationAddBottomSheet extends StatelessWidget {
                     ),
                   );
                   Navigator.pop(context);
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("All fields are required"),
-                    ),
-                  );
-                }
+                } 
               },
               text: 'Save Changes',
             ),

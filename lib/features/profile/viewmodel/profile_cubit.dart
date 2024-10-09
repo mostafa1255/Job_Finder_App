@@ -140,7 +140,27 @@ class ProfileCubit extends Cubit<ProfileState> {
           emit(ProfileError("Failed to fetch updated user info"));
         }
       } else {
-        emit(ProfileError("Failed to update name, email, and phone number"));
+        emit(ProfileError("Failed to update name and phone number"));
+      }
+    } catch (e) {
+      emit(ProfileError(e.toString()));
+    }
+  }
+
+  //i need to implement the customUpdateToFirebaseProfile method that is in the profile_web_services.dart
+  Future<void> customUpdateToFirebaseProfile(String key, String value) async {
+    emit(ProfileLoading());
+    try {
+      final success = await _profileWebServices.customUpdateToFirebaseProfile(key, value);
+      if (success == true) {
+        final user = await _profileWebServices.getUserInfo();
+        if (user != null) {
+          emit(UserUpdated(user));
+        } else {
+          emit(ProfileError("Failed to fetch updated user info"));
+        }
+      } else {
+        emit(ProfileError("Failed to update visibility or job title"));
       }
     } catch (e) {
       emit(ProfileError(e.toString()));
@@ -167,11 +187,11 @@ class ProfileCubit extends Cubit<ProfileState> {
       emit(ProfileError(e.toString()));
     }
   }
+
   Future<void> removeEducation(Education education) async {
     emit(ProfileLoading());
     try {
-      final userId = FirebaseAuth.instance.currentUser?.uid; // Assuming you have the user's ID
-      final success = await _profileWebServices.removeEducation(userId!, education);
+      final success = await _profileWebServices.removeEducation(education);
       if (success == true) {
         final user = await _profileWebServices.getUserInfo();
         if (user != null) {
@@ -220,19 +240,22 @@ class ProfileCubit extends Cubit<ProfileState> {
       emit(ProfileError(e.toString()));
     }
   }
-  // i want to implement the deleteUser method from the firebase profile web services
-  
-  Future<void> deleteUser() async {
+  //i want to implement the reauthenticateAndDeleteUser method from the firebase profile web services
+
+  Future<bool> reauthenticateAndDeleteUser(String email ,String password ) async {
     emit(ProfileLoading());
     try {
-      final success = await _profileWebServices.deleteUser();
+      final success = await _profileWebServices.reauthenticateAndDeleteUser(email,password);
       if (success == true) {
-        emit(ProfileInitial());
+        emit(AccountDeleted());
+        return true;
       } else {
         emit(ProfileError("Failed to delete user"));
+        return false;
       }
     } catch (e) {
       emit(ProfileError(e.toString()));
+      return false;
     }
   }
 }

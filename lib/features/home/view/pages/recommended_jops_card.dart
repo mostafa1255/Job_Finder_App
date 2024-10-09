@@ -1,22 +1,22 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:jop_finder_app/features/home/view/pages/home_screen.dart';
 
 class RecommendedJopsCard extends StatelessWidget {
   final String company;
   final String title;
   final String salary;
   final Color color;
-  final String companyLogo;
+  final Image companyLogo;
 
   const RecommendedJopsCard({
-    super.key,
+    Key? key,
     required this.company,
     required this.title,
     required this.salary,
     required this.color,
     required this.companyLogo,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,36 +36,17 @@ class RecommendedJopsCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               CircleAvatar(
+                backgroundImage:
+                    companyLogo.image, // Add your profile image here
                 radius: 30,
-                backgroundColor: Colors.grey.shade200,
-                child: ClipOval(
-                  child:
-                 Uri.parse(companyLogo ?? "").hasAbsolutePath ?  
-                  CachedNetworkImage(
-                          imageUrl: companyLogo,
-                          fit: BoxFit.cover,
-                          width: 60,
-                          height: 60,
-                          progressIndicatorBuilder: (context, url, progress) =>
-                              Center(
-                            child: CircularProgressIndicator(
-                              value: progress.progress,
-                            ),
-                          ),
-                          errorWidget: (context, url, error) => const Center(
-                            child: Icon(Icons.error),
-                          ),
-                        )
-                      : const Icon(Icons.person),
-                ),
               ),
 
-              const SizedBox(height: 15),
+              SizedBox(height: 15),
 
               // Job Title
               Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -74,19 +55,19 @@ class RecommendedJopsCard extends StatelessWidget {
               // Company Name
               Text(
                 company,
-                style: const TextStyle(color: Colors.white, fontSize: 18),
+                style: TextStyle(color: Colors.white, fontSize: 18),
               ),
 
-              const SizedBox(height: 2),
+              SizedBox(height: 2),
 
               // Tags (now wrapped to avoid overflow)
 
-              const SizedBox(height: 2),
+
 
               // Salary
               Text(
                 salary,
-                style: const TextStyle(color: Colors.white, fontSize: 16),
+                style: TextStyle(color: Colors.white, fontSize: 16),
               ),
             ],
           ),
