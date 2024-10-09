@@ -28,6 +28,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
       if (userToken != null) {
         GoRouter.of(context).pushReplacementNamed(AppRouter.homeScreen);
+                // GoRouter.of(context).pushReplacementNamed(AppRouter.jobPostScreen);
+
       } else {
         if (mounted) {
           GoRouter.of(context)

@@ -20,6 +20,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
   @override
   initState() {
     saveUserToken();
@@ -28,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void saveUserToken() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString(userTokenKey, FirebaseAuth.instance.currentUser!.uid );
+    prefs.setString(userTokenKey, FirebaseAuth.instance.currentUser!.uid);
   }
 
   Future<List<PostedJob>> fetchJobs() async {
@@ -42,26 +49,36 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //SAFE AREA
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 30.h, horizontal: 15.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Row(
+              SafeArea(child: Container( height: 0.0,)),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Welcome Back!', style: TextStyle(fontSize: 24)),
-                  CircleAvatar(
-                    radius: 20,
+                  const Text('Welcome Back!', style: TextStyle(fontSize: 24)),
+                  GestureDetector(
+                    onTap: () {
+                      GoRouter.of(context).push(AppRouter.profileScreen);
+                    },
+                    child:const CircleAvatar(
+                      radius: 20,
+                    ),
                   ),
                 ],
               ),
-              const Text('John Lucas 👋',
+              const Text('John Lucas 👋',//take from fire base
                   style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  GoRouter.of(context).push(AppRouter.jobSearchScreen);
+                },
                 child: Container(
                   padding:
                       EdgeInsets.symmetric(horizontal: 12.w, vertical: 15.h),
@@ -84,14 +101,21 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               SizedBox(height: 40.h),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Featured Jobs',
+                  const Text('Featured Jobs',
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                  Text('See all',
-                      style: TextStyle(fontSize: 16, color: Colors.grey)),
+                  GestureDetector(
+                    onTap: () {
+                      GoRouter.of(context).push(AppRouter.seeAllPage);
+                    },
+                    child:  Text('See all',
+                      style: TextStyle(fontSize: 16, color: Colors.grey,),
+                    ),
+
+                  ),
                 ],
               ),
               const SizedBox(height: 20),
@@ -134,17 +158,28 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
                 },
               ),
+
               SizedBox(height: 40.h),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Recommended Jobs',
+                  const Text('Recommended Jobs',
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                  Text('See all',
-                      style: TextStyle(fontSize: 16, color: Colors.grey)),
+                  GestureDetector(
+                    onTap: () {
+                      GoRouter.of(context).push(AppRouter.seeAllPage);
+                    },
+                    child:  Text('See all',
+                      style: TextStyle(fontSize: 16, color: Colors.grey,),
+                    ),
+
+                  ),
+
+
                 ],
               ),
+
               SizedBox(height: 20.h),
               FutureBuilder<List<PostedJob>>(
                 future: fetchJobs(),
@@ -175,7 +210,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               title: jobs[index].jobTitle ?? '',
                               salary: jobs[index].salary ?? '',
                               color: Colors.pinkAccent,
-                              companyLogo: jobs[index].imageUrl ?? '',
+                              companyLogo: Image.network(jobs[index].imageUrl ?? ''),
                             ),
                           );
                         },
@@ -188,7 +223,27 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigation(), // Custom widget for navigation
+      bottomNavigationBar: BottomNavigation( ),
+
+      // bottomNavigationBar: BottomNavigationBar(
+      //   items: const <BottomNavigationBarItem>[
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.home),
+      //       label: 'Home',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.search),
+      //       label: 'Search',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.person),
+      //       label: 'Profile',
+      //     ),
+      //   ],
+      //   currentIndex: _selectedIndex,
+      //   selectedItemColor: Colors.amber[800],
+      //   onTap: _onItemTapped,
+      // ), // Custom widget for navigation
     );
   }
 }

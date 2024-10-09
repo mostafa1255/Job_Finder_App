@@ -169,12 +169,12 @@ class PostedJobCard extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: MyColor.primaryBlue, width: 1),
+                    border: Border.all(color: AppColors.primaryBlue, width: 1),
                   ),
                   child: Text(
                     postedJob.applicantIds!.length.toString(),
                     style: TextStyle(
-                      color: MyColor.primaryBlue,
+                      color: AppColors.primaryBlue,
                       fontSize: 16,
                     ),
                   ),

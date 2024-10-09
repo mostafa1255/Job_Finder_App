@@ -21,8 +21,9 @@ class JobCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(right: 16.0),
+      padding: const EdgeInsets.only(right: 16.0,bottom: 16.0),
       child: Container(
+        height: 150,
         width: 300,
         decoration: BoxDecoration(
           // Setting the card background with opacity

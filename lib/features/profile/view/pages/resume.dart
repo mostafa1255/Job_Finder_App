@@ -107,7 +107,7 @@ class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
             },
             child: Text(
               'Skip',
-              style: TextStyle(color: MyColor.primaryBlue, fontSize: 16),
+              style: TextStyle(color: AppColors.primaryBlue, fontSize: 16),
             ),
           ),
         ],
@@ -175,7 +175,7 @@ class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
             child: Text(
               'Upload a PDF',
               style: TextStyle(
-                  color: MyColor.primaryBlue,
+                  color: AppColors.primaryBlue,
                   fontSize: 16.sp,
                   fontWeight: FontWeight.bold),
             ),

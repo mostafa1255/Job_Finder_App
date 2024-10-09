@@ -11,6 +11,7 @@ import 'package:jop_finder_app/features/job_apply/view/pages/job_apply.dart';
 import 'package:jop_finder_app/features/job_apply/view/pages/succefull_Screen.dart';
 import 'package:jop_finder_app/features/job_post/view/pages/all_applicants_screen.dart';
 import 'package:jop_finder_app/features/job_post/view/pages/job_post.dart';
+import 'package:jop_finder_app/features/job_post/view/pages/my_postedJob.dart';
 import 'package:jop_finder_app/features/profile/view/pages/applications.dart';
 import 'package:jop_finder_app/features/profile/view/pages/profile.dart';
 import 'package:jop_finder_app/features/profile/view/pages/proposals.dart';
@@ -20,6 +21,9 @@ import 'package:jop_finder_app/features/profile/viewmodel/firebase_profile_web_s
 import 'package:jop_finder_app/features/profile/viewmodel/profile_cubit.dart';
 import 'package:jop_finder_app/features/splash/view/splash.dart';
 import 'package:jop_finder_app/features/splash/view/splash/OnboardingScreen1.dart';
+
+import '../../features/home/view/pages/see_all_page.dart';
+import '../../features/job_search/view/pages/job_search.dart';
 
 class AppRouter {
   static const splash = "/splash";
@@ -36,7 +40,12 @@ class AppRouter {
   static const applicationsScreen = "/applicationsScreen";
   static const proposalsScreen = "/proposalsScreen";
   static const allApplicantsScreen = "/allApplicantsScreen";
+  static const myPostedJob = "/myPostedJob";
   static const successScreen = "/successScreen";
+  static const jobSearchScreen = "/jobSearchScreen";
+  static const seeAllPage = "/seeAllPage";
+
+
 
   static FireBaseAuthenticationWebServices fireBaseAuthenticationWebServices =
       FireBaseAuthenticationWebServices();
@@ -45,7 +54,7 @@ class AppRouter {
   static ProfileCubit profileCubit = ProfileCubit(firebaseProfileWebServices);
 
   static GoRouter router = GoRouter(
-    initialLocation: splash,
+    initialLocation: homeScreen,
     errorPageBuilder: (context, state) => MaterialPage(
       key: state.pageKey,
       child: Scaffold(
@@ -86,6 +95,11 @@ class AppRouter {
         builder: (context, state) => HomeScreen(),
       ),
       GoRoute(
+        path: jobSearchScreen,
+        name: jobSearchScreen,
+        builder: (context, state) =>const JobSearchScreen(),
+      ),
+      GoRoute(
         path: jobApplyScreen,
         name: jobApplyScreen,
         builder: (context, state) =>
@@ -101,6 +115,16 @@ class AppRouter {
         path: jobPostScreen,
         name: jobPostScreen,
         builder: (context, state) => JobPostScreen(),
+      ),
+      GoRoute(
+        path: seeAllPage,
+        name: seeAllPage,
+        builder: (context, state) => SeeAllPage(),
+      ),
+      GoRoute(
+        path: myPostedJob,
+        name: myPostedJob,
+        builder: (context, state) => const MyPostedJob(),
       ),
       GoRoute(
         path: allApplicantsScreen,
@@ -127,7 +151,10 @@ class AppRouter {
       GoRoute(
         path: settingsScreen,
         name: settingsScreen,
-        builder: (context, state) => SettingsScreen(),
+        builder: (context, state) => BlocProvider.value(
+          value: profileCubit,
+          child: SettingsScreen(),
+        ),
       ),
       GoRoute(
         path: applicationsScreen,

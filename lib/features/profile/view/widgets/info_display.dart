@@ -24,7 +24,7 @@ class CustomInfoDisplay extends StatelessWidget {
         children: [
           Icon(
             icon,
-            color: MyColor.primaryBlue,
+            color: AppColors.primaryBlue,
             size: 30,
           ),
           const SizedBox(width: 10),
@@ -66,7 +66,7 @@ class CustomBioDisplay extends StatelessWidget {
         children: [
           const Icon(
             Icons.info,
-            color: MyColor.primaryBlue,
+            color: AppColors.primaryBlue,
             size: 30,
           ),
           const SizedBox(width: 12),

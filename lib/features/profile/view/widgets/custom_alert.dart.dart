@@ -8,12 +8,12 @@ class CustomAlertDialog extends StatelessWidget {
       required this.title,
       required this.body,
       required this.actionButtonTitle,
-      required this.route});
+      this.route});
 
   final String title;
   final String body;
   final String actionButtonTitle;
-  final String route;
+  final String? route;
 
   @override
   Widget build(BuildContext context) {
@@ -22,13 +22,15 @@ class CustomAlertDialog extends StatelessWidget {
         title,
         style: const TextStyle(
             fontWeight: FontWeight.bold,
-            color: MyColor.primaryBlue,
+            color: AppColors.primaryBlue,
             fontSize: 24),
         textAlign: TextAlign.center,
       ),
-      content: Text(
-        body,
-        textAlign: TextAlign.center,
+      content: SingleChildScrollView(
+        child: Text(
+          body,
+          textAlign: TextAlign.center,
+        ),
       ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       actions: <Widget>[
@@ -49,7 +51,7 @@ class CustomAlertDialog extends StatelessWidget {
             Expanded(
               child: TextButton(
                 style: TextButton.styleFrom(
-                  backgroundColor: MyColor.primaryBlue,
+                  backgroundColor: AppColors.primaryBlue,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4.0),
                   ),
@@ -61,7 +63,9 @@ class CustomAlertDialog extends StatelessWidget {
                 onPressed: () {
                   // Handle logout logic
                   Navigator.of(context).pop();
-                  GoRouter.of(context).pushNamed(route);
+                  if (route != null) {
+                    GoRouter.of(context).go(route!);
+                  }
                 },
               ),
             ),
