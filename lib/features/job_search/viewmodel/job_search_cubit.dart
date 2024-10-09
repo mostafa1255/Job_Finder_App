@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:jop_finder_app/features/job_search/models/jobs.dart';
-import 'package:jop_finder_app/features/job_search/models/mock_data.dart';
 import 'package:jop_finder_app/features/job_search/viewmodel/job_search_state.dart';
 
 class JobSearchCubit extends Cubit<JobSearchState> {
@@ -10,7 +10,6 @@ class JobSearchCubit extends Cubit<JobSearchState> {
 
   Timer? _debounce;
   Set<String> _filters = {};
-  List<Job> _result = [];
 
   void setFilters(Set<String> filters) {
     _filters = filters;
@@ -31,68 +30,56 @@ class JobSearchCubit extends Cubit<JobSearchState> {
     emit(JobFilterIsSelected(_selectedFilters));
   }
 
-  Future<void> searchJob(String query) async {
-    emit(JobSearchLoading());
+ Future<void> searchJob(String query) async {
+  emit(JobSearchLoading());
 
-    try {
-      if (query.trim().isEmpty) {
-        emit(JobSearchInitial());
-        return;
-      }
-
-      await Future.delayed(const Duration(seconds: 1));
-
-      List<Job> result = allJobs
-          .where((job) =>
-              job.jobTitle.trim().toLowerCase().contains(query.toLowerCase()))
-          .toList();
-
-      final List<String> uniqueJobTitles =
-          result.map((job) => job.jobTitle).toSet().toList();
-
-      if (result.isNotEmpty) {
-        emit(JobSearchSuccess(result, uniqueJobTitles));
-        _result = result;
-      } else {
-        emit(JobSearchNoResult());
-      }
-    } catch (e) {
-      emit(JobSearchError("Error occurred while searching for jobs: $e"));
-    }
-  }
-
-  void searchResult(List<Job> result) { 
-
-    try{
-      if (result.isEmpty) {
-        emit(JobSearchNoResult());
-        return;
-      }
-
-      print("Filters: $_filters");
-      if (_filters.isNotEmpty) {
-        result = _result.where((job) {
-          bool matchesCompany = _filters.contains(job.companyName);
-          bool matchesLocation = _filters.contains(job.location);
-          bool matchesExperienceLevel = _filters.contains(job.experienceLevel);
-          bool matchesJobType = _filters.contains(job.jobType);
-          bool matchesRole = _filters.contains(job.role);
-
-          return matchesCompany ||
-              matchesLocation ||
-              matchesExperienceLevel ||
-              matchesJobType ||
-              matchesRole;
-        }).toList();
-      }
-      emit(JobSearchSuccess(result, result.map((job) => job.jobTitle).toSet().toList()));
-    }catch(e){
-      emit(JobSearchError("Error occurred while searching for jobs: $e"));
+  try {
+    if (query.trim().isEmpty) {
+      emit(JobSearchInitial());
+      return;
     }
 
-    
-  }
+    // Fetch all jobs from Firestore
+    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('jobs').get();
 
+    print("Snapshot: ${snapshot.docs}");
+
+    // Map the snapshot to Job objects
+    List<Job> allJobs = snapshot.docs
+        .map((doc) => Job.fromMap(doc.data() as Map<String, dynamic>))
+        .toList();
+
+    // Normalize the query: remove spaces and convert to lowercase
+    String normalizedQuery = query.trim().toLowerCase().replaceAll(' ', '');
+
+    // Filter based on the normalized query
+    List<Job> result = allJobs.where((job) {
+      // Normalize the job title: remove spaces and convert to lowercase
+      String normalizedJobTitle = job.jobTitle!.toLowerCase().replaceAll(' ', '');
+      return normalizedJobTitle.startsWith(normalizedQuery);
+    }).toList();
+
+    // Apply additional filters if any
+    if (_filters.isNotEmpty) {
+      result = result.where((job) {
+        bool matchesCompany = _filters.contains(job.companyName);
+        bool matchesLocation = _filters.contains(job.location);
+        return matchesCompany || matchesLocation;
+      }).toList();
+    }
+
+    final List<String?> uniqueJobTitles = result.map((job) => job.jobTitle).toSet().toList();
+
+    if (result.isNotEmpty) {
+      emit(JobSearchSuccess(result, uniqueJobTitles));
+      print("Result: $result");
+    } else {
+      emit(JobSearchNoResult());
+    }
+  } catch (e) {
+    emit(JobSearchError("Error occurred while searching for jobs: $e"));
+  }
+}
   Set<String> get selectedFilters => _selectedFilters;
 
   @override
