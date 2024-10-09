@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jop_finder_app/features/job_search/view/pages/job_list.dart';
 import 'package:jop_finder_app/features/job_search/view/widgets/filter_widget/filter_bottom_sheet.dart';
-import 'package:jop_finder_app/features/job_search/view/widgets/recent_searches.dart';
 import 'package:jop_finder_app/features/job_search/view/widgets/search_filter.dart';
 import 'package:jop_finder_app/features/job_search/viewmodel/job_search_state.dart';
 
