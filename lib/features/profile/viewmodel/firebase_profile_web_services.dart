@@ -160,6 +160,20 @@ class FirebaseProfileWebServices {
       return false;
     }
   }
+  Future<bool> customUpdateToFirebaseProfile(String key, String value) async {
+    String? userId = getCurrentUserId();
+    if (userId == null) return false;
+    try {
+      await _firestore.collection('users').doc(userId).update({
+        // Update the bio in the user's document that in the userprofile map field in the firestore and not to update the whole userprofile map field but just the bio field
+        'profile.$key': value,
+      });
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
 
   //the previous method to update the education in the firestore but i want it not to update the whole userprofile map field but just the education field and not to update i need it to add a new education to the list of educations in the education field
   Future<bool> addEducation(Education education) async {
@@ -177,7 +191,9 @@ class FirebaseProfileWebServices {
     }
   }
 
-  Future<bool> removeEducation(String userId, Education education) async {
+  Future<bool> removeEducation(Education education) async {
+    String? userId = getCurrentUserId();
+    if (userId == null) return false;
     try {
       await _firestore.collection('users').doc(userId).update({
         // Remove the specified education from the list of educations in the user's document
@@ -199,9 +215,6 @@ class FirebaseProfileWebServices {
       User? user = FirebaseAuth.instance.currentUser;
       // Update the password
       await user!.updatePassword(newPassword);
-      await _firestore.collection('users').doc(user.uid).update({
-        'email': user.email,
-      });
       return true;
     } catch (e) {
       print(e.toString());
@@ -213,10 +226,15 @@ class FirebaseProfileWebServices {
     User? user = FirebaseAuth.instance.currentUser;
     await user!.reload(); // Refresh user data to get the latest emailVerified status
     if (user.emailVerified) {
+  final uid = user.uid;
+
       // Proceed with updating the email if the current email is verified
       await user.verifyBeforeUpdateEmail(newEmail);
       // Optionally, send a verification email for the new email
       await user.sendEmailVerification();
+      await _firestore.collection('users').doc(uid).update({
+        'email': newEmail,
+      });
       return true;
     } else {
       print("Email is not verified. Cannot update email.");
@@ -228,22 +246,28 @@ class FirebaseProfileWebServices {
   }
 }
 
-Future<bool> deleteUser() async {
+
+
+Future<bool> reauthenticateAndDeleteUser(String email, String password) async {
   User? user = FirebaseAuth.instance.currentUser;
   if (user == null) {
     print("No user signed in.");
     return false;
   }
   final uid = user.uid;
+  // Create credential
+  AuthCredential credential = EmailAuthProvider.credential(email: email, password: password);
   try {
-    // Deletes the user account
-    await user.delete();
-    // Delete the Firestore document associated with the user
+    // Re-authenticate
+    await user.reauthenticateWithCredential(credential);
     await FirebaseFirestore.instance.collection('users').doc(uid).delete();
+    // If re-authentication is successful, proceed to delete the user
+    await user.delete();
+    print("User account deleted successfully.");
     return true;
-  } catch (e) {
-    print(e.toString());
-    // Handle errors, possibly including re-authentication before deletion
+  } on FirebaseAuthException catch (e) {
+    // Handle different errors here (e.g., wrong password)
+    print("Error during re-authentication: ${e.code}");
     return false;
   }
 }

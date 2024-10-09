@@ -109,14 +109,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 Text(
                   user!.name,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       user!.profile!.jobTitle ?? 'No job title',
-                      style: TextStyle(color: Colors.grey),
+                      style: TextStyle(color: Colors.grey, fontSize: 13),
                     ),
                     Icon(
                       Icons.verified,
@@ -128,17 +128,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
           ),
-          SizedBox(height: 16),
+          SizedBox(height: 24),
           Center(
-            child: Text(
-              user!.appliedJobs!.length.toString()??'0',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-            ),
-          ),
-          Center(
-            child: Text(
-              'Applied',
-              style: TextStyle(color: Colors.grey),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      user!.appliedJobs!.length.toString(),
+                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                    ),
+                    Text(
+                      'Applied',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text(
+                      user!.profile!.status ?? 'No status',
+                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                    ),
+                    Text(
+                      'Status',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
           SizedBox(height: 30),
@@ -175,7 +194,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             shrinkWrap:
                 true, // This ensures the ListView takes only the necessary height
             physics: NeverScrollableScrollPhysics(),
-            itemCount: user!.profile!.education!.length ?? 0,
+            itemCount: user!.profile!.education!.length,
             itemBuilder: user!.profile!.education!.isEmpty
                 ? (context, index) => Center(
                       child: Text('No education added'),
@@ -283,25 +302,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Icon(Icons.school, size: 40, color: AppColors.primaryBlue),
-          SizedBox(width: 16),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Row(
             children: [
-              Text(
-                education!.fieldOfStudy ?? 'No Field',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-              Text(
-                education.degree ?? 'No Degree',
-                style: TextStyle(color: Colors.grey),
-              ),
-              Text(
-                '${education.institution ?? 'no institution'}  • ${education.startDate!.year} - ${education.endDate!.year}',
-                style: TextStyle(color: Colors.grey),
-              ),
+              Icon(Icons.school, size: 40, color: AppColors.primaryBlue),
+              SizedBox(width: 16),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    education!.fieldOfStudy ?? 'No Field',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  Text(
+                    education.degree ?? 'No Degree',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                  Text(
+                    '${education.institution ?? 'no institution'}  • ${education.startDate!.year} - ${education.endDate!.year}',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ],
+              )
             ],
+          ),
+          IconButton(
+            onPressed: () {
+              profileCubit!.removeEducation(education);
+            },
+            icon: Icon(Icons.delete, color: AppColors.primaryBlue),
           )
         ],
       ),
@@ -320,13 +350,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Text('No CV. Add one.'.toUpperCase(),
                   style: TextStyle(color: Colors.grey, fontSize: 16)),
             )
-          : InkWell(
-              onTap: () {
-                // Assuming `profileCubit` has the method `openPdf` to open the URL
-                profileCubit!.openPdf(user!.cvUrl!);
-              },
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
+          : Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
                 children: [
                   SizedBox(width: 4), // Spacing between icon and text
                   Icon(
@@ -334,14 +361,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     size: 30,
                     color: AppColors.primaryBlue,
                   ), // File icon
-                  SizedBox(width: 8), // Spacing between icon and text
-                  Expanded(
-                    child: Text('${user!.name} CV.pdf',
+                  SizedBox(width: 12), // Spacing between icon and text
+                  InkWell(
+                    onTap: () {
+                      profileCubit!.openPdf(user!.cvUrl!);
+                    },
+                    child: Text('${user!.name}_CV.pdf',
                         maxLines: 1, overflow: TextOverflow.ellipsis),
                   ), // Displaying the file name extracted from the URL
                 ],
               ),
-            ),
+              IconButton(
+                onPressed: () {
+                  profileCubit!.customUpdateToFirebase("cvUrl", "");
+                },
+                icon: Icon(Icons.delete, color: AppColors.primaryBlue),
+              )
+            ],
+          ),
     );
   }
 }

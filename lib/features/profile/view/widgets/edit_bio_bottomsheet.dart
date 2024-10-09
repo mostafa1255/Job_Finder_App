@@ -13,7 +13,13 @@ class EditBioBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+      ),
       padding: const EdgeInsets.all(20),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -24,22 +30,25 @@ class EditBioBottomSheet extends StatelessWidget {
             hint: "Enter your new bio",
           ),
           const SizedBox(height: 16),
-          StyledButton(
-            text: "Save Changes",
-            onPressed: () {
-              //i need to check if the bioController is not empty
-              if (bioController.text.isNotEmpty) {
-                profileCubit.updateBio(bioController.text);
-              Navigator.pop(context);
-              } else {
-                //i need to show a snackbar with a message "Bio can't be empty"
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("Bio can't be empty"),
-                  ),
-                );
-              }
-            },
+          Container(
+            width: double.infinity,
+            child: StyledButton(
+              text: "Save Changes",
+              onPressed: () {
+                //i need to check if the bioController is not empty
+                if (bioController.text.isNotEmpty) {
+                  profileCubit.updateBio(bioController.text);
+                Navigator.pop(context);
+                } else {
+                  //i need to show a snackbar with a message "Bio can't be empty"
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Bio can't be empty"),
+                    ),
+                  );
+                }
+              },
+            ),
           ),
         ],
       ),

@@ -5,14 +5,14 @@ class UserProfile {
   final String? bio;
   final List<String>? skills;
   final List<Education>? education;
-  final String? visibility;
+  final String? status;
 
   UserProfile({
     this.jobTitle,
     this.bio,
     this.skills,
     this.education,
-    this.visibility,
+    this.status,
   });
 
   factory UserProfile.fromMap(Map<String, dynamic> map) {
@@ -23,7 +23,7 @@ class UserProfile {
       education: (map['education'] as List? ?? [])
           .map((edu) => Education.fromMap(edu))
           .toList(),
-      visibility: map['visibility'] as String?,
+      status: map['status'] as String?,
     );
   }
 
@@ -33,7 +33,7 @@ class UserProfile {
       'bio': bio,
       'skills': skills,
       'education': education?.map((edu) => edu.toMap()).toList(),
-      'visibility': visibility,
+      'status': status,
     };
   }
 }

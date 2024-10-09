@@ -144,7 +144,10 @@ class AppRouter {
       GoRoute(
         path: settingsScreen,
         name: settingsScreen,
-        builder: (context, state) => SettingsScreen(),
+        builder: (context, state) => BlocProvider.value(
+          value: profileCubit,
+          child: SettingsScreen(),
+        ),
       ),
       GoRoute(
         path: applicationsScreen,
