@@ -101,6 +101,7 @@ class HomeScreen extends StatelessWidget {
                   }
                 },
               ),
+
               SizedBox(height: 40.h),
               const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -111,6 +112,7 @@ class HomeScreen extends StatelessWidget {
                       style: TextStyle(fontSize: 16, color: Colors.grey)),
                 ],
               ),
+
               SizedBox(height: 20.h),
               FutureBuilder<List<PostedJob>>(
                 future: fetchJobs(),
