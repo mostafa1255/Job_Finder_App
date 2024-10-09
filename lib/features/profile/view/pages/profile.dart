@@ -304,34 +304,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
+          Icon(Icons.school, size: 40, color: AppColors.primaryBlue),
+          SizedBox(width: 16),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(Icons.school, size: 40, color: AppColors.primaryBlue),
-              SizedBox(width: 16),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    education!.fieldOfStudy ?? 'No Field',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  Text(
-                    education.degree ?? 'No Degree',
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                  Text(
-                    '${education.institution ?? 'no institution'}  • ${education.startDate!.year} - ${education.endDate!.year}',
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                ],
-              )
+              Text(
+                education!.fieldOfStudy ?? 'No Field',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              Text(
+                education.degree ?? 'No Degree',
+                style: TextStyle(color: Colors.grey),
+              ),
+              Text(
+                '${education.institution ?? 'no institution'}  • ${education.startDate!.year} - ${education.endDate!.year}',
+                style: TextStyle(color: Colors.grey),
+              ),
             ],
-          ),
-          IconButton(
-            onPressed: () {
-              profileCubit!.removeEducation(education);
-            },
-            icon: Icon(Icons.delete, color: AppColors.primaryBlue),
           )
         ],
       ),

@@ -46,6 +46,8 @@ class AppRouter {
   static const jobSearchScreen = "/jobSearchScreen";
   static const seeAllPage = "/seeAllPage";
 
+
+
   static FireBaseAuthenticationWebServices fireBaseAuthenticationWebServices =
       FireBaseAuthenticationWebServices();
   static FirebaseProfileWebServices firebaseProfileWebServices =
