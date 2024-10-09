@@ -90,7 +90,7 @@ class AppRouter {
       GoRoute(
         path: homeScreen,
         name: homeScreen,
-        builder: (context, state) => HomeScreen(),
+        builder: (context,state) =>const HomeScreen(),
       ),
       GoRoute(
         path: jobSearchScreen,

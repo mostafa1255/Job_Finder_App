@@ -1,5 +1,4 @@
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jop_finder_app/features/auth/data/model/UserProfile_model.dart';

@@ -27,10 +27,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
     profileCubit = BlocProvider.of<ProfileCubit>(context);
     // Schedule the asynchronous operation to fetch user information
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((context) {
       _fetchUserInfo();
     });
   }
+  
 
   Future<void> _fetchUserInfo() async {
     // Fetch user information from Firestore using the cubit method
@@ -44,6 +45,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget buildBlock() {
+    profileCubit = BlocProvider.of<ProfileCubit>(context);
+  if (profileCubit == null) {
+    return Center(child: Text('ProfileCubit is null'));
+  }
     return BlocBuilder<ProfileCubit, ProfileState>(
       builder: (context, state) {
         if (state is ProfileLoading) {
@@ -75,7 +80,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               CircleAvatar(
                 radius: 60.sp,
-                backgroundImage: NetworkImage(user!.profileImageUrl??'https://via.placeholder.com/150'),
+                backgroundImage: NetworkImage(user?.profileImageUrl??'https://pinnaclera.com/wp-content/uploads/2023/02/default_profile_image.png',scale: 1.0),
                 // Replace with actual image URL
               ),
               Positioned(
@@ -111,6 +116,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   user!.name,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
                 ),
+                SizedBox(height: 4),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -128,7 +134,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
           ),
-          SizedBox(height: 24),
+          SizedBox(height: 40),
           Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -160,7 +166,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
           ),
-          SizedBox(height: 30),
+          SizedBox(height: 44),
           Row(
             children: [
               Expanded(
@@ -183,28 +189,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
           }),
           SizedBox(height: 10),
           CustomBioDisplay(text: user!.profile!.bio??'No bio added'),
-          SizedBox(height: 24),
+          SizedBox(height: 28),
           buildSectionHeader('Education', onPressed: () {
             showModalBottomSheet(
               context: context,
               builder: (context) => EducationAddBottomSheet(profileCubit!),
             );
           }),
-          ListView.builder(
-            shrinkWrap:
-                true, // This ensures the ListView takes only the necessary height
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: user!.profile!.education!.length,
-            itemBuilder: user!.profile!.education!.isEmpty
-                ? (context, index) => Center(
-                      child: Text('No education added'),
-                    )
-                : (context, index) {
-                    return buildEducationItem(
-                        education: user!.profile!.education![index]);
-                  },
-          ),
-          SizedBox(height: 20),
+          SizedBox(height: 10),
+          buildEducationSection(),
+          SizedBox(height: 26),
           buildSectionHeader('Resume', onPressed: () {
             GoRouter.of(context).pushNamed('/resumeUploadScreen');
           }),
@@ -381,4 +375,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
     );
   }
+  Widget buildEducationSection() {
+  if (user?.profile?.education == null || user!.profile!.education!.isEmpty) {
+    return Center(
+      child: Text('No education added'.toUpperCase(), style: TextStyle(color: Colors.grey, fontSize: 16)),
+    );
+  } else {
+    return ListView.builder(
+      shrinkWrap: true, // This ensures the ListView takes only the necessary height
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: user!.profile!.education!.length,
+      itemBuilder: (context, index) {
+        return buildEducationItem(education: user!.profile!.education![index]);
+      },
+    );
+  }
+}
 }

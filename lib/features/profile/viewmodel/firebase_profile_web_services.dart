@@ -15,19 +15,17 @@ import 'package:jop_finder_app/features/auth/data/web_services/firebase_authenti
 class FirebaseProfileWebServices {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FireBaseAuthenticationWebServices _authenticationWebServices;
-
   FirebaseProfileWebServices(this._authenticationWebServices);
 
   // Get the current user's ID from FirebaseAuth
   String? getCurrentUserId() {
-    return   "nwrmkmITTuOuL76MvGAa" ;
+    return   FirebaseAuth.instance.currentUser!.uid ;
   }
   
 
   // Fetch user information from Firestore
   Future<UserModel?> getUserInfo() async {
     String? userId = getCurrentUserId();
-    if (userId == null) return null;
     try {
       DocumentSnapshot userDoc =
           await _firestore.collection('users').doc(userId).get();
