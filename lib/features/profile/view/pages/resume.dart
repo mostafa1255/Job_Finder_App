@@ -1,14 +1,12 @@
 // ignore_for_file: prefer_const_constructors
-import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jop_finder_app/core/constants/app_colors.dart';
-// import 'package:jop_finder_app/features/auth/view/pages/shared/styled_button.dart';
-import 'package:jop_finder_app/features/profile/view/pages/profile.dart';
+import 'package:jop_finder_app/features/auth/data/model/user_model.dart';
+import 'package:jop_finder_app/features/profile/viewmodel/profile_cubit.dart';
 
 class ResumeUploadScreen extends StatefulWidget {
   const ResumeUploadScreen({super.key});
@@ -18,9 +16,30 @@ class ResumeUploadScreen extends StatefulWidget {
 }
 
 class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
-  BuildContext get context => context;
-  bool fileUploaded = false;
+  ProfileCubit? profileCubit ;
   String fileName = '';
+  UserModel? user ;
+
+
+  @override
+  void initState() {
+    super.initState();
+    profileCubit = BlocProvider.of<ProfileCubit>(context);
+    // Schedule the asynchronous operation to fetch user information
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchUserInfo();
+    });
+  }
+
+  Future<void> _fetchUserInfo() async {
+    // Fetch user information from Firestore using the cubit method
+    var fetchedUser =
+        await BlocProvider.of<ProfileCubit>(context).getUserInfo();
+    setState(() {
+      user = fetchedUser;
+    });
+  }
+
 
   // Method to pick a PDF file
   Future<FilePickerResult?> pickPDF() async {
@@ -44,43 +63,26 @@ class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
     }
   }
 
-  Future<bool?> uploadFile(FilePickerResult cvPdf) async {
-    try {
-      // Ensure the file name retains the .pdf extension
-      String fileName =
-          "${DateTime.now().millisecondsSinceEpoch.toString()}.pdf";
-      Reference ref = FirebaseStorage.instance.ref().child('CVs/$fileName');
-      UploadTask uploadTask;
-      // Check if running on web
-      if (kIsWeb) {
-        // Use bytes for uploading if on web
-        final bytes = cvPdf.files.first.bytes;
-        if (bytes == null) throw Exception("File bytes are null");
-        uploadTask = ref.putData(
-            bytes, SettableMetadata(contentType: 'application/pdf'));
-      } else {
-        // Use the file path for uploading if not on web
-        File file = File(cvPdf.files.single.path!);
-        uploadTask =
-            ref.putFile(file, SettableMetadata(contentType: 'application/pdf'));
-      }
-      final snapshot = await uploadTask.whenComplete(() {
-        setState(() {
-          fileUploaded = true;
-
-          // Update fileName if needed
-        });
-        // Perform any actions after the file is uploaded
-      });
-      final cvUrl = await snapshot.ref.getDownloadURL();
-      print("the cv url is: $cvUrl");
-      // Update the user's document with the CV URL
-      return true;
-    } catch (e) {
-      print(e.toString());
-      return false;
-    }
+  Widget  buildBlock(){
+    return BlocBuilder<ProfileCubit, ProfileState>(
+      builder: (context, state) {
+        if (state is ProfileLoading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (state is UserLoaded) {
+          return uploadPrompt();
+        } else if (state is UserUpdated) {
+          return displayUploadedFile();
+        } else if (state is ProfileError) {
+          return Center(child: Text(state.errorMessage));
+        } else {
+          return Center(child: Text('Error occurred'));
+        }
+      },
+    );
   }
+    
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +105,7 @@ class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
             },
             child: Text(
               'Skip',
-              style: TextStyle(color: MyColor.primaryBlue, fontSize: 16),
+              style: TextStyle(color: AppColors.primaryBlue, fontSize: 16),
             ),
           ),
         ],
@@ -127,7 +129,7 @@ class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
                 borderRadius: BorderRadius.circular(10),
               ),
               padding: const EdgeInsets.all(16),
-              child: fileUploaded ? displayUploadedFile() : uploadPrompt(),
+              child: buildBlock(),
             ),
             SizedBox(
               height: 12,
@@ -171,7 +173,7 @@ class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
             child: Text(
               'Upload a PDF',
               style: TextStyle(
-                  color: MyColor.primaryBlue,
+                  color: AppColors.primaryBlue,
                   fontSize: 16.sp,
                   fontWeight: FontWeight.bold),
             ),
@@ -190,7 +192,7 @@ class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
           onPressed: () {
             pickPDF().then((cvPdf) {
               if (cvPdf != null) {
-                uploadFile(cvPdf);
+                profileCubit!.uploadCVAndUpdateUser(cvPdf);
               }
             });
           }, // add your save function here

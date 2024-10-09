@@ -3,25 +3,44 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:jop_finder_app/core/constants/app_colors.dart';
+import 'package:jop_finder_app/features/auth/data/model/UserProfile_model.dart';
 import 'package:jop_finder_app/features/auth/data/model/user_model.dart';
-import 'package:jop_finder_app/features/profile/view/widgets/bottom_sheet.dart';
+import 'package:jop_finder_app/features/profile/view/widgets/edit_info_bottom_sheet.dart';
+import 'package:jop_finder_app/features/profile/view/widgets/edit_bio_bottomsheet.dart';
+import 'package:jop_finder_app/features/profile/view/widgets/education_add_bottomsheet.dart';
 import 'package:jop_finder_app/features/profile/view/widgets/info_display.dart';
 import 'package:jop_finder_app/features/profile/viewmodel/profile_cubit.dart';
 
 class ProfileScreen extends StatefulWidget {
-  ProfileScreen({super.key});
+  const ProfileScreen({super.key});
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  User? user;
+  UserModel? user;
+  ProfileCubit? profileCubit;
 
   @override
-  void initState() async {
+  void initState() {
     super.initState();
+    profileCubit = BlocProvider.of<ProfileCubit>(context);
+    // Schedule the asynchronous operation to fetch user information
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchUserInfo();
+    });
+  }
+
+  Future<void> _fetchUserInfo() async {
     // Fetch user information from Firestore using the cubit method
-    user = await BlocProvider.of<ProfileCubit>(context).getUserInfo();
+    var fetchedUser =
+        await BlocProvider.of<ProfileCubit>(context).getUserInfo();
+    if (mounted) {
+      setState(() {
+        user = fetchedUser;
+      });
+    }
   }
 
   Widget buildBlock() {
@@ -32,10 +51,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         } else if (state is UserLoaded) {
           user = state.user;
           return buildProfileScreen();
+        } else if (state is UserUpdated) {
+          user = state.user;
+          return buildProfileScreen();
         } else if (state is ProfileError) {
           return Center(child: Text(state.errorMessage));
         } else {
-          return Center(child: Text('An error occurred'));
+          return Center(child: Text('Error occurred'));
         }
       },
     );
@@ -53,7 +75,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               CircleAvatar(
                 radius: 60.sp,
-                backgroundImage: NetworkImage(user!.profileImageUrl!),
+                backgroundImage: NetworkImage(user!.profileImageUrl??'https://via.placeholder.com/150'),
                 // Replace with actual image URL
               ),
               Positioned(
@@ -63,13 +85,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Container(
                   padding: EdgeInsets.all(5), // Adjust padding if necessary
                   decoration: BoxDecoration(
-                    color: Colors.blue,
+                    color: AppColors.primaryBlue,
                     shape: BoxShape.circle,
                   ),
                   child: IconButton(
                     onPressed: () {
-
-                      // Action for Edit icon to change profile image///////////////////////
+                      profileCubit!.pickImageAndUpdateUser();
                     },
                     icon: Icon(Icons.edit, color: Colors.white),
                     iconSize: 15.sp, // Adjust icon size if necessary
@@ -88,19 +109,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 Text(
                   user!.name,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      //  user!.role,/////////////////////////////////////////////////////////////////////
-                      'UX Designer',
-                      style: TextStyle(color: Colors.grey),
+                      user!.profile!.jobTitle ?? 'No job title',
+                      style: TextStyle(color: Colors.grey, fontSize: 13),
                     ),
                     Icon(
                       Icons.verified,
-                      color: Colors.blue,
+                      color: AppColors.primaryBlue,
                       size: 16,
                     )
                   ],
@@ -108,17 +128,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
           ),
-          SizedBox(height: 16),
+          SizedBox(height: 24),
           Center(
-            child: Text(
-              user!.appliedJobs!.length.toString(),
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-            ),
-          ),
-          Center(
-            child: Text(
-              'Applied',
-              style: TextStyle(color: Colors.grey),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      user!.appliedJobs!.length.toString(),
+                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                    ),
+                    Text(
+                      'Applied',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text(
+                      user!.profile!.status ?? 'No status',
+                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                    ),
+                    Text(
+                      'Status',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
           SizedBox(height: 30),
@@ -130,80 +169,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
               SizedBox(width: 10.w), // Adjust spacing based on your layout
               Expanded(
                 child: CustomInfoDisplay(
-                    text: user!.phoneNumber!, icon: Icons.phone_android_outlined),
+                    text: user!.phoneNumber ??'No phone number',
+                    icon: Icons.phone_android_outlined),
               ),
             ],
           ),
-          SizedBox(height: 20),
-          buildSectionHeader('Education', onPressed: () {}),
-          buildExperienceItem(
-            title: 'Computer Science',
-            subtitle: 'Bachelor | Caltech',
-            location: 'Pasadena',
-            duration: '2017 - 2020',
-            iconData: Icons.school,
+          SizedBox(height: 24),
+          buildAboutHeader('About', onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              builder: (context) => EditBioBottomSheet(profileCubit!),
+            );
+          }),
+          SizedBox(height: 10),
+          CustomBioDisplay(text: user!.profile!.bio??'No bio added'),
+          SizedBox(height: 24),
+          buildSectionHeader('Education', onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              builder: (context) => EducationAddBottomSheet(profileCubit!),
+            );
+          }),
+          ListView.builder(
+            shrinkWrap:
+                true, // This ensures the ListView takes only the necessary height
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: user!.profile!.education!.length,
+            itemBuilder: user!.profile!.education!.isEmpty
+                ? (context, index) => Center(
+                      child: Text('No education added'),
+                    )
+                : (context, index) {
+                    return buildEducationItem(
+                        education: user!.profile!.education![index]);
+                  },
           ),
           SizedBox(height: 20),
-          buildSectionHeader('About', onPressed: () {}),
-          buildExperienceItem(
-            title: 'UX Intern',
-            subtitle: 'Spotify',
-            location: 'San Jose, US',
-            duration: 'Dec 20 - Feb 21',
-            iconData: Icons.music_note,
-          ),
-          SizedBox(height: 20),
-          buildSectionHeader('Resume', onPressed: () {}),
-          Container(
-            padding: EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: Colors.white,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        // CV download action
-                      },
-                      child: Text('CV'),
-                    ),
-                    SizedBox(width: 8),
-                    OutlinedButton(
-                      onPressed: () {
-                        // PDF download action
-                      },
-                      child: Text('PDF'),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 8),
-                Center(
-                  child: Column(
-                    children: [
-                      Text(
-                        'Haley Jessica',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                      Text(
-                        'UX Designer',
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'Creative UX Designer with 3+ years of experience working with cross-functional teams to produce beautiful, functional designs.',
-                  style: TextStyle(color: Colors.black),
-                ),
-              ],
-            ),
-          ),
+          buildSectionHeader('Resume', onPressed: () {
+            GoRouter.of(context).pushNamed('/resumeUploadScreen');
+          }),
+          resumeDisplay(),
           SizedBox(height: 32),
         ],
       ),
@@ -213,12 +218,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(244, 255, 255, 255),
+      backgroundColor: const Color.fromARGB(230, 255, 255, 255),
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(244, 255, 255, 255),
+        backgroundColor: const Color.fromARGB(230, 255, 255, 255),
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: AppColors.primaryBlue),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -229,16 +234,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onPressed: () {
               showModalBottomSheet(
                 context: context,
-                builder: (context) => CustomBottomSheet(),
+                builder: (context) => EditInfoBottomSheet(profileCubit!, user!),
               );
             },
-            icon: Icon(Icons.edit, color: Colors.blue),
+            icon: Icon(Icons.edit, color: AppColors.primaryBlue),
           ),
           IconButton(
             onPressed: () {
               GoRouter.of(context).pushNamed('/settingsScreen');
             },
-            icon: Icon(Icons.settings, color: Colors.blue),
+            icon: Icon(Icons.settings, color: AppColors.primaryBlue),
           )
         ],
       ),
@@ -258,51 +263,122 @@ class _ProfileScreenState extends State<ProfileScreen> {
         TextButton(
           onPressed: onPressed,
           child: Text(
-            'See all',
-            style: TextStyle(color: Colors.blue),
+            'Add',
+            style: TextStyle(color: AppColors.primaryBlue),
           ),
         )
       ],
     );
   }
 
-  Widget buildExperienceItem({
-    required String title,
-    required String subtitle,
-    required String location,
-    required String duration,
-    required IconData iconData,
+  Widget buildAboutHeader(String title, {required VoidCallback onPressed}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black),
+        ),
+        TextButton(
+          onPressed: onPressed,
+          child: Text(
+            'Edit',
+            style: TextStyle(color: AppColors.primaryBlue),
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget buildEducationItem({
+    required Education? education,
   }) {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: EdgeInsets.all(10),
       margin: EdgeInsets.only(top: 8),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Icon(iconData, size: 40, color: Colors.orange),
-          SizedBox(width: 16),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Row(
             children: [
-              Text(
-                title,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-              Text(
-                subtitle,
-                style: TextStyle(color: Colors.grey),
-              ),
-              Text(
-                '$location • $duration',
-                style: TextStyle(color: Colors.grey),
-              ),
+              Icon(Icons.school, size: 40, color: AppColors.primaryBlue),
+              SizedBox(width: 16),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    education!.fieldOfStudy ?? 'No Field',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  Text(
+                    education.degree ?? 'No Degree',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                  Text(
+                    '${education.institution ?? 'no institution'}  • ${education.startDate!.year} - ${education.endDate!.year}',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ],
+              )
             ],
+          ),
+          IconButton(
+            onPressed: () {
+              profileCubit!.removeEducation(education);
+            },
+            icon: Icon(Icons.delete, color: AppColors.primaryBlue),
           )
         ],
       ),
+    );
+  }
+
+  Widget resumeDisplay() {
+    return Container(
+      padding: EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: Colors.white,
+      ),
+      child: (user?.cvUrl == null || user!.cvUrl!.isEmpty)
+          ? Center(
+              child: Text('No CV. Add one.'.toUpperCase(),
+                  style: TextStyle(color: Colors.grey, fontSize: 16)),
+            )
+          : Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  SizedBox(width: 4), // Spacing between icon and text
+                  Icon(
+                    Icons.file_present,
+                    size: 30,
+                    color: AppColors.primaryBlue,
+                  ), // File icon
+                  SizedBox(width: 12), // Spacing between icon and text
+                  InkWell(
+                    onTap: () {
+                      profileCubit!.openPdf(user!.cvUrl!);
+                    },
+                    child: Text('${user!.name}_CV.pdf',
+                        maxLines: 1, overflow: TextOverflow.ellipsis),
+                  ), // Displaying the file name extracted from the URL
+                ],
+              ),
+              IconButton(
+                onPressed: () {
+                  profileCubit!.customUpdateToFirebase("cvUrl", "");
+                },
+                icon: Icon(Icons.delete, color: AppColors.primaryBlue),
+              )
+            ],
+          ),
     );
   }
 }

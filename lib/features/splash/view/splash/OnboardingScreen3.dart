@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ThirdScreen extends StatelessWidget {
-  ThirdScreen({super.key});
+  const ThirdScreen({super.key});
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -20,7 +20,7 @@ class ThirdScreen extends StatelessWidget {
             ),
           ),
           Container(
-            margin: EdgeInsets.all(20),
+            margin: const EdgeInsets.all(20),
             child: const Text(
               'You can apply to your desirable jobs very quickly and easily with ease.',
               textAlign: TextAlign.center,

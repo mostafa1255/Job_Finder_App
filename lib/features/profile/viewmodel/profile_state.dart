@@ -5,15 +5,17 @@ abstract class ProfileState {}
 
 class ProfileInitial extends ProfileState {}
 class ProfileLoading extends ProfileState {}
+class PasswordChanged extends ProfileState {}
+class AccountDeleted extends ProfileState {}
 
 
 class UserLoaded extends ProfileState {
-  final User user;
+  final UserModel user;
   UserLoaded(this.user);
 }
 
 class UserUpdated extends ProfileState {
-  final User user;
+  final UserModel user;
   UserUpdated(this.user);
 }
 

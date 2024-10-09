@@ -3,24 +3,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:jop_finder_app/features/profile/view/widgets/custom_alert.dart.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
-
     ListTile buildDrawerItem(IconData icon, String title,
-        {Color color = Colors.black, required String screen}) {
+        {Color color = Colors.black, required String route}) {
       return ListTile(
-        contentPadding: EdgeInsets.only(left: 20.w), // 24 pixels padding
+        contentPadding: EdgeInsets.only(left: 18.w), // 24 pixels padding
         leading: Icon(icon, color: color),
         title: Text(title, style: TextStyle(color: color, fontSize: 10.sp)),
         onTap: () {
-          Navigator.pop(context); 
-          GoRouter.of(context).pushNamed(screen);
-                  
+          Navigator.pop(context);
+          GoRouter.of(context).pushNamed(route);
         },
       );
     }
@@ -86,17 +84,35 @@ class CustomDrawer extends StatelessWidget {
           // Drawer ItemsbuildDrawerItem(Icons.person_outline, 'Personal Info', route: '/personal-info'),
 
           buildDrawerItem(Icons.person_outline, ' View Profile',
-              screen: '/profileScreen'),
+              route: '/profileScreen'),
           buildDrawerItem(Icons.app_registration, 'Applications',
-              screen: '/applicationsScreen'),
+              route: '/applicationsScreen'),
           buildDrawerItem(Icons.description_outlined, 'Proposals',
-              screen:   '/proposalsScreen'),
+              route: '/proposalsScreen'),
           buildDrawerItem(Icons.assignment_ind_outlined, 'Resume',
-              screen: '/resumeUploadScreen'),
+              route: '/resumeUploadScreen'),
           buildDrawerItem(Icons.settings_outlined, 'Settings',
-              screen: '/settingsScreen'),
-          buildDrawerItem(Icons.logout, 'Logout',
-              color: Colors.red, screen: '/login'),
+              route: '/settingsScreen'),
+          // Logout
+          ListTile(
+            contentPadding: EdgeInsets.only(left: 18.w), // 24 pixels padding
+            leading: Icon(Icons.logout, color: Colors.red),
+            title: Text('Logout',
+                style: TextStyle(color: Colors.red, fontSize: 10.sp)),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return CustomAlertDialog(
+                    title: 'Logout',
+                    body: 'Are you sure you want to logout ?',
+                    actionButtonTitle: 'Logout',
+                    route: '/login',
+                  );
+                },
+              );
+            },
+          )
         ],
       ),
     );

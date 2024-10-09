@@ -1,31 +1,39 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserProfile {
+  final String? jobTitle;
   final String? bio;
   final List<String>? skills;
   final List<Education>? education;
+  final String? status;
 
   UserProfile({
+    this.jobTitle,
     this.bio,
     this.skills,
     this.education,
+    this.status,
   });
 
   factory UserProfile.fromMap(Map<String, dynamic> map) {
     return UserProfile(
+      jobTitle: map['jobTitle'] as String?,
       bio: map['bio'] as String?,
       skills: List<String>.from(map['skills'] ?? []),
       education: (map['education'] as List? ?? [])
           .map((edu) => Education.fromMap(edu))
           .toList(),
+      status: map['status'] as String?,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
+      'jobTitle': jobTitle,
       'bio': bio,
       'skills': skills,
       'education': education?.map((edu) => edu.toMap()).toList(),
+      'status': status,
     };
   }
 }

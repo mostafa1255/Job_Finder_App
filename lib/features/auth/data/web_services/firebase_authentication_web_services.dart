@@ -1,4 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:jop_finder_app/features/auth/data/model/user_model.dart';
+import 'package:jop_finder_app/features/auth/data/web_services/firebase_firestore_user_model.dart';
 
 class FireBaseAuthenticationWebServices {
   final FirebaseAuth _fireBaseAuth = FirebaseAuth.instance;
@@ -9,13 +11,31 @@ class FireBaseAuthenticationWebServices {
   }
 
   //Sign Up
-  Future<String?> signUp(
-      {required String email, required String password}) async {
+  Future<String?> signUp({
+    required String email,
+    required String password,
+    required String fullName, // Add fullName as a required parameter
+  }) async {
     try {
       final UserCredential credential = await _fireBaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
 
       if (credential.user != null) {
+        // Update the display name (full name) for the new user
+        await credential.user!.updateDisplayName(fullName);
+        await credential.user!.reload(); // Reload the user to apply the changes
+
+        UserModel user = UserModel(
+            id: credential.user!.uid.toString(),
+            name: credential.user!.displayName.toString(),
+            email: credential.user!.email.toString());
+        FirebaseFirestoreUserModel fireStore = FirebaseFirestoreUserModel();
+        try {
+          await fireStore.saveUserToFirestore(user);
+        } catch (e) {
+          print(e);
+        }
+
         return "User signed up successfully";
       }
       return "Failed to sign up user";
