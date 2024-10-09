@@ -23,8 +23,8 @@ class RecommendedJopsCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(right: 16.0),
       child: Container(
-        width: 160.w,
-        height: 350,
+        width: 150.w,
+        height: 260,
         decoration: BoxDecoration(
           // Setting the card background with opacity
           color: color, // Adjust the background opacity here
@@ -55,18 +55,19 @@ class RecommendedJopsCard extends StatelessWidget {
               // Company Name
               Text(
                 company,
-                style: TextStyle(color: Colors.white, fontSize: 16),
+                style: TextStyle(color: Colors.white, fontSize: 18),
               ),
 
+              SizedBox(height: 2),
 
               // Tags (now wrapped to avoid overflow)
 
-              SizedBox(height: 2),
+
 
               // Salary
               Text(
                 salary,
-                style: TextStyle(color: Colors.white, fontSize: 14),
+                style: TextStyle(color: Colors.white, fontSize: 16),
               ),
             ],
           ),

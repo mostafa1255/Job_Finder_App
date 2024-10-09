@@ -20,6 +20,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
   @override
   initState() {
     saveUserToken();
@@ -42,6 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //SAFE AREA
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
@@ -49,6 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SafeArea(child: Container( height: 0.0,)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -63,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
-              const Text('John Lucas 👋',
+              const Text('John Lucas 👋',//take from fire base
                   style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               GestureDetector(
@@ -92,14 +101,21 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               SizedBox(height: 40.h),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Featured Jobs',
+                  const Text('Featured Jobs',
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                  Text('See all',
-                      style: TextStyle(fontSize: 16, color: Colors.grey)),
+                  GestureDetector(
+                    onTap: () {
+                      GoRouter.of(context).push(AppRouter.seeAllPage);
+                    },
+                    child:  Text('See all',
+                      style: TextStyle(fontSize: 16, color: Colors.grey,),
+                    ),
+
+                  ),
                 ],
               ),
               const SizedBox(height: 20),
@@ -144,14 +160,23 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
 
               SizedBox(height: 40.h),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Recommended Jobs',
+                  const Text('Recommended Jobs',
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                  Text('See all',
-                      style: TextStyle(fontSize: 16, color: Colors.grey)),
+                  GestureDetector(
+                    onTap: () {
+                      GoRouter.of(context).push(AppRouter.seeAllPage);
+                    },
+                    child:  Text('See all',
+                      style: TextStyle(fontSize: 16, color: Colors.grey,),
+                    ),
+
+                  ),
+
+
                 ],
               ),
 
@@ -185,7 +210,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               title: jobs[index].jobTitle ?? '',
                               salary: jobs[index].salary ?? '',
                               color: Colors.pinkAccent,
-                              companyLogo: jobs[index].imageUrl ?? '',
+                              companyLogo: Image.network(jobs[index].imageUrl ?? ''),
                             ),
                           );
                         },
@@ -198,7 +223,27 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      bottomNavigationBar:const BottomNavigation(), // Custom widget for navigation
+      bottomNavigationBar: BottomNavigation( ),
+
+      // bottomNavigationBar: BottomNavigationBar(
+      //   items: const <BottomNavigationBarItem>[
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.home),
+      //       label: 'Home',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.search),
+      //       label: 'Search',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.person),
+      //       label: 'Profile',
+      //     ),
+      //   ],
+      //   currentIndex: _selectedIndex,
+      //   selectedItemColor: Colors.amber[800],
+      //   onTap: _onItemTapped,
+      // ), // Custom widget for navigation
     );
   }
 }
