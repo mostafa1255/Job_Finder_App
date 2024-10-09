@@ -80,7 +80,6 @@ class JobSearchCubit extends Cubit<JobSearchState> {
     emit(JobSearchError("Error occurred while searching for jobs: $e"));
   }
 }
-
   Set<String> get selectedFilters => _selectedFilters;
 
   @override
