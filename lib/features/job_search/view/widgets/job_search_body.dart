@@ -26,7 +26,6 @@ class JobSearchBody extends StatelessWidget {
                   context: context,
                   builder: (context) {
                     return const FilterBottomSheet();
-                    
                   },
                 );
               },
@@ -54,13 +53,13 @@ class JobSearchBody extends StatelessWidget {
                                   .where(
                                       (job) => job.jobTitle == selectedJobTitle)
                                   .toList();
-                                  
+
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) {
                                     return JobListScreen(
-                                      jobTitle: selectedJobTitle,
+                                      jobTitle: selectedJobTitle??'',
                                       jobs: filteredJobs,
                                     );
                                   },
@@ -68,7 +67,7 @@ class JobSearchBody extends StatelessWidget {
                               );
                               print(state.jobs);
                             },
-                            icon: Text(state.uniqueJobTitles[index]),
+                            icon: Text(state.uniqueJobTitles[index]??''),
                           );
                         },
                       ),
@@ -81,23 +80,17 @@ class JobSearchBody extends StatelessWidget {
                 } else if (state is JobSearchError) {
                   return Text(state.message);
                 }
-                return Column(
+                return const Column(
                   children: [
-                    const SizedBox(height: 24),
-                    const Text('Recent Searches'),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      height: 150,
-                      child: ListView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: 3,
-                        itemBuilder: (context, index) {
-                          return const RecentSearches(
-                            name: 'Flutter Developer',
-                          );
-                        },
+                    Center(
+                      child: Text(
+                        'Search for jobs',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
+                    )
                   ],
                 );
               },

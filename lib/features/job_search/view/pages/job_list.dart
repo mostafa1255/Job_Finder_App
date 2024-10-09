@@ -38,11 +38,11 @@ class JobListScreen extends StatelessWidget {
         itemBuilder: (context, index) {
           final job = jobs[index];
           return JobsCard(
-            jobTitle: job.jobTitle,
-            salary: job.salary,
-            companyName: job.companyName,
-            location: job.location,
-            imageUrl: job.imageUrl,
+            jobTitle: job.jobTitle ?? 'Unknown Title',
+            salary: job.salary?? 'Unknown Title',
+            companyName: job.companyName?? 'Unknown Title',
+            location: job.location?? 'Unknown Title',
+            imageUrl: job.imageUrl?? 'Unknown Title',
           );
         },
       ),

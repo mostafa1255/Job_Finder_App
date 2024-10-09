@@ -1,0 +1,27 @@
+- commit: 5e44b23
+  branch: develp
+  action: reset
+  description: moving to HEAD
+- commit: 5e44b23
+  branch: develp
+  action: pull
+  description: Fast-forward
+- commit: efa7b95
+  action: pull
+  description: Fast-forward
+- commit: 4b97083
+  action: reset
+  description: moving to HEAD
+- commit: 4b97083
+  action: reset
+  description: moving to HEAD
+- commit: 4b97083
+  action: pull --tags origin develp
+  description: Fast-forward
+- commit: 37bbae0
+  action: checkout
+  description: moving from main to develp
+- commit: ce32d28
+  branch: main
+  action: clone
+  description: from https://github.com/mostafa1255/Job_Finder_App.git

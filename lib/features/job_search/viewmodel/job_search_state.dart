@@ -8,7 +8,7 @@ class JobSearchLoading extends JobSearchState {}
 
 class JobSearchSuccess extends JobSearchState {
   final List<Job> jobs;
-  final List<String> uniqueJobTitles;
+  final List<String?> uniqueJobTitles;
 
   JobSearchSuccess(this.jobs, this.uniqueJobTitles);
 }

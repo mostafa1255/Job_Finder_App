@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:icons_plus/icons_plus.dart';
 
 class RecentSearches extends StatelessWidget {
   const RecentSearches({super.key, required this.name});
@@ -38,7 +37,7 @@ class RecentSearches extends StatelessWidget {
             ),
           ),
           const Icon(
-            OctIcons.x,
+            Icons.cancel,
             color: Colors.grey,
           ),
         ],
