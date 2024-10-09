@@ -37,6 +37,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // Fetch user information from Firestore using the cubit method
     var fetchedUser =
         await BlocProvider.of<ProfileCubit>(context).getUserInfo();
+        if (fetchedUser?.profile == null) {
+          UserProfile userProfile = UserProfile(
+            bio: 'No bio added',
+            education: [],
+            jobTitle: 'No job title',
+            status: 'No status',
+          );
+     BlocProvider.of<ProfileCubit>(context).updateUserProfile(userProfile) ;
+    }
+    
+    // Update the Firestore with the default profile
     if (mounted) {
       setState(() {
         user = fetchedUser;

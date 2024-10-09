@@ -270,9 +270,21 @@ Future<bool> reauthenticateAndDeleteUser(String email, String password) async {
   }
 }
 
+//make a method to update the user profile in the firestore to update the whole userprofile map field 
+Future<bool> updateUserProfile(UserProfile profile) async {
+  String? userId = getCurrentUserId();
+  if (userId == null) return false;
 
-
-
+  try {
+    await _firestore.collection('users').doc(userId).update({
+      'profile': profile.toMap(),
+    });
+    return true;
+  } catch (e) {
+    print(e.toString());
+    return false;
+  }
+}
 
 }
 

@@ -257,4 +257,24 @@ class ProfileCubit extends Cubit<ProfileState> {
       return false;
     }
   }
+
+  //implement the updateUserProfile method from the firebase profile web services
+  Future<void> updateUserProfile(UserProfile userProfile) async {
+    emit(ProfileLoading());
+    try {
+      final success = await _profileWebServices.updateUserProfile(userProfile);
+      if (success == true) {
+        final user = await _profileWebServices.getUserInfo();
+        if (user != null) {
+          emit(UserUpdated(user));
+        } else {
+          emit(ProfileError("Failed to fetch updated user info"));
+        }
+      } else {
+        emit(ProfileError("Failed to update user profile"));
+      }
+    } catch (e) {
+      emit(ProfileError(e.toString()));
+    }
+  }
 }
