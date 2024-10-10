@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:jop_finder_app/core/utils/app_router.dart';
 import 'package:jop_finder_app/features/auth/data/web_services/firebase_authentication_web_services.dart';
 import 'package:jop_finder_app/features/auth/data/web_services/google_authentication_web_services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 part 'auth_state.dart';
 
@@ -91,7 +90,6 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> signInWithGoogle(BuildContext context) async {
     emit(AuthLoading());
     try {
-      bool rememberMe = true;
       var result = await googleAuthenticationWebServices.signInWithGoogle();
       if (result != null &&
           result == "User signed in successfully with Google") {

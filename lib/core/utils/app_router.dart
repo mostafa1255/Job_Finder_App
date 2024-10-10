@@ -70,18 +70,29 @@ class AppRouter {
       GoRoute(
         path: signUp,
         name: signUp,
-        builder: (context, state) => const SignUpScreen(),
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const SignUpScreen(),
+          transitionsBuilder: _fadeTransition, // Slide transition
+        ),
       ),
       GoRoute(
         path: login,
         name: login,
-        builder: (context, state) => const LoginScreen(),
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const LoginScreen(),
+          transitionsBuilder: _slideTransition,
+        ),
       ),
       GoRoute(
-        path: forgetPassword,
-        name: forgetPassword,
-        builder: (context, state) => ForgetPasswordScreen(),
-      ),
+          path: forgetPassword,
+          name: forgetPassword,
+          pageBuilder: (context, state) => CustomTransitionPage(
+                key: state.pageKey,
+                child: const ForgetPasswordScreen(),
+                transitionsBuilder: _slideTransition, // Slide transition
+              )),
       GoRoute(
         path: homeScreen,
         name: homeScreen,
@@ -155,4 +166,34 @@ class AppRouter {
       //end bodaSayed
     ],
   );
+
+  // Slide transition
+  static Widget _slideTransition(
+      BuildContext context,
+      Animation<double> animation,
+      Animation<double> secondaryAnimation,
+      Widget child) {
+    const begin = Offset(1.0, 0.0); // Slide from right
+    const end = Offset.zero;
+    const curve = Curves.easeInOut;
+
+    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+    return SlideTransition(
+      position: animation.drive(tween),
+      child: child,
+    );
+  }
+
+  // Fade transition
+  static Widget _fadeTransition(
+      BuildContext context,
+      Animation<double> animation,
+      Animation<double> secondaryAnimation,
+      Widget child) {
+    return FadeTransition(
+      opacity: animation,
+      child: child,
+    );
+  }
 }

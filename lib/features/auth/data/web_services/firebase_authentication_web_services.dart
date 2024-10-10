@@ -27,7 +27,7 @@ class FireBaseAuthenticationWebServices {
 
         UserModel user = UserModel(
             id: credential.user!.uid.toString(),
-            name: credential.user!.displayName.toString(),
+            name: capitalizeEachWord(fullName.toString()),
             email: credential.user!.email.toString());
         FirebaseFirestoreUserModel fireStore = FirebaseFirestoreUserModel();
         try {
@@ -106,5 +106,20 @@ class FireBaseAuthenticationWebServices {
       default:
         return "An error occurred: ${e.message}";
     }
+  }
+
+  String capitalizeEachWord(String text) {
+    // Split the text by spaces
+    final words = text.split(' ');
+
+    // Capitalize each word
+    final capitalizedWords = words.map((word) {
+      return word.isNotEmpty
+          ? word[0].toUpperCase() + word.substring(1).toLowerCase()
+          : '';
+    }).toList();
+
+    // Rejoin the words into a sentence
+    return capitalizedWords.join(' ');
   }
 }
