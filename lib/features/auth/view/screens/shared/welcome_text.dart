@@ -26,33 +26,20 @@ class WelcomeText extends StatelessWidget {
       children: [
         Text(
           title,
-          style: const TextStyle(
-            color: Color.fromARGB(255, 53, 104, 153),
-            fontSize: 22,
-            fontWeight: FontWeight.w600,
-          ),
+          style: Theme.of(context).textTheme.titleMedium,
         ),
         SizedBox(height: (innerPadding == null) ? 5 : innerPadding),
         Text(
           headline,
-          style: const TextStyle(
-            color: Color.fromARGB(255, 13, 13, 38),
-            fontSize: 24,
-            fontWeight: FontWeight.w600,
-          ),
+          style: Theme.of(context).textTheme.titleLarge,
         ),
         SizedBox(height: (innerPadding == null) ? 3 : innerPadding),
-        Text(
-          text,
-          textAlign:
-              (crossAxisAlignment == null || crossAxisAlignment == "start")
-                  ? TextAlign.start
-                  : TextAlign.center,
-          style: const TextStyle(
-              color: Color.fromARGB(102, 13, 13, 38),
-              fontSize: 14,
-              fontWeight: FontWeight.w400),
-        ),
+        Text(text,
+            textAlign:
+                (crossAxisAlignment == null || crossAxisAlignment == "start")
+                    ? TextAlign.start
+                    : TextAlign.center,
+            style: Theme.of(context).textTheme.bodyMedium),
       ],
     );
   }

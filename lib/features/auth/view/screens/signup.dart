@@ -160,7 +160,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                       //Text between two lines
                       const TextBetweenDivider(text: "Or continue with"),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 30),
 
                       //Row for the Google and facebook Login
                       const GoogleFacebookSign(),

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:jop_finder_app/core/constants/app_colors.dart';
 import 'package:jop_finder_app/core/utils/app_router.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/google_facebook_sign.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/styled_button.dart';
@@ -90,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 padding: EdgeInsets.only(top: 15.0),
                                 child: Center(
                                   child: LinearProgressIndicator(
-                                    color: Color.fromARGB(255, 53, 104, 153),
+                                    color: AppColors.primaryBlue,
                                   ),
                                 ),
                               ),
@@ -103,7 +104,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   padding: const EdgeInsets.only(left: 20),
                                   child: Text(
                                     state.errorMessage.toString(),
-                                    style: const TextStyle(color: Colors.red),
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge,
                                   ),
                                 ),
                                 const SizedBox(height: 15),
@@ -143,24 +145,25 @@ class _LoginScreenState extends State<LoginScreen> {
 
                       //Forgetpassword Text button
                       TextButton(
-                          onPressed: () {
-                            GoRouter.of(context)
-                                .pushNamed(AppRouter.forgetPassword);
-                          },
-                          child: const Text(
-                            "Forgot Password?",
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 53, 104, 153),
-                              fontSize: 13,
-                            ),
-                          )),
+                        onPressed: () {
+                          GoRouter.of(context)
+                              .pushNamed(AppRouter.forgetPassword);
+                        },
+                        child: const Text(
+                          "Forgot Password?",
+                          style: TextStyle(
+                            color: AppColors.mainColor,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
                       const SizedBox(
                         height: 30,
                       ),
 
                       //Text between two lines
                       const TextBetweenDivider(text: "Or continue with"),
-                      const SizedBox(height: 70),
+                      const SizedBox(height: 30),
 
                       //Row for the Google and facebook Login
                       const GoogleFacebookSign(),

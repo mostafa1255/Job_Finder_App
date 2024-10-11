@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:jop_finder_app/core/constants/app_colors.dart';
 import 'package:jop_finder_app/core/utils/app_router.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/styled_button.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/styled_textField.dart';
@@ -35,7 +36,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
       child: SafeArea(
         child: Scaffold(
           appBar: AppBar(),
-          backgroundColor: const Color.fromARGB(255, 250, 250, 253),
+          backgroundColor: AppColors.myWhiteBackground,
           body: BlocListener<AuthCubit, AuthState>(
             listener: (context, state) {
               if (state is AuthLoaded) {
@@ -72,14 +73,13 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                           ),
                           child: FilledButton(
                               style: const ButtonStyle(
-                                  backgroundColor:
-                                      WidgetStatePropertyAll(Colors.white)),
+                                  backgroundColor: WidgetStatePropertyAll(
+                                      AppColors.myWhite)),
                               onPressed: () {},
                               child: const Text(
                                 "E-mail",
                                 style: TextStyle(
-                                    fontSize: 13,
-                                    color: Color.fromARGB(255, 13, 13, 38)),
+                                    fontSize: 13, color: AppColors.primaryText),
                               )),
                         ),
                         const SizedBox(
