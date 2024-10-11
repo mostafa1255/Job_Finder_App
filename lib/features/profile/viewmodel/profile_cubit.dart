@@ -211,14 +211,28 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
 //i want to implement the changeUserPassword from the firebase profile web services
-  Future<void> changeUserPassword(String password) async {
+  Future<void> changeUserPassword(String currentEmail,String currentPassword,String newPassword) async {
     emit(ProfileLoading());
     try {
-      final success = await _profileWebServices.changeUserPassword(password);
+      final success = await _profileWebServices.changeUserPassword(currentEmail,currentPassword,newPassword);
       if (success == true) {
         emit(PasswordChanged());
+        Future.delayed(const Duration(seconds: 5), () {
+        });
+        UserModel? user = await _profileWebServices.getUserInfo();
+        if (user != null) {
+          emit(UserUpdated(user));
+        } else {
+          emit(ProfileError("Failed to fetch updated user info"));
+        }
       } else {
-        emit(ProfileError("Failed to change password"));
+        emit(ProfileError("Failed to change password Please check your current password and try again"));
+        Future.delayed(const Duration(seconds: 5), () {
+        });
+        UserModel? user = await _profileWebServices.getUserInfo();
+        if (user != null) {
+          emit(UserUpdated(user));
+        }
       }
     } catch (e) {
       emit(ProfileError(e.toString()));
@@ -226,10 +240,10 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   //i want to implement the updateEmailIfVerified from the firebase profile web services
-  Future<void> updateEmailIfVerified(String email) async {
+  Future<void> updateEmailIfVerified(String currentEmail,String currentPassword,String newEmail) async {
     emit(ProfileLoading());
     try {
-      final success = await _profileWebServices.updateEmailIfVerified(email);
+      final success = await _profileWebServices.updateEmail(currentEmail,currentPassword,newEmail);
       if (success == true) {
         final user = await _profileWebServices.getUserInfo();
         if (user != null) {
@@ -238,14 +252,20 @@ class ProfileCubit extends Cubit<ProfileState> {
           emit(ProfileError("Failed to fetch updated user info"));
         }
       } else {
-        emit(ProfileError("Failed to update email"));
+        emit(ProfileError("Failed to update email Please check your email and password and try again "));
+        Future.delayed(const Duration(seconds: 5), () {
+        });
+        UserModel? user = await _profileWebServices.getUserInfo();
+        if (user != null) {
+          emit(UserUpdated(user));
+        }
       }
     } catch (e) {
       emit(ProfileError(e.toString()));
     }
   }
-  //i want to implement the reauthenticateAndDeleteUser method from the firebase profile web services
 
+  //i want to implement the reauthenticateAndDeleteUser method from the firebase profile web services
   Future<bool> reauthenticateAndDeleteUser(
       String email, String password) async {
     emit(ProfileLoading());
@@ -262,6 +282,20 @@ class ProfileCubit extends Cubit<ProfileState> {
     } catch (e) {
       emit(ProfileError(e.toString()));
       return false;
+    }
+  }
+  //implement the signOut method from the firebase profile web services
+  Future<void> signOut() async {
+    emit(ProfileLoading());
+    try {
+      final success = await _profileWebServices.signOut();
+      if (success == true) {
+        emit(SignedOut());
+      } else {
+        emit(ProfileError("Failed to sign out"));
+      }
+    } catch (e) {
+      emit(ProfileError(e.toString()));
     }
   }
 

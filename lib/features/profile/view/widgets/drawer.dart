@@ -107,7 +107,11 @@ class CustomDrawer extends StatelessWidget {
                     title: 'Logout',
                     body: 'Are you sure you want to logout ?',
                     actionButtonTitle: 'Logout',
-                    route: '/login',
+                    onActionButtonPressed: () {
+                      // Handle logout logic
+                      Navigator.pop(context);
+                      GoRouter.of(context).pushNamed('/login');
+                    },
                   );
                 },
               );

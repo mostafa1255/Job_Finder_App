@@ -6,8 +6,10 @@ import 'package:jop_finder_app/features/auth/view/screens/shared/styled_textFiel
 import 'package:jop_finder_app/features/profile/viewmodel/profile_cubit.dart';
 
 class ChangePasswordBottomSheet extends StatelessWidget {
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController currentPasswordController = TextEditingController();
+  final TextEditingController newPasswordController = TextEditingController();
+  final TextEditingController confirmNewPasswordController = TextEditingController();
   final ProfileCubit profileCubit;
   ChangePasswordBottomSheet(this.profileCubit, {super.key});
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -36,18 +38,40 @@ class ChangePasswordBottomSheet extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             StyledTextField(
+              icon: Icons.email,
+              controller: emailController,
+              hint: "E-mail",
+            ),
+            const SizedBox(height: 16),
+            StyledTextField(
               icon: Icons.lock,
-              controller: passwordController,
+              controller: currentPasswordController,
+              hint: "Password",
+              isPassword: true, // Assuming StyledTextField supports a isPassword flag
+            ),
+            const SizedBox(height: 16),
+             const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+               children: [
+                 Divider( color: Colors.grey,),
+                  Text("New Password", style: TextStyle(color: Colors.grey,fontSize: 12),),
+                  Divider( color: Colors.grey,),
+               ],
+             ),
+            const SizedBox(height: 16),
+            StyledTextField(
+              icon: Icons.lock,
+              controller: newPasswordController,
               hint: "Password",
               isPassword: true,
             ),
             const SizedBox(height: 16),
             StyledTextField(
               icon: Icons.lock,
-              controller: confirmPasswordController,
+              controller: confirmNewPasswordController,
               hint: "Confirm Password",
               isPassword: true,
-              password: passwordController,  
+              password: newPasswordController,  
             ),
             const SizedBox(height: 16),
             Container(
@@ -56,14 +80,10 @@ class ChangePasswordBottomSheet extends StatelessWidget {
                 text: "Save Changes",
                 onPressed: () {
                   if (validation()) {
-                    profileCubit.changeUserPassword(passwordController.text);
+                    profileCubit.changeUserPassword(emailController.text,currentPasswordController.text, newPasswordController.text);
                     Navigator.of(context).pop();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Password Updated Successfully"),
-                      ),
-                    );
-                  }
+                    
+                  } 
                 },
               ),
             ),

@@ -15,11 +15,6 @@ class CustomInfoDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15.0),
-      decoration: BoxDecoration(
-        border: Border.all(
-            color: const Color.fromARGB(255, 175, 176, 182), width: 2),
-        borderRadius: BorderRadius.circular(10.0),
-      ),
       child: Row(
         children: [
           Icon(
@@ -57,12 +52,8 @@ class CustomBioDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15.0),
-      decoration: BoxDecoration(
-        border: Border.all(
-            color: const Color.fromARGB(255, 175, 176, 182), width: 2),
-        borderRadius: BorderRadius.circular(10.0),
-      ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
           const Icon(
             Icons.info,

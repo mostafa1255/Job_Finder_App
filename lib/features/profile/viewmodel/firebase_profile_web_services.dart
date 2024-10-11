@@ -205,12 +205,15 @@ class FirebaseProfileWebServices {
   }
 
   // i need to add a function to change the password of the authenticated user by sending an email to the user to reset the password
-  Future<bool> changeUserPassword(String newPassword) async {
+  Future<bool> changeUserPassword(String currentEmail,String currentPassword,String newPassword) async {
     try {
       // Get the current user
       User? user = FirebaseAuth.instance.currentUser;
+      AuthCredential credential =
+      EmailAuthProvider.credential(email: currentEmail, password: currentPassword);
+      await user!.reauthenticateWithCredential(credential);
       // Update the password
-      await user!.updatePassword(newPassword);
+      await user.updatePassword(newPassword);
       return true;
     } catch (e) {
       print(e.toString());
@@ -218,26 +221,30 @@ class FirebaseProfileWebServices {
     }
   }
 
-  Future<bool> updateEmailIfVerified(String newEmail) async {
+  Future<bool> updateEmail(String currentEmail,String currentPassword,String newEmail) async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
-      await user!
-          .reload(); // Refresh user data to get the latest emailVerified status
-      if (user.emailVerified) {
-        final uid = user.uid;
-
+       // Refresh user data to get the latest emailVerified status
+        final uid = user!.uid;
+        AuthCredential credential =
+      EmailAuthProvider.credential(email: currentEmail, password: currentPassword);
+      await user.reauthenticateWithCredential(credential);
         // Proceed with updating the email if the current email is verified
-        await user.verifyBeforeUpdateEmail(newEmail);
-        // Optionally, send a verification email for the new email
-        await user.sendEmailVerification();
+        await user.updateEmail(newEmail);
         await _firestore.collection('users').doc(uid).update({
           'email': newEmail,
         });
         return true;
-      } else {
-        print("Email is not verified. Cannot update email.");
-        return false;
-      }
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+  //i want a function to sign out the user
+  Future<bool> signOut() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      return true;
     } catch (e) {
       print(e.toString());
       return false;
