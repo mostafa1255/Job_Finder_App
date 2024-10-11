@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:jop_finder_app/features/auth/data/model/user_model.dart';
+import 'package:jop_finder_app/features/auth/data/web_services/firebase_firestore_user_model.dart';
 
 class GoogleAuthenticationWebServices {
   // Google Sign-In Method with Error Management
@@ -29,6 +31,17 @@ class GoogleAuthenticationWebServices {
 
       // Check if the user was successfully signed in
       if (userCredential.user != null) {
+        UserModel user = UserModel(
+            id: userCredential.user!.uid.toString(),
+            name: userCredential.user!.displayName.toString(),
+            email: userCredential.user!.email.toString());
+
+        FirebaseFirestoreUserModel fireStore = FirebaseFirestoreUserModel();
+        try {
+          await fireStore.saveUserToFirestore(user);
+        } catch (e) {
+          print(e);
+        }
         return "User signed in successfully with Google";
       }
 

@@ -15,19 +15,16 @@ import 'package:jop_finder_app/features/auth/data/web_services/firebase_authenti
 class FirebaseProfileWebServices {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FireBaseAuthenticationWebServices _authenticationWebServices;
-
   FirebaseProfileWebServices(this._authenticationWebServices);
 
   // Get the current user's ID from FirebaseAuth
   String? getCurrentUserId() {
-    return   "nwrmkmITTuOuL76MvGAa" ;
+    return FirebaseAuth.instance.currentUser!.uid;
   }
-  
 
   // Fetch user information from Firestore
   Future<UserModel?> getUserInfo() async {
     String? userId = getCurrentUserId();
-    if (userId == null) return null;
     try {
       DocumentSnapshot userDoc =
           await _firestore.collection('users').doc(userId).get();
@@ -160,6 +157,7 @@ class FirebaseProfileWebServices {
       return false;
     }
   }
+
   Future<bool> customUpdateToFirebaseProfile(String key, String value) async {
     String? userId = getCurrentUserId();
     if (userId == null) return false;
@@ -206,8 +204,6 @@ class FirebaseProfileWebServices {
     }
   }
 
-
-
   // i need to add a function to change the password of the authenticated user by sending an email to the user to reset the password
   Future<bool> changeUserPassword(String newPassword) async {
     try {
@@ -221,66 +217,75 @@ class FirebaseProfileWebServices {
       return false;
     }
   }
-  Future<bool> updateEmailIfVerified(String newEmail) async {
-  try {
-    User? user = FirebaseAuth.instance.currentUser;
-    await user!.reload(); // Refresh user data to get the latest emailVerified status
-    if (user.emailVerified) {
-  final uid = user.uid;
 
-      // Proceed with updating the email if the current email is verified
-      await user.verifyBeforeUpdateEmail(newEmail);
-      // Optionally, send a verification email for the new email
-      await user.sendEmailVerification();
-      await _firestore.collection('users').doc(uid).update({
-        'email': newEmail,
-      });
-      return true;
-    } else {
-      print("Email is not verified. Cannot update email.");
+  Future<bool> updateEmailIfVerified(String newEmail) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      await user!
+          .reload(); // Refresh user data to get the latest emailVerified status
+      if (user.emailVerified) {
+        final uid = user.uid;
+
+        // Proceed with updating the email if the current email is verified
+        await user.verifyBeforeUpdateEmail(newEmail);
+        // Optionally, send a verification email for the new email
+        await user.sendEmailVerification();
+        await _firestore.collection('users').doc(uid).update({
+          'email': newEmail,
+        });
+        return true;
+      } else {
+        print("Email is not verified. Cannot update email.");
+        return false;
+      }
+    } catch (e) {
+      print(e.toString());
       return false;
     }
-  } catch (e) {
-    print(e.toString());
-    return false;
+  }
+
+  Future<bool> reauthenticateAndDeleteUser(
+      String email, String password) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      print("No user signed in.");
+      return false;
+    }
+    final uid = user.uid;
+    // Create credential
+    AuthCredential credential =
+        EmailAuthProvider.credential(email: email, password: password);
+    try {
+      // Re-authenticate
+      await user.reauthenticateWithCredential(credential);
+      await FirebaseFirestore.instance.collection('users').doc(uid).delete();
+      // If re-authentication is successful, proceed to delete the user
+      await user.delete();
+      print("User account deleted successfully.");
+      return true;
+    } on FirebaseAuthException catch (e) {
+      // Handle different errors here (e.g., wrong password)
+      print("Error during re-authentication: ${e.code}");
+      return false;
+    }
+  }
+
+//make a method to update the user profile in the firestore to update the whole userprofile map field
+  Future<bool> updateUserProfile(UserProfile profile) async {
+    String? userId = getCurrentUserId();
+    if (userId == null) return false;
+
+    try {
+      await _firestore.collection('users').doc(userId).update({
+        'profile': profile.toMap(),
+      });
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
   }
 }
-
-
-
-Future<bool> reauthenticateAndDeleteUser(String email, String password) async {
-  User? user = FirebaseAuth.instance.currentUser;
-  if (user == null) {
-    print("No user signed in.");
-    return false;
-  }
-  final uid = user.uid;
-  // Create credential
-  AuthCredential credential = EmailAuthProvider.credential(email: email, password: password);
-  try {
-    // Re-authenticate
-    await user.reauthenticateWithCredential(credential);
-    await FirebaseFirestore.instance.collection('users').doc(uid).delete();
-    // If re-authentication is successful, proceed to delete the user
-    await user.delete();
-    print("User account deleted successfully.");
-    return true;
-  } on FirebaseAuthException catch (e) {
-    // Handle different errors here (e.g., wrong password)
-    print("Error during re-authentication: ${e.code}");
-    return false;
-  }
-}
-
-
-
-
-
-}
-
-
-
-
 
 /*
 ***************************important ***********************
@@ -298,7 +303,6 @@ Future<bool> reauthenticateAndDeleteUser(String email, String password) async {
 ***************************important ***********************
 
 */
-
 
 /*
 

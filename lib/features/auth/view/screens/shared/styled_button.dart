@@ -16,8 +16,6 @@ class StyledButton extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(5)),
           ),
         ),
-        backgroundColor:
-            WidgetStatePropertyAll(Color.fromARGB(255, 53, 104, 153)),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16),

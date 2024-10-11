@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jop_finder_app/core/constants/app_colors.dart';
 
 class StyledTextField extends StatefulWidget {
   const StyledTextField(
@@ -36,6 +37,7 @@ class _StyledTextFieldState extends State<StyledTextField> {
         isPasswordChecker ?? (widget.isPassword == true ? true : false);
 
     return TextFormField(
+      style: Theme.of(context).textTheme.headlineMedium,
       controller: widget.controller,
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -49,49 +51,75 @@ class _StyledTextFieldState extends State<StyledTextField> {
           return "${widget.hint} must be at least 8 digits";
         } else if (widget.hint == "Confirm Password" &&
             widget.password?.text != value) {
-          print(value);
-          print(widget.password?.text);
           return ("Doesn't match");
         }
         return null;
       },
       obscureText: isPasswordChecker!,
       decoration: InputDecoration(
+        //Hint text
         hintText: widget.hint,
-        labelStyle: const TextStyle(
-            color: Color.fromARGB(255, 13, 13, 38),
-            fontSize: 14,
-            fontWeight: FontWeight.w400),
-        hintStyle: const TextStyle(
-            color: Color.fromARGB(255, 175, 176, 182), fontSize: 14),
+
+        //apply padding
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+
+        //text coloring
+        labelStyle: Theme.of(context).textTheme.headlineMedium,
+        hintStyle: Theme.of(context).textTheme.bodySmall,
+        errorStyle: Theme.of(context).textTheme.bodyLarge,
+
+        // left side Icon
         prefixIcon: Icon(
           widget.icon,
-          color: const Color.fromARGB(255, 175, 176, 182),
+          color: AppColors.hintColor,
           size: 20,
         ),
+
+        //enable border
+
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
           borderSide: const BorderSide(
-              color: Color.fromARGB(255, 175, 176, 182), width: 1),
+            color: AppColors.hintColor,
+            width: 1,
+          ),
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
           borderSide: const BorderSide(
-            color: Color.fromARGB(102, 175, 176, 182),
+            color: AppColors.hintColor,
           ),
         ),
-        focusColor: const Color.fromARGB(255, 13, 13, 38),
+        focusColor: AppColors.primaryText,
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
           borderSide: const BorderSide(
-              color: Color.fromARGB(255, 13, 13, 38), width: 1),
+            color: AppColors.primaryText,
+            width: 1,
+          ),
         ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: const BorderSide(
+            color: AppColors.myRed,
+            width: 1,
+          ),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: const BorderSide(
+            color: AppColors.myRed,
+            width: 1,
+          ),
+        ),
+        //password right side Icon
         suffixIcon: widget.isPassword == true
             ? IconButton(
                 icon: Icon(
                   isPasswordChecker! ? Icons.visibility : Icons.visibility_off,
-                  color: const Color.fromARGB(255, 175, 176, 182),
-                  size: 24,
+                  color: AppColors.hintColor,
+                  size: 20,
                 ),
                 onPressed: () {
                   setState(() {
@@ -99,8 +127,6 @@ class _StyledTextFieldState extends State<StyledTextField> {
                   });
                 })
             : const SizedBox(),
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
       ),
     );
   }

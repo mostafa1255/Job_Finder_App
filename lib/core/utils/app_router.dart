@@ -12,7 +12,6 @@ import 'package:jop_finder_app/features/job_apply/view/pages/succefull_Screen.da
 import 'package:jop_finder_app/features/job_post/view/pages/all_applicants_screen.dart';
 import 'package:jop_finder_app/features/job_post/view/pages/job_post.dart';
 import 'package:jop_finder_app/features/job_post/view/pages/my_postedJob.dart';
-import 'package:jop_finder_app/features/job_search/viewmodel/job_search_cubit.dart';
 import 'package:jop_finder_app/features/profile/view/pages/applications.dart';
 import 'package:jop_finder_app/features/profile/view/pages/profile.dart';
 import 'package:jop_finder_app/features/profile/view/pages/proposals.dart';
@@ -46,8 +45,6 @@ class AppRouter {
   static const jobSearchScreen = "/jobSearchScreen";
   static const seeAllPage = "/seeAllPage";
 
-
-
   static FireBaseAuthenticationWebServices fireBaseAuthenticationWebServices =
       FireBaseAuthenticationWebServices();
   static FirebaseProfileWebServices firebaseProfileWebServices =
@@ -55,7 +52,7 @@ class AppRouter {
   static ProfileCubit profileCubit = ProfileCubit(firebaseProfileWebServices);
 
   static GoRouter router = GoRouter(
-    initialLocation: homeScreen,
+    initialLocation: splash,
     errorPageBuilder: (context, state) => MaterialPage(
       key: state.pageKey,
       child: Scaffold(
@@ -78,22 +75,34 @@ class AppRouter {
       GoRoute(
         path: signUp,
         name: signUp,
-        builder: (context, state) => const SignUpScreen(),
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const SignUpScreen(),
+          transitionsBuilder: _fadeTransition, // Slide transition
+        ),
       ),
       GoRoute(
         path: login,
         name: login,
-        builder: (context, state) => const LoginScreen(),
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const LoginScreen(),
+          transitionsBuilder: _slideTransition,
+        ),
       ),
       GoRoute(
         path: forgetPassword,
         name: forgetPassword,
-        builder: (context, state) => ForgetPasswordScreen(),
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const ForgetPasswordScreen(),
+          transitionsBuilder: _slideTransition, // Slide transition
+        ),
       ),
       GoRoute(
         path: homeScreen,
         name: homeScreen,
-        builder: (context, state) => HomeScreen(),
+        builder: (context, state) => const HomeScreen(),
       ),
       GoRoute(
         path: jobSearchScreen,

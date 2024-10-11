@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jop_finder_app/core/constants/app_colors.dart';
 import 'package:jop_finder_app/core/utils/app_router.dart';
 import 'package:jop_finder_app/features/auth/viewmodel/cubit/auth_cubit.dart';
 import 'package:jop_finder_app/features/job_search/viewmodel/job_search_cubit.dart';
@@ -31,15 +32,7 @@ class JopFinderApp extends StatelessWidget {
       splitScreenMode: false,
       builder: (_, child) {
         return MaterialApp.router(
-          theme: ThemeData(
-            fontFamily: 'Poppins',
-            textSelectionTheme: TextSelectionThemeData(
-              cursorColor: Colors.blue, // Change the cursor color to blue
-              selectionColor: Colors.blue
-                  .withOpacity(0.4), // Text selection color (highlight)
-              selectionHandleColor: Colors.blue, // The tear drop color
-            ),
-          ),
+          theme: appTheme,
           routerConfig: AppRouter.router,
           debugShowCheckedModeBanner: false,
         );

@@ -44,7 +44,7 @@ Future<void> createFakeUserDocument() async {
       PostedJob(jobId: "jobId2", postedDate: DateTime.now()),
     ],
     cvUrl: "https://example.com/cv.pdf",
-    additionalInfo: {"jopTitle": "UX Designer"},
+    additionalInfo: {"key": "value"},
     profile: UserProfile(
       bio: "A short bio",
       skills: ["Dart", "Flutter"],

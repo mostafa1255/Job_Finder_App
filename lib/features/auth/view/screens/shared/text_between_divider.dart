@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jop_finder_app/core/constants/app_colors.dart';
 
 class TextBetweenDivider extends StatelessWidget {
   const TextBetweenDivider({required this.text, super.key});
@@ -15,7 +16,7 @@ class TextBetweenDivider extends StatelessWidget {
           child: Text(
             text,
             style: const TextStyle(
-              color: Color.fromARGB(255, 175, 176, 182),
+              color: AppColors.hintColor,
               fontSize: 13,
             ),
           ),
