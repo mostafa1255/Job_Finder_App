@@ -1,10 +1,11 @@
+//firebase_auth
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:jop_finder_app/features/auth/data/model/user_model.dart';
 import 'package:jop_finder_app/features/auth/data/web_services/firebase_firestore_user_model.dart';
 
 class FireBaseAuthenticationWebServices {
   final FirebaseAuth _fireBaseAuth = FirebaseAuth.instance;
-  FirebaseFirestoreUserModel fireStore = FirebaseFirestoreUserModel();
 
   // Method to get the current user
   User? getCurrentUser() {
@@ -28,9 +29,9 @@ class FireBaseAuthenticationWebServices {
 
         UserModel user = UserModel(
             id: credential.user!.uid.toString(),
-            name: fullName.toString(),
+            name: capitalizeEachWord(fullName.toString()),
             email: credential.user!.email.toString());
-
+        FirebaseFirestoreUserModel fireStore = FirebaseFirestoreUserModel();
         try {
           await fireStore.saveUserToFirestore(user);
         } catch (e) {
@@ -107,5 +108,20 @@ class FireBaseAuthenticationWebServices {
       default:
         return "An error occurred: ${e.message}";
     }
+  }
+
+  String capitalizeEachWord(String text) {
+    // Split the text by spaces
+    final words = text.split(' ');
+
+    // Capitalize each word
+    final capitalizedWords = words.map((word) {
+      return word.isNotEmpty
+          ? word[0].toUpperCase() + word.substring(1).toLowerCase()
+          : '';
+    }).toList();
+
+    // Rejoin the words into a sentence
+    return capitalizedWords.join(' ');
   }
 }
