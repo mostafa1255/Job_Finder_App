@@ -19,11 +19,7 @@ class FirebaseProfileWebServices {
 
   // Get the current user's ID from FirebaseAuth
   String? getCurrentUserId() {
-<<<<<<< HEAD
-    return "nwrmkmITTuOuL76MvGAa";
-=======
-    return   FirebaseAuth.instance.currentUser!.uid ;
->>>>>>> e467b4c6fe299a557d19a43de7984b543fccf6d3
+    return FirebaseAuth.instance.currentUser!.uid;
   }
 
   // Fetch user information from Firestore
@@ -273,45 +269,23 @@ class FirebaseProfileWebServices {
       return false;
     }
   }
-  final uid = user.uid;
-  // Create credential
-  AuthCredential credential = EmailAuthProvider.credential(email: email, password: password);
-  try {
-    // Re-authenticate
-    await user.reauthenticateWithCredential(credential);
-    await FirebaseFirestore.instance.collection('users').doc(uid).delete();
-    // If re-authentication is successful, proceed to delete the user
-    await user.delete();
-    print("User account deleted successfully.");
-    return true;
-  } on FirebaseAuthException catch (e) {
-    // Handle different errors here (e.g., wrong password)
-    print("Error during re-authentication: ${e.code}");
-    return false;
+
+//make a method to update the user profile in the firestore to update the whole userprofile map field
+  Future<bool> updateUserProfile(UserProfile profile) async {
+    String? userId = getCurrentUserId();
+    if (userId == null) return false;
+
+    try {
+      await _firestore.collection('users').doc(userId).update({
+        'profile': profile.toMap(),
+      });
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
   }
 }
-
-//make a method to update the user profile in the firestore to update the whole userprofile map field 
-Future<bool> updateUserProfile(UserProfile profile) async {
-  String? userId = getCurrentUserId();
-  if (userId == null) return false;
-
-  try {
-    await _firestore.collection('users').doc(userId).update({
-      'profile': profile.toMap(),
-    });
-    return true;
-  } catch (e) {
-    print(e.toString());
-    return false;
-  }
-}
-
-}
-
-
-
-
 
 /*
 ***************************important ***********************
@@ -329,7 +303,6 @@ Future<bool> updateUserProfile(UserProfile profile) async {
 ***************************important ***********************
 
 */
-
 
 /*
 
