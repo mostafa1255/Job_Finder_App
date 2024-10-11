@@ -1,5 +1,4 @@
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jop_finder_app/features/auth/data/model/UserProfile_model.dart';
@@ -263,6 +262,26 @@ class ProfileCubit extends Cubit<ProfileState> {
     } catch (e) {
       emit(ProfileError(e.toString()));
       return false;
+    }
+  }
+
+  //implement the updateUserProfile method from the firebase profile web services
+  Future<void> updateUserProfile(UserProfile userProfile) async {
+    emit(ProfileLoading());
+    try {
+      final success = await _profileWebServices.updateUserProfile(userProfile);
+      if (success == true) {
+        final user = await _profileWebServices.getUserInfo();
+        if (user != null) {
+          emit(UserUpdated(user));
+        } else {
+          emit(ProfileError("Failed to fetch updated user info"));
+        }
+      } else {
+        emit(ProfileError("Failed to update user profile"));
+      }
+    } catch (e) {
+      emit(ProfileError(e.toString()));
     }
   }
 }
