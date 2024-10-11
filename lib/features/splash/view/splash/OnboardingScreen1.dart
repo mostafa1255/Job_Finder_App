@@ -84,9 +84,9 @@ class _OnBoardingScreen1State extends State<OnBoardingScreen1> {
                   controller: _controller,
                   count: 4,
                   effect: const ExpandingDotsEffect(
-                    spacing: 4,
+                    spacing: 3,
                     radius: 8,
-                    dotWidth: 18,
+                    dotWidth: 16,
                     dotHeight: 14,
                     paintStyle: PaintingStyle.fill,
                     dotColor: Colors.grey,
