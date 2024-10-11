@@ -1,8 +1,27 @@
-[33m5e44b23[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdevelp[m[33m)[m HEAD@{0}: reset: moving to HEAD
-[33m5e44b23[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdevelp[m[33m)[m HEAD@{1}: pull: Fast-forward
-[33mefa7b95[m HEAD@{2}: pull: Fast-forward
-[33m4b97083[m HEAD@{3}: reset: moving to HEAD
-[33m4b97083[m HEAD@{4}: reset: moving to HEAD
-[33m4b97083[m HEAD@{5}: pull --tags origin develp: Fast-forward
-[33m37bbae0[m HEAD@{6}: checkout: moving from main to develp
-[33mce32d28[m[33m ([m[1;32mmain[m[33m)[m HEAD@{7}: clone: from https://github.com/mostafa1255/Job_Finder_App.git
+- commit: 5e44b23
+  branch: develp
+  action: reset
+  description: moving to HEAD
+- commit: 5e44b23
+  branch: develp
+  action: pull
+  description: Fast-forward
+- commit: efa7b95
+  action: pull
+  description: Fast-forward
+- commit: 4b97083
+  action: reset
+  description: moving to HEAD
+- commit: 4b97083
+  action: reset
+  description: moving to HEAD
+- commit: 4b97083
+  action: pull --tags origin develp
+  description: Fast-forward
+- commit: 37bbae0
+  action: checkout
+  description: moving from main to develp
+- commit: ce32d28
+  branch: main
+  action: clone
+  description: from https://github.com/mostafa1255/Job_Finder_App.git

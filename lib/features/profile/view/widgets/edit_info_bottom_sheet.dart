@@ -9,7 +9,7 @@ import 'package:jop_finder_app/features/profile/viewmodel/profile_cubit.dart';
 class EditInfoBottomSheet extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneNumberController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
+  final TextEditingController jobTitleController = TextEditingController();
   final ProfileCubit profileCubit;
   final UserModel? user ;
   EditInfoBottomSheet(this.profileCubit, this.user, {super.key});
@@ -34,9 +34,8 @@ class EditInfoBottomSheet extends StatelessWidget {
     return false;
   }
 
-  bool isEmailValid() {
-    if (emailController.text.contains('@') &&
-        emailController.text.contains('.com')) {
+  bool isJopTitleValid() {
+    if (jobTitleController.text[0] == jobTitleController.text[0].toUpperCase()) {
       return true;
     }
     return false;
@@ -70,10 +69,10 @@ class EditInfoBottomSheet extends StatelessWidget {
             icon: Icons.phone, // Example icon, adjust as needed
           ),
           EditInfoTextFiled(
-            initialText: user!.email,
-            controller: emailController,
-            hint: "E-mail", // Corrected from hintText to hint
-            icon: Icons.email, // Example icon, adjust as needed
+            initialText: user!.profile!.jobTitle??'',
+            controller: jobTitleController,
+            hint: "Job Title", // Corrected from hintText to hint
+            icon: Icons.title, // Example icon, adjust as needed
           ),
           SizedBox(height: 16),
           Container(
@@ -82,7 +81,7 @@ class EditInfoBottomSheet extends StatelessWidget {
               onPressed: () {
                 if (nameController.text.isNotEmpty ||
                     phoneNumberController.text.isNotEmpty ||
-                    emailController.text.isNotEmpty) {
+                    jobTitleController.text.isNotEmpty) {
                       if ( isNameValid() ) {
                         profileCubit.customUpdateToFirebase('name', nameController.text);
                       }else {
@@ -101,12 +100,12 @@ class EditInfoBottomSheet extends StatelessWidget {
                           ),
                         );
                       }
-                      if ( isEmailValid() ) {
-                        profileCubit.customUpdateToFirebase('email', emailController.text);
+                      if ( isJopTitleValid() ) {
+                        profileCubit.customUpdateToFirebaseProfile('jobTitle', jobTitleController.text);
                       }else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text("Email is not valid"),
+                            content: Text("job Title is not valid"),
                           ),
                         );
                       }
@@ -164,7 +163,7 @@ class EditInfoTextFiled extends StatelessWidget {
               color: Color.fromARGB(255, 175, 176, 182), fontSize: 14),
           prefixIcon: Icon(
             icon,
-            color: MyColor.primaryBlue,
+            color: AppColors.primaryBlue,
             size: 20,
           ),
           enabledBorder: OutlineInputBorder(

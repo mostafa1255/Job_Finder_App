@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jop_finder_app/core/utils/app_router.dart';
 import 'package:jop_finder_app/features/auth/viewmodel/cubit/auth_cubit.dart';
+import 'package:jop_finder_app/features/job_search/viewmodel/job_search_cubit.dart';
 import 'package:jop_finder_app/firebase_options.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -13,7 +14,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(BlocProvider(
-    create: (context) => AuthCubit(),
+    create: (context) => JobSearchCubit(),
     child: const JopFinderApp(),
   ));
 }

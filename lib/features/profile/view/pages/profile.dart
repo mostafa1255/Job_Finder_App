@@ -75,7 +75,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               CircleAvatar(
                 radius: 60.sp,
-                backgroundImage: NetworkImage(user!.profileImageUrl!),
+                backgroundImage: NetworkImage(user!.profileImageUrl??'https://via.placeholder.com/150'),
                 // Replace with actual image URL
               ),
               Positioned(
@@ -85,7 +85,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Container(
                   padding: EdgeInsets.all(5), // Adjust padding if necessary
                   decoration: BoxDecoration(
-                    color: MyColor.primaryBlue,
+                    color: AppColors.primaryBlue,
                     shape: BoxShape.circle,
                   ),
                   child: IconButton(
@@ -109,18 +109,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 Text(
                   user!.name,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      user!.jobTitle ?? 'No job title',
-                      style: TextStyle(color: Colors.grey),
+                      user!.profile!.jobTitle ?? 'No job title',
+                      style: TextStyle(color: Colors.grey, fontSize: 13),
                     ),
                     Icon(
                       Icons.verified,
-                      color: MyColor.primaryBlue,
+                      color: AppColors.primaryBlue,
                       size: 16,
                     )
                   ],
@@ -128,17 +128,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
           ),
-          SizedBox(height: 16),
+          SizedBox(height: 24),
           Center(
-            child: Text(
-              user!.appliedJobs!.length.toString(),
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-            ),
-          ),
-          Center(
-            child: Text(
-              'Applied',
-              style: TextStyle(color: Colors.grey),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      user!.appliedJobs!.length.toString(),
+                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                    ),
+                    Text(
+                      'Applied',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text(
+                      user!.profile!.status ?? 'No status',
+                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                    ),
+                    Text(
+                      'Status',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
           SizedBox(height: 30),
@@ -150,7 +169,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               SizedBox(width: 10.w), // Adjust spacing based on your layout
               Expanded(
                 child: CustomInfoDisplay(
-                    text: user!.phoneNumber!,
+                    text: user!.phoneNumber ??'No phone number',
                     icon: Icons.phone_android_outlined),
               ),
             ],
@@ -163,7 +182,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             );
           }),
           SizedBox(height: 10),
-          CustomBioDisplay(text: user!.profile!.bio!),
+          CustomBioDisplay(text: user!.profile!.bio??'No bio added'),
           SizedBox(height: 24),
           buildSectionHeader('Education', onPressed: () {
             showModalBottomSheet(
@@ -204,7 +223,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: const Color.fromARGB(230, 255, 255, 255),
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: MyColor.primaryBlue),
+          icon: Icon(Icons.arrow_back, color: AppColors.primaryBlue),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -218,13 +237,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 builder: (context) => EditInfoBottomSheet(profileCubit!, user!),
               );
             },
-            icon: Icon(Icons.edit, color: MyColor.primaryBlue),
+            icon: Icon(Icons.edit, color: AppColors.primaryBlue),
           ),
           IconButton(
             onPressed: () {
               GoRouter.of(context).pushNamed('/settingsScreen');
             },
-            icon: Icon(Icons.settings, color: MyColor.primaryBlue),
+            icon: Icon(Icons.settings, color: AppColors.primaryBlue),
           )
         ],
       ),
@@ -245,7 +264,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           onPressed: onPressed,
           child: Text(
             'Add',
-            style: TextStyle(color: MyColor.primaryBlue),
+            style: TextStyle(color: AppColors.primaryBlue),
           ),
         )
       ],
@@ -265,7 +284,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           onPressed: onPressed,
           child: Text(
             'Edit',
-            style: TextStyle(color: MyColor.primaryBlue),
+            style: TextStyle(color: AppColors.primaryBlue),
           ),
         )
       ],
@@ -283,8 +302,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Icon(Icons.school, size: 40, color: MyColor.primaryBlue),
+          Icon(Icons.school, size: 40, color: AppColors.primaryBlue),
           SizedBox(width: 16),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -320,28 +340,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Text('No CV. Add one.'.toUpperCase(),
                   style: TextStyle(color: Colors.grey, fontSize: 16)),
             )
-          : InkWell(
-              onTap: () {
-                // Assuming `profileCubit` has the method `openPdf` to open the URL
-                profileCubit!.openPdf(user!.cvUrl!);
-              },
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
+          : Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
                 children: [
                   SizedBox(width: 4), // Spacing between icon and text
                   Icon(
                     Icons.file_present,
                     size: 30,
-                    color: MyColor.primaryBlue,
+                    color: AppColors.primaryBlue,
                   ), // File icon
-                  SizedBox(width: 8), // Spacing between icon and text
-                  Expanded(
-                    child: Text('${user!.name} CV.pdf',
+                  SizedBox(width: 12), // Spacing between icon and text
+                  InkWell(
+                    onTap: () {
+                      profileCubit!.openPdf(user!.cvUrl!);
+                    },
+                    child: Text('${user!.name}_CV.pdf',
                         maxLines: 1, overflow: TextOverflow.ellipsis),
                   ), // Displaying the file name extracted from the URL
                 ],
               ),
-            ),
+              IconButton(
+                onPressed: () {
+                  profileCubit!.customUpdateToFirebase("cvUrl", "");
+                },
+                icon: Icon(Icons.delete, color: AppColors.primaryBlue),
+              )
+            ],
+          ),
     );
   }
 }
