@@ -62,6 +62,14 @@ class FirebaseProfileWebServices {
     String? userId = getCurrentUserId();
     if (userId == null) return false;
     try {
+       DocumentSnapshot userDoc = await _firestore.collection('users').doc(userId).get();
+    String? currentImageUrl = userDoc['profileImageUrl'];
+
+    // Delete the current image from Firebase Storage if it exists
+    if (currentImageUrl != null && currentImageUrl.isNotEmpty) {
+      String currentImageFileName = Uri.parse(currentImageUrl).pathSegments.last;
+      await FirebaseStorage.instance.ref().child(currentImageFileName).delete();
+    }
       // Upload image to Firebase Storage
       String fileName = DateTime.now().millisecondsSinceEpoch.toString();
       Reference ref =
@@ -85,10 +93,17 @@ class FirebaseProfileWebServices {
     String? userId = getCurrentUserId();
     if (userId == null) return false;
     try {
+      DocumentSnapshot userDoc = await _firestore.collection('users').doc(userId).get();
+      String? currentCvUrl = userDoc['cvUrl'];
+      // Delete the current CV from Firebase Storage if it exists
+      if (currentCvUrl != null && currentCvUrl.isNotEmpty) {
+        String currentCvFileName = Uri.parse(currentCvUrl).pathSegments.last;
+        await FirebaseStorage.instance.ref().child(currentCvFileName).delete();
+      }
       // Ensure the file name retains the .pdf extension
       String fileName =
           "${DateTime.now().millisecondsSinceEpoch.toString()}.pdf";
-      Reference ref = FirebaseStorage.instance.ref().child('CVs/$fileName');
+      Reference ref = FirebaseStorage.instance.ref().child('CVs/$userId/$fileName');
       UploadTask uploadTask;
       // Check if running on web
       if (kIsWeb) {
@@ -103,14 +118,11 @@ class FirebaseProfileWebServices {
         uploadTask =
             ref.putFile(file, SettableMetadata(contentType: 'application/pdf'));
       }
-      final snapshot = await uploadTask.whenComplete(() {
-        // Perform any actions after the file is uploaded
-      });
+      final snapshot = await uploadTask.whenComplete(() {});
       final cvUrl = await snapshot.ref.getDownloadURL();
       await _firestore.collection('users').doc(userId).update({
         'cvUrl': cvUrl,
       });
-      // Update the user's document with the CV URL
       return true;
     } catch (e) {
       print(e.toString());

@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:jop_finder_app/core/constants/app_colors.dart';
 import 'package:jop_finder_app/core/constants/strings.dart';
 import 'package:jop_finder_app/features/profile/view/widgets/change_email_bottomsheet.dart';
