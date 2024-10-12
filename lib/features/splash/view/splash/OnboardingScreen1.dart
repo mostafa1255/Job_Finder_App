@@ -32,6 +32,7 @@ class _OnBoardingScreen1State extends State<OnBoardingScreen1> {
   void dispose() {
     _controller.dispose();
     super.dispose();
+    print('');
   }
 
   void _goToNextPage() {
