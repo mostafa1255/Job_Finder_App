@@ -72,7 +72,7 @@ class FirebaseProfileWebServices {
 
       // Update user's imageUrl in Firestore
       await _firestore.collection('users').doc(userId).update({
-        'imageUrl': imageUrl,
+        'profileImageUrl': imageUrl,
       });
       return true;
     } catch (e) {

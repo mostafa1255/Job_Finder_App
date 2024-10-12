@@ -6,13 +6,13 @@ import 'package:jop_finder_app/features/auth/data/model/user_model.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/styled_button.dart'; // Ensure correct path
 import 'package:jop_finder_app/features/profile/viewmodel/profile_cubit.dart';
 
-class EditInfoBottomSheet extends StatelessWidget {
+class EditInfoDialog extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneNumberController = TextEditingController();
   final TextEditingController jobTitleController = TextEditingController();
   final ProfileCubit profileCubit;
   final UserModel? user;
-  EditInfoBottomSheet(this.profileCubit, this.user, {super.key});
+  EditInfoDialog(this.profileCubit, this.user, {super.key});
 
   bool isNameValid() {
     if (nameController.text.contains(' ') &&
@@ -44,91 +44,86 @@ class EditInfoBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
-      ),
-      padding: EdgeInsets.all(16),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          EditInfoTextFiled(
-            initialText: user!.name,
-            controller: nameController,
-            hint: "Full Name", // Corrected from hintText to hint
-            icon: Icons.person, // Example icon, adjust as needed
-          ),
-          EditInfoTextFiled(
-            initialText: user!.phoneNumber ?? '',
-            controller: phoneNumberController,
-            hint: 'Phone Number', // Corrected from hintText to hint
-            icon: Icons.phone, // Example icon, adjust as needed
-          ),
-          EditInfoTextFiled(
-            initialText: user!.profile!.jobTitle ?? '',
-            controller: jobTitleController,
-            hint: "Job Title", // Corrected from hintText to hint
-            icon: Icons.title, // Example icon, adjust as needed
-          ),
-          SizedBox(height: 16),
-          Container(
-            width: double.infinity,
-            child: StyledButton(
-              onPressed: () {
-                if (nameController.text.isNotEmpty ||
-                    phoneNumberController.text.isNotEmpty ||
-                    jobTitleController.text.isNotEmpty) {
-                  if (isNameValid()) {
-                    profileCubit.customUpdateToFirebase(
-                        'name', nameController.text);
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text("Name is not valid"),
-                      ),
-                    );
-                  }
-                  if (isPhoneNumberValid()) {
-                    profileCubit.customUpdateToFirebase(
-                        'phoneNumber', phoneNumberController.text);
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text("Phone number is not valid"),
-                      ),
-                    );
-                  }
-                  if (isJopTitleValid()) {
-                    profileCubit.customUpdateToFirebaseProfile(
-                        'jobTitle', jobTitleController.text);
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text("job Title is not valid"),
-                      ),
-                    );
-                  }
-
-                  Navigator.pop(context);
-                } else {
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("Fields can't be empty"),
-                    ),
-                  );
-                }
-              },
-              text:
-                  'Save Changes', // Assuming StyledButton requires a text parameter
+    return Dialog(
+      child: Container(
+        padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            EditInfoTextFiled(
+              initialText: user!.name,
+              controller: nameController,
+              hint: "Full Name", // Corrected from hintText to hint
+              icon: Icons.person, // Example icon, adjust as needed
             ),
-          ),
-          const SizedBox(height: 16),
-        ],
+            EditInfoTextFiled(
+              initialText: user!.phoneNumber ?? '',
+              controller: phoneNumberController,
+              hint: 'Phone Number', // Corrected from hintText to hint
+              icon: Icons.phone, // Example icon, adjust as needed
+            ),
+            EditInfoTextFiled(
+              initialText: user!.profile!.jobTitle ?? '',
+              controller: jobTitleController,
+              hint: "Job Title", // Corrected from hintText to hint
+              icon: Icons.title, // Example icon, adjust as needed
+            ),
+            SizedBox(height: 16),
+            Container(
+              width: double.infinity,
+              child: StyledButton(
+                onPressed: () {
+                  if (nameController.text.isNotEmpty ||
+                      phoneNumberController.text.isNotEmpty ||
+                      jobTitleController.text.isNotEmpty) {
+                    if (isNameValid()) {
+                      profileCubit.customUpdateToFirebase(
+                          'name', nameController.text);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Name is not valid"),
+                        ),
+                      );
+                    }
+                    if (isPhoneNumberValid()) {
+                      profileCubit.customUpdateToFirebase(
+                          'phoneNumber', phoneNumberController.text);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Phone number is not valid"),
+                        ),
+                      );
+                    }
+                    if (isJopTitleValid()) {
+                      profileCubit.customUpdateToFirebaseProfile(
+                          'jobTitle', jobTitleController.text);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("job Title is not valid"),
+                        ),
+                      );
+                    }
+      
+                    Navigator.pop(context);
+                  } else {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Fields can't be empty"),
+                      ),
+                    );
+                  }
+                },
+                text:
+                    'Save Changes', // Assuming StyledButton requires a text parameter
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
+        ),
       ),
     );
   }

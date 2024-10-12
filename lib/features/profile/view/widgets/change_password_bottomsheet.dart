@@ -5,13 +5,13 @@ import 'package:jop_finder_app/features/auth/view/screens/shared/styled_button.d
 import 'package:jop_finder_app/features/auth/view/screens/shared/styled_textField.dart';
 import 'package:jop_finder_app/features/profile/viewmodel/profile_cubit.dart';
 
-class ChangePasswordBottomSheet extends StatelessWidget {
+class ChangePasswordDialog extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController currentPasswordController = TextEditingController();
   final TextEditingController newPasswordController = TextEditingController();
   final TextEditingController confirmNewPasswordController = TextEditingController();
   final ProfileCubit profileCubit;
-  ChangePasswordBottomSheet(this.profileCubit, {super.key});
+  ChangePasswordDialog(this.profileCubit, {super.key});
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool validation() {
@@ -23,71 +23,66 @@ class ChangePasswordBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ),
-        ),
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            StyledTextField(
-              icon: Icons.email,
-              controller: emailController,
-              hint: "E-mail",
-            ),
-            const SizedBox(height: 16),
-            StyledTextField(
-              icon: Icons.lock,
-              controller: currentPasswordController,
-              hint: "Password",
-              isPassword: true, // Assuming StyledTextField supports a isPassword flag
-            ),
-            const SizedBox(height: 16),
-             const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-               children: [
-                 Divider( color: Colors.grey,),
-                  Text("New Password", style: TextStyle(color: Colors.grey,fontSize: 12),),
-                  Divider( color: Colors.grey,),
-               ],
-             ),
-            const SizedBox(height: 16),
-            StyledTextField(
-              icon: Icons.lock,
-              controller: newPasswordController,
-              hint: "Password",
-              isPassword: true,
-            ),
-            const SizedBox(height: 16),
-            StyledTextField(
-              icon: Icons.lock,
-              controller: confirmNewPasswordController,
-              hint: "Confirm Password",
-              isPassword: true,
-              password: newPasswordController,  
-            ),
-            const SizedBox(height: 16),
-            Container(
-              width: double.infinity,
-              child: StyledButton(
-                text: "Save Changes",
-                onPressed: () {
-                  if (validation()) {
-                    profileCubit.changeUserPassword(emailController.text,currentPasswordController.text, newPasswordController.text);
-                    Navigator.of(context).pop();
-                    
-                  } 
-                },
+    return Dialog(
+      child: Form(
+        key: _formKey,
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              StyledTextField(
+                icon: Icons.email,
+                controller: emailController,
+                hint: "E-mail",
               ),
-            ),
-          ],
+              const SizedBox(height: 16),
+              StyledTextField(
+                icon: Icons.lock,
+                controller: currentPasswordController,
+                hint: "Password",
+                isPassword: true, // Assuming StyledTextField supports a isPassword flag
+              ),
+              const SizedBox(height: 16),
+               const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                 children: [
+                   Divider( color: Colors.grey,),
+                    Text("New Password", style: TextStyle(color: Colors.grey,fontSize: 12),),
+                    Divider( color: Colors.grey,),
+                 ],
+               ),
+              const SizedBox(height: 16),
+              StyledTextField(
+                icon: Icons.lock,
+                controller: newPasswordController,
+                hint: "Password",
+                isPassword: true,
+              ),
+              const SizedBox(height: 16),
+              StyledTextField(
+                icon: Icons.lock,
+                controller: confirmNewPasswordController,
+                hint: "Confirm Password",
+                isPassword: true,
+                password: newPasswordController,  
+              ),
+              const SizedBox(height: 16),
+              Container(
+                width: double.infinity,
+                child: StyledButton(
+                  text: "Save Changes",
+                  onPressed: () {
+                    if (validation()) {
+                      profileCubit.changeUserPassword(emailController.text,currentPasswordController.text, newPasswordController.text);
+                      Navigator.of(context).pop();
+                      
+                    } 
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

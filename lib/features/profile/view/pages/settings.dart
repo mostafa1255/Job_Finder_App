@@ -82,15 +82,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
         }),
         // buildListItem(Icons.color_lens_outlined, 'Notifications'),
         buildListItem(Icons.lock, 'Change Password', onTap: () {
-          showModalBottomSheet(
+          showDialog(
             context: context,
-            builder: (context) => ChangePasswordBottomSheet(profileCubit!),
+            builder: (context) => ChangePasswordDialog(profileCubit!),
           );
         }),
         buildListItem(Icons.email, 'Change E-mail', onTap: () {
-          showModalBottomSheet(
+          showDialog(
             context: context,
-            builder: (context) => ChangeEmailBottomSheet(profileCubit!),
+            builder: (context) => ChangeEmailDialog(profileCubit!),
           );
         }),
         buildListItem(Icons.logout, 'Logout', onTap: () {
@@ -115,9 +115,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
         // buildListItem(Icons.color_lens_outlined, 'Theme'),
         buildListItem(Icons.delete, 'Delete Account', color: Colors.red,
             onTap: () {
-          showModalBottomSheet(
+          showDialog(
             context: context,
-            builder: (context) => DeleteAccountBottomSheet(profileCubit!),
+            builder: (context) => DeleteAccountDialog(profileCubit!),
           );
         }),
         SizedBox(height: 20),

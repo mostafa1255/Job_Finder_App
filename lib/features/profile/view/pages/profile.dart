@@ -20,6 +20,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  
   UserModel? user;
   ProfileCubit? profileCubit;
 
@@ -102,7 +103,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               CircleAvatar(
                 radius: 60.sp,
                 backgroundImage: NetworkImage(
-                    user?.profileImageUrl ??
+                    user!.profileImageUrl ??
                         'https://pinnaclera.com/wp-content/uploads/2023/02/default_profile_image.png',
                     scale: 1.0),
                 // Replace with actual image URL
@@ -208,18 +209,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           SizedBox(height: 24),
           buildBioHeader('Bio', onPressed: () {
-            showModalBottomSheet(
+            showDialog(
               context: context,
-              builder: (context) => EditBioBottomSheet(profileCubit!),
+              builder: (context) => EditBioDialog(profileCubit!),
             );
           }),
           SizedBox(height: 10),
           CustomBioDisplay(text: user!.profile!.bio ?? 'No bio added'),
           SizedBox(height: 28),
           buildSectionHeader('Education', onPressed: () {
-            showModalBottomSheet(
+            showDialog(
               context: context,
-              builder: (context) => EducationAddBottomSheet(profileCubit!),
+              builder: (context) => EducationAddDialog(profileCubit!),
             );
           }),
           SizedBox(height: 10),
@@ -251,10 +252,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
           actions: [
             IconButton(
               onPressed: () {
-                showModalBottomSheet(
+                showDialog(
                   context: context,
                   builder: (context) =>
-                      EditInfoBottomSheet(profileCubit!, user!),
+                      EditInfoDialog(profileCubit!, user!),
                 );
               },
               icon: Icon(
