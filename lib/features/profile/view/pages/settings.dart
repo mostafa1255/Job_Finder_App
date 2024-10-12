@@ -39,11 +39,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           return buildSettingsScreen();
         } else if (state is ProfileError) {
           return Center(child: Text(state.errorMessage));
-        } else if (state is AccountDeleted || state is SignedOut) {
-          GoRouter.of(context).pushReplacementNamed('/login');
-          return Center();
-          } else if (state is PasswordChanged) {
-          return Center( child: Text('Password changed successfully'));
+        } else if (state is PasswordChanged) {
+          return Center(child: Text('Password changed successfully'));
         } else {
           return Center(child: Text('Error occurred'));
         }
@@ -98,18 +95,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
         }),
         buildListItem(Icons.logout, 'Logout', onTap: () {
           showDialog(
-                context: context,
-                builder: (context) {
-                  return CustomAlertDialog(
-                    title: 'Logout',
-                    body: 'Are you sure you want to logout ?',
-                    actionButtonTitle: 'Logout',
-                    onActionButtonPressed: () {
-                      profileCubit!.signOut();
-                    },
-                  );
+            context: context,
+            builder: (context) {
+              return CustomAlertDialog(
+                title: 'Logout',
+                body: 'Are you sure you want to logout ?',
+                actionButtonTitle: 'Logout',
+                onActionButtonPressed: () {
+                  Navigator.of(context).pop();
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    // Assuming profileCubit.signOut() triggers navigation or state update
+                    profileCubit!.signOut();
+                  });
                 },
               );
+            },
+          );
         }),
         // buildListItem(Icons.color_lens_outlined, 'Theme'),
         buildListItem(Icons.delete, 'Delete Account', color: Colors.red,
@@ -124,8 +125,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         buildListItem(Icons.privacy_tip, 'Privacy', onTap: () {
           showPrivacyDialog(context);
         }),
-        buildListItem(Icons.description, 'Terms and conditions',
-            onTap: () {
+        buildListItem(Icons.description, 'Terms and conditions', onTap: () {
           showTermsDialog(context);
         }),
         buildListItem(Icons.info, 'About', onTap: () {
@@ -149,12 +149,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   ListTile buildListItem(IconData icon, String title,
-      {Color color =AppColors.primaryBlue, required Function onTap}) {
+      {Color color = AppColors.primaryBlue, required Function onTap}) {
     return ListTile(
       leading: Icon(icon, color: color),
       title: Text(
         title,
-        style:  (title =='Delete Account')? TextStyle(color: color) : (Theme.of(context).textTheme.labelLarge),
+        style: (title == 'Delete Account')
+            ? TextStyle(color: color)
+            : (Theme.of(context).textTheme.labelLarge),
       ),
       onTap: () {
         onTap();

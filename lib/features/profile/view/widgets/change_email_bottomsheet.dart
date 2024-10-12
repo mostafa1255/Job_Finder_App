@@ -70,7 +70,7 @@ class ChangeEmailBottomSheet extends StatelessWidget {
                 text: "Save Changes",
                 onPressed: () {
                   if (validation()) {
-                   profileCubit.updateEmailIfVerified(currentEmailController.text, currentPasswordController.text, newEmailController.text);
+                   profileCubit.updateEmail(currentEmailController.text, currentPasswordController.text, newEmailController.text);
                     Navigator.of(context).pop();
                    ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(

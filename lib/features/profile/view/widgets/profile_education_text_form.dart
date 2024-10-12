@@ -46,6 +46,7 @@ class _ProfileEducationTextFormState extends State<ProfileEducationTextForm> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      style: Theme.of(context).textTheme.headlineMedium,
       readOnly: widget.isDateField, // Make the field read-only if it's a date field
       controller: widget.controller,
       validator: (value) {

@@ -39,17 +39,17 @@ class EducationAddBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
+    return Container(
+               decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
           ),
-        ),
-        padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
+      child: Form(
+        key: _formKey,
         child: ListView(
           children: [
             ProfileEducationTextForm(

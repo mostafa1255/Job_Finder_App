@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jop_finder_app/core/constants/app_colors.dart';
+import 'package:jop_finder_app/core/utils/app_router.dart';
 import 'package:jop_finder_app/features/auth/data/model/UserProfile_model.dart';
 import 'package:jop_finder_app/features/auth/data/model/user_model.dart';
 import 'package:jop_finder_app/features/profile/view/widgets/edit_info_bottom_sheet.dart';
@@ -31,22 +32,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
       _fetchUserInfo();
     });
   }
-  
 
   Future<void> _fetchUserInfo() async {
     // Fetch user information from Firestore using the cubit method
     var fetchedUser =
         await BlocProvider.of<ProfileCubit>(context).getUserInfo();
-        if (fetchedUser.profile == null) {
-          UserProfile userProfile = UserProfile(
-            bio: 'No bio added',
-            education: [],
-            jobTitle: 'No job title',
-            status: 'No status',
-          );
-     BlocProvider.of<ProfileCubit>(context).updateUserProfile(userProfile) ;
+    if (fetchedUser.profile == null) {
+      UserProfile userProfile = UserProfile(
+        bio: 'No bio added',
+        education: [],
+        jobTitle: 'No job title',
+        status: 'No status',
+      );
+      BlocProvider.of<ProfileCubit>(context).updateUserProfile(userProfile);
     }
-    
+
     // Update the Firestore with the default profile
     if (mounted) {
       setState(() {
@@ -56,9 +56,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget buildBlock() {
-  if (profileCubit == null) {
-    return Center(child: Text('ProfileCubit is null'));
-  }
+    if (profileCubit == null) {
+      return Center(child: Text('ProfileCubit is null'));
+    }
     return BlocBuilder<ProfileCubit, ProfileState>(
       builder: (context, state) {
         if (state is ProfileLoading) {
@@ -78,6 +78,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  Widget logOutLis() {
+    if (profileCubit == null) {
+      return Center(child: Text('ProfileCubit is null'));
+    }
+    return BlocListener<ProfileCubit, ProfileState>(listener: (context, state) {
+      if (state is SignedOut) {
+        GoRouter.of(context).pushReplacementNamed(AppRouter.login);
+      }
+    });
+  }
+
   Widget buildProfileScreen() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -90,7 +101,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               CircleAvatar(
                 radius: 60.sp,
-                backgroundImage: NetworkImage(user?.profileImageUrl??'https://pinnaclera.com/wp-content/uploads/2023/02/default_profile_image.png',scale: 1.0),
+                backgroundImage: NetworkImage(
+                    user?.profileImageUrl ??
+                        'https://pinnaclera.com/wp-content/uploads/2023/02/default_profile_image.png',
+                    scale: 1.0),
                 // Replace with actual image URL
               ),
               Positioned(
@@ -153,7 +167,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     Text(
                       user!.appliedJobs!.length.toString(),
-                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                      style:
+                          TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
                     ),
                     Text(
                       'Applied',
@@ -165,7 +180,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     Text(
                       user!.profile!.status ?? 'No status',
-                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                      style:
+                          TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
                     ),
                     Text(
                       'Status',
@@ -185,7 +201,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               SizedBox(width: 10.w), // Adjust spacing based on your layout
               Expanded(
                 child: CustomInfoDisplay(
-                    text: user!.phoneNumber ??'No phone number',
+                    text: user!.phoneNumber ?? 'No phone number',
                     icon: Icons.phone_android_outlined),
               ),
             ],
@@ -198,7 +214,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             );
           }),
           SizedBox(height: 10),
-          CustomBioDisplay(text: user!.profile!.bio??'No bio added'),
+          CustomBioDisplay(text: user!.profile!.bio ?? 'No bio added'),
           SizedBox(height: 28),
           buildSectionHeader('Education', onPressed: () {
             showModalBottomSheet(
@@ -226,7 +242,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         appBar: AppBar(
           elevation: 0,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color:Colors.white),
+            icon: Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -237,20 +253,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onPressed: () {
                 showModalBottomSheet(
                   context: context,
-                  builder: (context) => EditInfoBottomSheet(profileCubit!, user!),
+                  builder: (context) =>
+                      EditInfoBottomSheet(profileCubit!, user!),
                 );
               },
-              icon: Icon(Icons.edit,),
+              icon: Icon(
+                Icons.edit,
+              ),
             ),
             IconButton(
               onPressed: () {
                 GoRouter.of(context).pushNamed('/settingsScreen');
               },
-            icon: Icon(Icons.settings,),
+              icon: Icon(
+                Icons.settings,
+              ),
             )
           ],
         ),
-        body: buildBlock(),
+        body: BlocListener<ProfileCubit, ProfileState>(
+          listener: (context, state) {
+            if (state is SignedOut || state is AccountDeleted) {
+              GoRouter.of(context).pushReplacementNamed(AppRouter.login);
+            }
+          },
+          child: buildBlock(),
+        ),
       ),
     );
   }
@@ -347,7 +375,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color:Theme.of(context).primaryColor.withOpacity(0.1),
+        color: Theme.of(context).primaryColor.withOpacity(0.1),
       ),
       child: (user?.cvUrl == null || user!.cvUrl!.isEmpty)
           ? Center(
@@ -355,50 +383,54 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   style: TextStyle(color: Colors.grey, fontSize: 16)),
             )
           : Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  SizedBox(width: 4), // Spacing between icon and text
-                  Icon(
-                    Icons.file_present,
-                    size: 30,
-                    color: AppColors.primaryBlue,
-                  ), // File icon
-                  SizedBox(width: 12), // Spacing between icon and text
-                  InkWell(
-                    onTap: () {
-                      profileCubit!.openPdf(user!.cvUrl!);
-                    },
-                    child: Text('${user!.name}_CV.pdf',
-                        maxLines: 1, overflow: TextOverflow.ellipsis),
-                  ), // Displaying the file name extracted from the URL
-                ],
-              ),
-              IconButton(
-                onPressed: () {
-                  profileCubit!.customUpdateToFirebase("cvUrl", "");
-                },
-                icon: Icon(Icons.delete, color: AppColors.primaryBlue),
-              )
-            ],
-          ),
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    SizedBox(width: 4), // Spacing between icon and text
+                    Icon(
+                      Icons.file_present,
+                      size: 30,
+                      color: AppColors.primaryBlue,
+                    ), // File icon
+                    SizedBox(width: 12), // Spacing between icon and text
+                    InkWell(
+                      onTap: () {
+                        profileCubit!.openPdf(user!.cvUrl!);
+                      },
+                      child: Text('${user!.name}_CV.pdf',
+                          maxLines: 1, overflow: TextOverflow.ellipsis),
+                    ), // Displaying the file name extracted from the URL
+                  ],
+                ),
+                IconButton(
+                  onPressed: () {
+                    profileCubit!.customUpdateToFirebase("cvUrl", "");
+                  },
+                  icon: Icon(Icons.delete, color: AppColors.primaryBlue),
+                )
+              ],
+            ),
     );
   }
+
   Widget buildEducationSection() {
-  if (user?.profile?.education == null || user!.profile!.education!.isEmpty) {
-    return Center(
-      child: Text('No education added'.toUpperCase(), style: TextStyle(color: Colors.grey, fontSize: 16)),
-    );
-  } else {
-    return ListView.builder(
-      shrinkWrap: true, // This ensures the ListView takes only the necessary height
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: user!.profile!.education!.length,
-      itemBuilder: (context, index) {
-        return buildEducationItem(education: user!.profile!.education![index]);
-      },
-    );
+    if (user?.profile?.education == null || user!.profile!.education!.isEmpty) {
+      return Center(
+        child: Text('No education added'.toUpperCase(),
+            style: TextStyle(color: Colors.grey, fontSize: 16)),
+      );
+    } else {
+      return ListView.builder(
+        shrinkWrap:
+            true, // This ensures the ListView takes only the necessary height
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: user!.profile!.education!.length,
+        itemBuilder: (context, index) {
+          return buildEducationItem(
+              education: user!.profile!.education![index]);
+        },
+      );
+    }
   }
-}
 }
