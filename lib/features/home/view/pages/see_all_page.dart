@@ -5,9 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jop_finder_app/core/utils/app_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'recommended_jops_card.dart';
 import 'job_card.dart';
-import 'bottom_navigation.dart';
 import 'package:jop_finder_app/features/auth/data/model/PostedJob_model.dart';
 
 const String userTokenKey = 'userToken';
@@ -33,7 +31,7 @@ class _SeeAllPage extends State<SeeAllPage> {
 
   Future<List<PostedJob>> fetchJobs() async {
     QuerySnapshot querySnapshot =
-    await FirebaseFirestore.instance.collection('jobs').get();
+        await FirebaseFirestore.instance.collection('jobs').get();
     return querySnapshot.docs
         .map((doc) => PostedJob.fromMap(doc.data() as Map<String, dynamic>))
         .toList();
@@ -70,7 +68,8 @@ class _SeeAllPage extends State<SeeAllPage> {
                   GoRouter.of(context).push(AppRouter.jobSearchScreen);
                 },
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 15.h),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 12.w, vertical: 15.h),
                   decoration: BoxDecoration(
                     color: Colors.grey[200],
                     borderRadius: BorderRadius.circular(10),
@@ -106,7 +105,6 @@ class _SeeAllPage extends State<SeeAllPage> {
                       child: ListView.builder(
                         itemCount: jobs.length,
                         scrollDirection: Axis.vertical,
-
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
                           return GestureDetector(

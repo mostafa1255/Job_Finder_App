@@ -5,55 +5,41 @@ class FourthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 80.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Image.asset('assets/images/Career progress-amico 1 (1).png'),
-          const Text(
-            'Make your career',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 35,
-              color: Colors.black,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: ClipRect(
+            child: Align(
+              alignment: Alignment
+                  .topCenter, // Aligns the part of the image you want to show
+              heightFactor:
+                  0.8, // Adjust this to control how much of the image is shown
+              child: Image.asset(
+                'assets/images/Career progress-amico 1 (1).png',
+                width: 430,
+                height: 430,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
-          const Text(
+        ),
+        const Text(
+          'Make your career',
+          style: TextStyle(
+              fontSize: 28, color: Colors.black, fontWeight: FontWeight.w600),
+        ),
+        Container(
+          margin: const EdgeInsets.all(15),
+          child: const Text(
             'We help you find your dream job based on your skillset, location, demand.',
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 15,
-            ),
+            style: TextStyle(fontSize: 15),
           ),
-          const SizedBox(
-            height: 30,
-          ),
-          // SizedBox(
-          //   width: 200.w,
-          //   height: 50.h,
-          //   child: ElevatedButton(
-          //     style: ElevatedButton.styleFrom(
-          //       backgroundColor: Colors.indigo,
-          //       shape: RoundedRectangleBorder(
-          //         borderRadius: BorderRadius.circular(10),
-          //       ),
-          //     ),
-          //     onPressed: () {
-          //       Navigator.pushReplacement(
-          //           context,
-          //           MaterialPageRoute(
-          //             builder: (context) => const Registeration(),
-          //           ));
-          //     },
-          //     child: Text(
-          //       'Explore',
-          //       style: TextStyle(fontSize: 24, color: Colors.white),
-          //     ),
-          //   ),
-          // ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

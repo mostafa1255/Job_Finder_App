@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:jop_finder_app/core/constants/app_colors.dart';
 import 'package:jop_finder_app/core/utils/app_router.dart';
 import 'package:jop_finder_app/features/auth/viewmodel/cubit/auth_cubit.dart';
 import 'package:jop_finder_app/features/home/view/pages/home_screen.dart';
@@ -28,8 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
       if (userToken != null) {
         GoRouter.of(context).pushReplacementNamed(AppRouter.homeScreen);
-                // GoRouter.of(context).pushReplacementNamed(AppRouter.jobPostScreen);
-
+        // GoRouter.of(context).pushReplacementNamed(AppRouter.jobPostScreen);
       } else {
         if (mounted) {
           GoRouter.of(context)
@@ -42,15 +42,19 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-            color: Color.fromARGB(255, 53, 104, 153),
-            padding: const EdgeInsets.all(100),
-            child: Center(
-              child: Image.asset(
-                'assets/images/Group 218.png',
-                fit: BoxFit.fill,
-                color: Colors.white,
-              ),
-            )));
+        backgroundColor: AppColors.primaryBlue,
+        body: SafeArea(
+          child: Container(
+              color: Color.fromARGB(255, 53, 104, 153),
+              padding: const EdgeInsets.all(100),
+              child: Center(
+                child: Image.asset(
+                  'assets/images/Group 218.png',
+                  fit: BoxFit.fill,
+                  scale: 3.5,
+                  color: Colors.white,
+                ),
+              )),
+        ));
   }
 }
