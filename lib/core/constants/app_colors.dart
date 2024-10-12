@@ -76,6 +76,22 @@ ThemeData appTheme = ThemeData(
       fontWeight: FontWeight.w600,
       fontFamily: 'Poppins',
     ),
+
+    //info display
+    displayMedium: TextStyle(
+      color: AppColors.primaryText,
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
+      fontFamily: 'Poppins',
+    ),
+
+    //info titles
+    displayLarge: TextStyle(
+      color: AppColors.primaryText,
+      fontSize: 16,
+      fontWeight: FontWeight.w500,
+      fontFamily: 'Poppins',
+    ),
   ),
 
   //font

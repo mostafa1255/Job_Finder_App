@@ -7,6 +7,7 @@ import 'package:jop_finder_app/core/constants/app_colors.dart';
 import 'package:jop_finder_app/core/utils/app_router.dart';
 import 'package:jop_finder_app/features/auth/data/model/UserProfile_model.dart';
 import 'package:jop_finder_app/features/auth/data/model/user_model.dart';
+import 'package:jop_finder_app/features/profile/view/widgets/custom_alert.dart.dart';
 import 'package:jop_finder_app/features/profile/view/widgets/edit_info_bottom_sheet.dart';
 import 'package:jop_finder_app/features/profile/view/widgets/edit_bio_bottomsheet.dart';
 import 'package:jop_finder_app/features/profile/view/widgets/education_add_bottomsheet.dart';
@@ -20,7 +21,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  
   UserModel? user;
   ProfileCubit? profileCubit;
 
@@ -47,8 +47,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       );
       BlocProvider.of<ProfileCubit>(context).updateUserProfile(userProfile);
     }
-
-    // Update the Firestore with the default profile
     if (mounted) {
       setState(() {
         user = fetchedUser;
@@ -104,7 +102,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 radius: 60.sp,
                 backgroundImage: NetworkImage(
                     user!.profileImageUrl ??
-                        'https://pinnaclera.com/wp-content/uploads/2023/02/default_profile_image.png',
+                        'https://avatars.githubusercontent.com/u/953478?v=4?s=400',
                     scale: 1.0),
                 // Replace with actual image URL
               ),
@@ -147,8 +145,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     Text(
                       user!.profile!.jobTitle ?? 'No job title',
-                      style: TextStyle(color: Colors.grey, fontSize: 13),
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
+                    const SizedBox(width: 2),
                     Icon(
                       Icons.verified,
                       color: AppColors.primaryBlue,
@@ -168,12 +167,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     Text(
                       user!.appliedJobs!.length.toString(),
-                      style:
-                          TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                      style: Theme.of(context).textTheme.displayLarge,
                     ),
                     Text(
                       'Applied',
-                      style: TextStyle(color: Colors.grey),
                     ),
                   ],
                 ),
@@ -181,12 +178,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     Text(
                       user!.profile!.status ?? 'No status',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                      style: Theme.of(context).textTheme.displayLarge,
                     ),
                     Text(
                       'Status',
-                      style: TextStyle(color: Colors.grey),
                     ),
                   ],
                 ),
@@ -194,18 +189,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           SizedBox(height: 44),
-          Row(
-            children: [
-              Expanded(
-                child: CustomInfoDisplay(text: user!.email, icon: Icons.email),
-              ),
-              SizedBox(width: 10.w), // Adjust spacing based on your layout
-              Expanded(
-                child: CustomInfoDisplay(
-                    text: user!.phoneNumber ?? 'No phone number',
-                    icon: Icons.phone_android_outlined),
-              ),
-            ],
+          Text(
+            'Contacts ',
+            style: Theme.of(context).textTheme.displayLarge,
+          ),
+          SizedBox(height: 10),
+          InkWell(
+          child: CustomInfoDisplay(text: user!.email, icon: Icons.email)
+          ,onTap:  () { profileCubit!.openEmail(user!.email);}
+          ),
+          SizedBox(width: 10.w), // Adjust spacing based on your layout
+          InkWell(
+            child: CustomInfoDisplay(
+                text: user!.phoneNumber ?? 'No phone number',
+                icon: Icons.phone_android),
+            onTap: () {profileCubit!.callPhoneNumber(user!.phoneNumber!);},
           ),
           SizedBox(height: 24),
           buildBioHeader('Bio', onPressed: () {
@@ -215,7 +213,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             );
           }),
           SizedBox(height: 10),
-          CustomBioDisplay(text: user!.profile!.bio ?? 'No bio added'),
+          CustomBioDisplay(text: user!.profile!.bio ?? 'No bio'),
           SizedBox(height: 28),
           buildSectionHeader('Education', onPressed: () {
             showDialog(
@@ -229,6 +227,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           buildSectionHeader('Resume', onPressed: () {
             GoRouter.of(context).pushNamed('/resumeUploadScreen');
           }),
+          SizedBox(height: 10),
           resumeDisplay(),
           SizedBox(height: 32),
         ],
@@ -254,8 +253,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onPressed: () {
                 showDialog(
                   context: context,
-                  builder: (context) =>
-                      EditInfoDialog(profileCubit!, user!),
+                  builder: (context) => EditInfoDialog(profileCubit!, user!),
                 );
               },
               icon: Icon(
@@ -264,7 +262,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             IconButton(
               onPressed: () {
-                GoRouter.of(context).pushNamed('/settingsScreen');
+                GoRouter.of(context).pushNamed('/applicationsScreen');
+                // GoRouter.of(context).pushNamed('/settingsScreen');
               },
               icon: Icon(
                 Icons.settings,
@@ -290,8 +289,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       children: [
         Text(
           title,
-          style: TextStyle(
-              fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black),
+          style: Theme.of(context).textTheme.displayLarge,
         ),
         TextButton(
           onPressed: onPressed,
@@ -310,8 +308,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       children: [
         Text(
           title,
-          style: TextStyle(
-              fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black),
+          style: Theme.of(context).textTheme.displayLarge,
         ),
         TextButton(
           onPressed: onPressed,
@@ -324,12 +321,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  Widget buildEducationSection() {
+    if (user?.profile?.education == null || user!.profile!.education!.isEmpty) {
+      return Container(
+        padding: EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.white,
+        ),
+        child: Center(
+          child: Text('No education added'.toUpperCase(),
+              style: TextStyle(color: Colors.grey, fontSize: 16)),
+        ),
+      );
+    } else {
+      return ListView.builder(
+        shrinkWrap:
+            true, // This ensures the ListView takes only the necessary height
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: user!.profile!.education!.length,
+        itemBuilder: (context, index) {
+          return buildEducationItem(
+              education: user!.profile!.education![index]);
+        },
+      );
+    }
+  }
+
   Widget buildEducationItem({
     required Education? education,
   }) {
     return Container(
-      padding: EdgeInsets.all(10),
-      margin: EdgeInsets.only(top: 8),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
+      margin: EdgeInsets.fromLTRB(0, 6, 0, 6),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -346,15 +370,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   Text(
                     education!.fieldOfStudy ?? 'No Field',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    style: Theme.of(context).textTheme.displayMedium,
                   ),
+                  const SizedBox(height: 4),
                   Text(
                     education.degree ?? 'No Degree',
-                    style: TextStyle(color: Colors.grey),
                   ),
                   Text(
                     '${education.institution ?? 'no institution'}  • ${education.startDate!.year} - ${education.endDate!.year}',
-                    style: TextStyle(color: Colors.grey),
                   ),
                 ],
               )
@@ -362,7 +385,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           IconButton(
             onPressed: () {
-              profileCubit!.removeEducation(education);
+              showDialog(
+            context: context,
+            builder: (context) {
+              return CustomAlertDialog(
+                title: 'Delete Education',
+                body: 'Are you sure you want to Delete this Education?',
+                actionButtonTitle: 'Delete',
+                onActionButtonPressed: () {
+                  Navigator.of(context).pop();
+                  profileCubit!.removeEducation(education);
+                },
+              );
+            },
+          );
             },
             icon: Icon(Icons.delete, color: AppColors.primaryBlue),
           )
@@ -376,7 +412,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: Theme.of(context).primaryColor.withOpacity(0.1),
+        color: Colors.white,
       ),
       child: (user?.cvUrl == null || user!.cvUrl!.isEmpty)
           ? Center(
@@ -399,14 +435,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       onTap: () {
                         profileCubit!.openPdf(user!.cvUrl!);
                       },
-                      child: Text('${user!.name}_CV.pdf',
-                          maxLines: 1, overflow: TextOverflow.ellipsis),
+                      child: Text('${user!.name}_${user!.profile!.jobTitle}_CV.pdf',
+                          style: Theme.of(context).textTheme.displayMedium,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis),
                     ), // Displaying the file name extracted from the URL
                   ],
                 ),
                 IconButton(
                   onPressed: () {
-                    profileCubit!.customUpdateToFirebase("cvUrl", "");
+                     showDialog(
+            context: context,
+            builder: (context) {
+              return CustomAlertDialog(
+                title: 'Delete CV ',
+                body: 'Are you sure you want to Delete this CV?',
+                actionButtonTitle: 'Delete',
+                onActionButtonPressed: () {
+                  Navigator.of(context).pop();
+                  profileCubit!.customUpdateToFirebase("cvUrl", "");
+                },
+              );
+            },
+          );
                   },
                   icon: Icon(Icons.delete, color: AppColors.primaryBlue),
                 )
@@ -415,23 +466,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget buildEducationSection() {
-    if (user?.profile?.education == null || user!.profile!.education!.isEmpty) {
-      return Center(
-        child: Text('No education added'.toUpperCase(),
-            style: TextStyle(color: Colors.grey, fontSize: 16)),
-      );
-    } else {
-      return ListView.builder(
-        shrinkWrap:
-            true, // This ensures the ListView takes only the necessary height
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: user!.profile!.education!.length,
-        itemBuilder: (context, index) {
-          return buildEducationItem(
-              education: user!.profile!.education![index]);
-        },
-      );
-    }
-  }
 }

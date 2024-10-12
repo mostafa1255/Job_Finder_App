@@ -10,7 +10,6 @@ import 'package:jop_finder_app/features/profile/viewmodel/profile_cubit.dart';
 
 class ResumeUploadScreen extends StatefulWidget {
   const ResumeUploadScreen({super.key});
-
   @override
   State<ResumeUploadScreen> createState() => _ResumeUploadScreenState();
 }
@@ -83,55 +82,44 @@ class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Text('Resume'),
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        actions: [
-          TextButton(
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Resume'),
+          centerTitle: true,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
             onPressed: () {
-              // Implement skip functionality
+              Navigator.of(context).pop();
             },
-            child: Text(
-              'Skip',
-              style: TextStyle(color: AppColors.primaryBlue, fontSize: 16),
-            ),
           ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Resume or CV',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 16),
-            Container(
-              width: double.infinity,
-              height: MediaQuery.of(context).size.height * 0.5,
-              decoration: BoxDecoration(
-                border: Border.all(
-                    color: Color.fromARGB(255, 53, 104, 153), width: 2),
-                borderRadius: BorderRadius.circular(10),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Resume or CV',
+                style: Theme.of(context).textTheme.titleLarge,
               ),
-              padding: const EdgeInsets.all(16),
-              child: buildBlock(),
-            ),
-            SizedBox(
-              height: 12,
-            ),
-          ],
+              SizedBox(height: 24),
+              Container(
+                width: double.infinity,
+                height: MediaQuery.of(context).size.height * 0.5,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                      color: Color.fromARGB(255, 53, 104, 153), width: 2),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: const EdgeInsets.all(16),
+                child: buildBlock(),
+              ),
+              SizedBox(
+                height: 12,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -144,6 +132,7 @@ class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
         Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: const [
+           SizedBox(height: 16),
             Icon(
               Icons.cloud_upload_outlined,
               size: 40,

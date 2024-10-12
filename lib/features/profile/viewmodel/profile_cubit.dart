@@ -106,10 +106,37 @@ class ProfileCubit extends Cubit<ProfileState> {
       if (user != null) {
         emit(UserUpdated(user));
       }
-      // Optional: Emit initial state after launching URL successfully
     } else {
       emit(ProfileError(
           "Could not launch URL")); // Emit error state if URL cannot be launched
+    }
+  }
+
+//call phone number
+  Future<void> callPhoneNumber(String phoneNumber) async {
+    emit(ProfileLoading());
+    if (await canLaunch('tel:$phoneNumber')) {
+      await launch('tel:$phoneNumber');
+      final user = await _profileWebServices.getUserInfo();
+      if (user != null) {
+        emit(UserUpdated(user));
+      }
+    } else {
+      emit(ProfileError("Could not call phone number"));
+    }
+  }
+
+//open email
+  Future<void> openEmail(String email) async {
+    emit(ProfileLoading());
+    if (await canLaunch('mailto:$email')) {
+      await launch('mailto:$email');
+      final user = await _profileWebServices.getUserInfo();
+      if (user != null) {
+        emit(UserUpdated(user));
+      }
+    } else {
+      emit(ProfileError("Could not send email"));
     }
   }
 

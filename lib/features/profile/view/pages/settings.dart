@@ -69,7 +69,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget buildSettingsScreen() {
     return ListView(
-      padding: EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
+      padding: EdgeInsets.symmetric(vertical: 24.0, horizontal: 12.0),
       children: [
         buildSectionTitle('Applications'),
         buildListItem(Icons.visibility, 'Profile Status', onTap: () {
@@ -136,13 +136,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget buildSectionTitle(String title) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 18),
+      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16),
       child: Text(
         title,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          color: Colors.grey,
-        ),
+        style: Theme.of(context).textTheme.displayLarge,
       ),
     );
   }
@@ -155,7 +152,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         title,
         style: (title == 'Delete Account')
             ? TextStyle(color: color)
-            : (Theme.of(context).textTheme.labelLarge),
+            : (Theme.of(context).textTheme.displayMedium),
       ),
       onTap: () {
         onTap();

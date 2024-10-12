@@ -7,8 +7,7 @@ class CustomAlertDialog extends StatelessWidget {
       required this.title,
       required this.body,
       required this.actionButtonTitle,
-      required this.onActionButtonPressed
-      });
+      required this.onActionButtonPressed});
 
   final String title;
   final String body;
@@ -30,6 +29,7 @@ class CustomAlertDialog extends StatelessWidget {
         child: Text(
           body,
           textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.headlineMedium,
         ),
       ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),

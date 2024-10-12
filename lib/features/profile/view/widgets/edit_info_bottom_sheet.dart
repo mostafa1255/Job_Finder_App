@@ -188,8 +188,7 @@ class EditInfoTextFiled extends StatelessWidget {
         ),
         controller: controller, // Use the passed controller
         maxLines: 1,
-        style: const TextStyle(
-            color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
+        style: Theme.of(context).textTheme.displayMedium,
       ),
     );
   }

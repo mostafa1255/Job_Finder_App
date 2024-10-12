@@ -28,7 +28,6 @@ class _ApplicationsScreenState extends State<ApplicationsScreen> {
   }
 
   Future<void> _fetchUserInfo() async {
-    // Fetch user information from Firestore using the cubit method
     var fetchedUser =
         await BlocProvider.of<ProfileCubit>(context).getUserInfo();
     if (mounted) {
@@ -54,6 +53,7 @@ class _ApplicationsScreenState extends State<ApplicationsScreen> {
       },
     );
   }
+  
 
   Widget buildApplicationsScreen() {
     return Padding(
@@ -62,11 +62,12 @@ class _ApplicationsScreenState extends State<ApplicationsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'You have ${user?.appliedJobs?.length ?? 0} Applications',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            'You have \n${user?.appliedJobs?.length ?? 0} Applications',
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           SizedBox(height: 16),
           Expanded(
+
             child: ListView.builder(
               itemCount: user!.appliedJobs!.length,
               itemBuilder: (context, index) {
@@ -81,40 +82,44 @@ class _ApplicationsScreenState extends State<ApplicationsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          title: Text('Applications'),
-          centerTitle: true,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+    return SafeArea(
+      child: Scaffold(
+          appBar: AppBar(
+            title: Text('Applications'),
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back, ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            actions: [
+              if (user != null)
+                CircleAvatar(
+                  backgroundImage: NetworkImage(
+                    user!.profileImageUrl??'https://avatars.githubusercontent.com/u/953478?v=4?s=400'),
+                ),
+              SizedBox(width: 10),
+            ],
           ),
-          actions: [
-            if (user != null)
-              CircleAvatar(
-                backgroundImage: NetworkImage(user!.profileImageUrl!),
-              ),
-            SizedBox(width: 10),
-          ],
-        ),
-        body: buildBlock());
+          body: buildBlock()),
+    );
   }
+
 }
+
 
 class ApplicationCard extends StatelessWidget {
   final AppliedJob appliedJob;
-
   const ApplicationCard({super.key, required this.appliedJob});
+
+
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.white,
-      margin: EdgeInsets.symmetric(vertical: 8.0),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      surfaceTintColor: Theme.of(context).cardTheme.surfaceTintColor,
+      color:Theme.of(context).cardTheme.color,
+      shape: Theme.of(context).cardTheme.shape,
+      margin: Theme.of(context).cardTheme.margin,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
@@ -126,12 +131,22 @@ class ApplicationCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
+                    if(appliedJob.companyImageURL != null)
                     CircleAvatar(
                       radius: 35,
                       foregroundImage: NetworkImage(
-                        appliedJob.companyImageURL ??
-                            'https://picsum.photos/200/300', // Replace with actual company logo URL
+                        appliedJob.companyImageURL! 
                       ),
+                    )
+                    else
+                     Container(
+                      width: 70,
+                      height: 70,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(Icons.work, color: Colors.grey),
                     ),
                     SizedBox(width: 14),
                     Column(

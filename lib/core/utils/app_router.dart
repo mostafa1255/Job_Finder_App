@@ -148,7 +148,7 @@ class AppRouter {
         name: profileScreen,
         builder: (context, state) => BlocProvider.value(
           value: profileCubit,
-          child: ProfileScreen(),
+          child: const ProfileScreen(),
         ),
       ),
       GoRoute(
@@ -156,14 +156,14 @@ class AppRouter {
           name: resumeUploadScreen,
           builder: (context, state) => BlocProvider.value(
                 value: profileCubit,
-                child: ResumeUploadScreen(),
+                child: const ResumeUploadScreen(),
               )),
       GoRoute(
         path: settingsScreen,
         name: settingsScreen,
         builder: (context, state) => BlocProvider.value(
           value: profileCubit,
-          child: SettingsScreen(),
+          child: const SettingsScreen(),
         ),
       ),
       GoRoute(
@@ -171,7 +171,7 @@ class AppRouter {
         name: applicationsScreen,
         builder: (context, state) => BlocProvider.value(
           value: profileCubit,
-          child: ApplicationsScreen(),
+          child: const ApplicationsScreen(),
         ),
       ),
       GoRoute(
