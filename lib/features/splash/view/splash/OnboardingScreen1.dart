@@ -82,11 +82,13 @@ class _OnBoardingScreen1State extends State<OnBoardingScreen1> {
                    ),
 
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Container(
                             margin: EdgeInsets.symmetric(horizontal:16),
                           ),
-                          Text('Skip',style: TextStyle(fontSize: 18,color: Colors.grey.withOpacity(0.6)),),
+                          if (_currentPage != 3)
+                          Text('Skip', style: TextStyle(fontSize: 18, color: Colors.grey.withOpacity(0.6)),),
                           Spacer(),
                              ElevatedButton(
                             onPressed: _goToNextPage,
@@ -99,7 +101,7 @@ class _OnBoardingScreen1State extends State<OnBoardingScreen1> {
                               backgroundColor: Color.fromARGB(255, 53, 104, 153),
                             ),
                             child: Text(
-                              _currentPage == 3 ? 'Explore' : 'Next',
+                              _currentPage == 3 ? 'Explore' : 'Next' ,
                               style: const TextStyle(fontSize: 18, color: Colors.white),
                             ),
                             ),
