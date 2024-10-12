@@ -6,7 +6,9 @@ import 'package:jop_finder_app/features/auth/view/screens/shared/styled_textFiel
 import 'package:jop_finder_app/features/profile/viewmodel/profile_cubit.dart';
 
 class ChangeEmailBottomSheet extends StatelessWidget {
-  final TextEditingController emailController = TextEditingController();
+  final TextEditingController currentEmailController = TextEditingController();
+  final TextEditingController currentPasswordController = TextEditingController();
+  final TextEditingController newEmailController = TextEditingController();
   final ProfileCubit profileCubit;
   ChangeEmailBottomSheet(this.profileCubit, {super.key});
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -36,7 +38,29 @@ class ChangeEmailBottomSheet extends StatelessWidget {
           children: [
             StyledTextField(
               icon: Icons.email,
-              controller: emailController,
+              controller: currentEmailController,
+              hint: "E-mail",
+            ),
+            const SizedBox(height: 16),
+            StyledTextField(
+              icon: Icons.lock,
+              controller: currentPasswordController,
+              hint: "Password",
+              isPassword: true, // Assuming StyledTextField supports a isPassword flag
+            ),
+            const SizedBox(height: 16),
+             const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+               children: [
+                 Divider( color: Colors.grey,),
+                  Text("New Email", style: TextStyle(color: Colors.grey,fontSize: 12),),
+                  Divider( color: Colors.grey,),
+               ],
+             ),
+             const SizedBox(height: 16),
+            StyledTextField(
+              icon: Icons.email,
+              controller: newEmailController,
               hint: "E-mail",
             ),
             const SizedBox(height: 16),
@@ -46,11 +70,11 @@ class ChangeEmailBottomSheet extends StatelessWidget {
                 text: "Save Changes",
                 onPressed: () {
                   if (validation()) {
-                   profileCubit.updateEmailIfVerified(emailController.text);
+                   profileCubit.updateEmailIfVerified(currentEmailController.text, currentPasswordController.text, newEmailController.text);
                     Navigator.of(context).pop();
                    ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text("Verification email sent"),
+                        content: Text("Email updated successfully"),
                       ),
                     );
                   }

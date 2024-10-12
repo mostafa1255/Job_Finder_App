@@ -37,7 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // Fetch user information from Firestore using the cubit method
     var fetchedUser =
         await BlocProvider.of<ProfileCubit>(context).getUserInfo();
-        if (fetchedUser?.profile == null) {
+        if (fetchedUser.profile == null) {
           UserProfile userProfile = UserProfile(
             bio: 'No bio added',
             education: [],
@@ -56,7 +56,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget buildBlock() {
-    profileCubit = BlocProvider.of<ProfileCubit>(context);
   if (profileCubit == null) {
     return Center(child: Text('ProfileCubit is null'));
   }
@@ -125,7 +124,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 Text(
                   user!.name,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
                 SizedBox(height: 4),
                 Row(
@@ -192,7 +191,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
           ),
           SizedBox(height: 24),
-          buildAboutHeader('About', onPressed: () {
+          buildBioHeader('Bio', onPressed: () {
             showModalBottomSheet(
               context: context,
               builder: (context) => EditBioBottomSheet(profileCubit!),
@@ -222,37 +221,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromARGB(230, 255, 255, 255),
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(230, 255, 255, 255),
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: AppColors.primaryBlue),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        centerTitle: true,
-        actions: [
-          IconButton(
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color:Colors.white),
             onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                builder: (context) => EditInfoBottomSheet(profileCubit!, user!),
-              );
+              Navigator.of(context).pop();
             },
-            icon: Icon(Icons.edit, color: AppColors.primaryBlue),
           ),
-          IconButton(
-            onPressed: () {
-              GoRouter.of(context).pushNamed('/settingsScreen');
-            },
-            icon: Icon(Icons.settings, color: AppColors.primaryBlue),
-          )
-        ],
+          centerTitle: true,
+          actions: [
+            IconButton(
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) => EditInfoBottomSheet(profileCubit!, user!),
+                );
+              },
+              icon: Icon(Icons.edit,),
+            ),
+            IconButton(
+              onPressed: () {
+                GoRouter.of(context).pushNamed('/settingsScreen');
+              },
+            icon: Icon(Icons.settings,),
+            )
+          ],
+        ),
+        body: buildBlock(),
       ),
-      body: buildBlock(),
     );
   }
 
@@ -276,7 +275,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget buildAboutHeader(String title, {required VoidCallback onPressed}) {
+  Widget buildBioHeader(String title, {required VoidCallback onPressed}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -348,7 +347,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: Colors.white,
+        color:Theme.of(context).primaryColor.withOpacity(0.1),
       ),
       child: (user?.cvUrl == null || user!.cvUrl!.isEmpty)
           ? Center(

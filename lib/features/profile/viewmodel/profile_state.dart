@@ -8,6 +8,7 @@ class ProfileInitial extends ProfileState {}
 class ProfileLoading extends ProfileState {}
 class PasswordChanged extends ProfileState {}
 class AccountDeleted extends ProfileState {}
+class SignedOut extends ProfileState {}
 
 class UserLoaded extends ProfileState {
   final UserModel user;

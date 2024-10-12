@@ -88,7 +88,7 @@ class EducationAddBottomSheet extends StatelessWidget {
             const SizedBox(height: 16),
             StyledButton(
               onPressed: () {
-                if (validation()) {
+                if (validation() && (startDate!.isBefore(endDate!)) ) {
                   profileCubit.addEducation(
                     Education(
                       institution: institutionController.text,
@@ -99,9 +99,15 @@ class EducationAddBottomSheet extends StatelessWidget {
                     ),
                   );
                   Navigator.pop(context);
-                } 
+                }else{
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Start Date must be before End Date'),
+                    ),
+                  );
+                }
               },
-              text: 'Save Changes',
+              text: 'Add Education',
             ),
           ],
         ),
