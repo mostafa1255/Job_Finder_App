@@ -64,35 +64,52 @@ class _OnBoardingScreen1State extends State<OnBoardingScreen1> {
             right: 0,
             child: Column(
               children: [
-                ElevatedButton(
-                  onPressed: _goToNextPage,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 50, vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    backgroundColor: Color.fromARGB(255, 53, 104, 153),
-                  ),
-                  child: Text(
-                    _currentPage == 3 ? 'Explore' : 'Next',
-                    style: const TextStyle(fontSize: 18, color: Colors.white),
-                  ),
-                ),
+                   Padding(
+                     padding: const EdgeInsets.all(32),
+                     child: SmoothPageIndicator(
+                      controller: _controller,
+                      count: 4,
+                      effect: const ExpandingDotsEffect(
+                        spacing: 3,
+                        radius: 8,
+                        dotWidth: 12,
+                        dotHeight: 12,
+                        paintStyle: PaintingStyle.fill,
+                        dotColor: Colors.grey,
+                        activeDotColor: Color.fromARGB(255, 53, 104, 153),
+                      ),
+                     ),
+                   ),
+
+                      Row(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.symmetric(horizontal:16),
+                          ),
+                          Text('Skip',style: TextStyle(fontSize: 18,color: Colors.grey.withOpacity(0.6)),),
+                          Spacer(),
+                             ElevatedButton(
+                            onPressed: _goToNextPage,
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 50, vertical: 15),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              backgroundColor: Color.fromARGB(255, 53, 104, 153),
+                            ),
+                            child: Text(
+                              _currentPage == 3 ? 'Explore' : 'Next',
+                              style: const TextStyle(fontSize: 18, color: Colors.white),
+                            ),
+                            ),
+
+                          Container(
+                            margin: EdgeInsets.symmetric(horizontal:16),
+                          ),
+                        ],
+                      ),
                 const SizedBox(height: 50),
-                SmoothPageIndicator(
-                  controller: _controller,
-                  count: 4,
-                  effect: const ExpandingDotsEffect(
-                    spacing: 3,
-                    radius: 8,
-                    dotWidth: 16,
-                    dotHeight: 14,
-                    paintStyle: PaintingStyle.fill,
-                    dotColor: Colors.grey,
-                    activeDotColor: Color.fromARGB(255, 53, 104, 153),
-                  ),
-                ),
                 const SizedBox(height: 20),
               ],
             ),
