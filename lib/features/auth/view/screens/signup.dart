@@ -51,7 +51,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               if (state is AuthLoaded) {
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                     content: Text("User signed up successfully")));
-                GoRouter.of(context).pushReplacementNamed(AppRouter.homeScreen);
+                GoRouter.of(context).pushReplacementNamed(AppRouter.pageViewModel);
               }
             },
             child: Form(

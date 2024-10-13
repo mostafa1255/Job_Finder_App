@@ -91,9 +91,13 @@ class _OnBoardingScreen1State extends State<OnBoardingScreen1> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text(
-                      'Skip',
-                      style: TextStyle(fontSize: 18, color: Colors.grey),
+                    GestureDetector(
+                      onTap: () => GoRouter.of(context)
+                          .pushReplacementNamed(AppRouter.signUp),
+                      child: const Text(
+                        'Skip',
+                        style: TextStyle(fontSize: 18, color: Colors.grey),
+                      ),
                     ),
                     ElevatedButton(
                       onPressed: _goToNextPage,

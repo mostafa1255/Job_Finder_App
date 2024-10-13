@@ -195,15 +195,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           SizedBox(height: 10),
           InkWell(
-          child: CustomInfoDisplay(text: user!.email, icon: Icons.email)
-          ,onTap:  () { profileCubit!.openEmail(user!.email);}
-          ),
+              child: CustomInfoDisplay(text: user!.email, icon: Icons.email),
+              onTap: () {
+                profileCubit!.openEmail(user!.email);
+              }),
           SizedBox(width: 10.w), // Adjust spacing based on your layout
           InkWell(
             child: CustomInfoDisplay(
                 text: user!.phoneNumber ?? 'No phone number',
                 icon: Icons.phone_android),
-            onTap: () {profileCubit!.callPhoneNumber(user!.phoneNumber!);},
+            onTap: () {
+              profileCubit!.callPhoneNumber(user!.phoneNumber!);
+            },
           ),
           SizedBox(height: 24),
           buildBioHeader('Bio', onPressed: () {
@@ -237,48 +240,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          centerTitle: true,
-          actions: [
-            IconButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => EditInfoDialog(profileCubit!, user!),
-                );
-              },
-              icon: Icon(
-                Icons.edit,
-              ),
-            ),
-            IconButton(
-              onPressed: () {
-                // GoRouter.of(context).pushNamed('/applicationsScreen');
-                GoRouter.of(context).pushNamed('/settingsScreen');
-              },
-              icon: Icon(
-                Icons.settings,
-              ),
-            )
-          ],
-        ),
-        body: BlocListener<ProfileCubit, ProfileState>(
-          listener: (context, state) {
-            if (state is SignedOut || state is AccountDeleted) {
-              GoRouter.of(context).pushReplacementNamed(AppRouter.login);
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            if (GoRouter.of(context).canPop()) {
+              GoRouter.of(context).pop();
+            } else {
+              GoRouter.of(context)
+                  .pushReplacementNamed(AppRouter.pageViewModel);
             }
           },
-          child: buildBlock(),
         ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => EditInfoDialog(profileCubit!, user!),
+              );
+            },
+            icon: Icon(
+              Icons.edit,
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              // GoRouter.of(context).pushNamed('/applicationsScreen');
+              GoRouter.of(context).pushNamed('/settingsScreen');
+            },
+            icon: Icon(
+              Icons.settings,
+            ),
+          )
+        ],
+      ),
+      body: BlocListener<ProfileCubit, ProfileState>(
+        listener: (context, state) {
+          if (state is SignedOut || state is AccountDeleted) {
+            GoRouter.of(context).pushReplacementNamed(AppRouter.login);
+          }
+        },
+        child: SafeArea(child: buildBlock()),
       ),
     );
   }
@@ -386,19 +392,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
           IconButton(
             onPressed: () {
               showDialog(
-            context: context,
-            builder: (context) {
-              return CustomAlertDialog(
-                title: 'Delete Education',
-                body: 'Are you sure you want to Delete this Education?',
-                actionButtonTitle: 'Delete',
-                onActionButtonPressed: () {
-                  Navigator.of(context).pop();
-                  profileCubit!.removeEducation(education);
+                context: context,
+                builder: (context) {
+                  return CustomAlertDialog(
+                    title: 'Delete Education',
+                    body: 'Are you sure you want to Delete this Education?',
+                    actionButtonTitle: 'Delete',
+                    onActionButtonPressed: () {
+                      Navigator.of(context).pop();
+                      profileCubit!.removeEducation(education);
+                    },
+                  );
                 },
               );
-            },
-          );
             },
             icon: Icon(Icons.delete, color: AppColors.primaryBlue),
           )
@@ -435,7 +441,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       onTap: () {
                         profileCubit!.openPdf(user!.cvUrl!);
                       },
-                      child: Text('${user!.name}_${user!.profile!.jobTitle}_CV.pdf',
+                      child: Text(
+                          '${user!.name}_${user!.profile!.jobTitle}_CV.pdf',
                           style: Theme.of(context).textTheme.displayMedium,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis),
@@ -444,20 +451,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 IconButton(
                   onPressed: () {
-                     showDialog(
-            context: context,
-            builder: (context) {
-              return CustomAlertDialog(
-                title: 'Delete CV ',
-                body: 'Are you sure you want to Delete this CV?',
-                actionButtonTitle: 'Delete',
-                onActionButtonPressed: () {
-                  Navigator.of(context).pop();
-                  profileCubit!.customUpdateToFirebase("cvUrl", "");
-                },
-              );
-            },
-          );
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return CustomAlertDialog(
+                          title: 'Delete CV ',
+                          body: 'Are you sure you want to Delete this CV?',
+                          actionButtonTitle: 'Delete',
+                          onActionButtonPressed: () {
+                            Navigator.of(context).pop();
+                            profileCubit!.customUpdateToFirebase("cvUrl", "");
+                          },
+                        );
+                      },
+                    );
                   },
                   icon: Icon(Icons.delete, color: AppColors.primaryBlue),
                 )
@@ -465,5 +472,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
     );
   }
-
 }
