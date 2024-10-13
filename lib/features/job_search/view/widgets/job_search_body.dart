@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:jop_finder_app/core/utils/app_router.dart';
+import 'package:jop_finder_app/features/job_search/view/pages/job_list.dart';
 import 'package:jop_finder_app/features/job_search/view/pages/job_list.dart';
 import 'package:jop_finder_app/features/job_search/view/widgets/filter_widget/filter_bottom_sheet.dart';
-import 'package:jop_finder_app/features/job_search/view/widgets/recent_searches.dart';
 import 'package:jop_finder_app/features/job_search/view/widgets/search_filter.dart';
 import 'package:jop_finder_app/features/job_search/viewmodel/job_search_state.dart';
 
 import '../../viewmodel/job_search_cubit.dart';
+import '../pages/job_list.dart';
 
 class JobSearchBody extends StatelessWidget {
   const JobSearchBody({super.key});
@@ -38,16 +41,12 @@ class JobSearchBody extends StatelessWidget {
                 final state = context.read<JobSearchCubit>().state;
 
                 if (state is JobSearchSuccess) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return JobListScreen(
-                          jobTitle: value,
-                          jobs: state.jobs,
-                        );
-                      },
-                    ),
+                  GoRouter.of(context).push(
+                    '/jobList',
+                    extra: {
+                      'jobTitle': state.jobs.first.jobTitle ?? 'No Title',
+                      'jobs': state.jobs,
+                    },
                   );
                 } else if (state is JobSearchNoResult) {}
               },
@@ -75,16 +74,12 @@ class JobSearchBody extends StatelessWidget {
                               context
                                   .read<JobSearchCubit>()
                                   .addRecentSearch(selectedJobTitle.toString());
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return JobListScreen(
-                                      jobTitle: selectedJobTitle ?? '',
-                                      jobs: filteredJobs,
-                                    );
-                                  },
-                                ),
+                              GoRouter.of(context).push(
+                                '/jobList',
+                                extra: {
+                                  'jobTitle': selectedJobTitle ?? 'No Title',
+                                  'jobs': filteredJobs,
+                                },
                               );
                             },
                             icon: Text(state.uniqueJobTitles[index] ?? ''),
@@ -100,34 +95,11 @@ class JobSearchBody extends StatelessWidget {
                 } else if (state is JobSearchError) {
                   return Text(state.message);
                 }
-                return Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    Text(
-                      'Recent search',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    const SizedBox(height: 10),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      itemCount:
-                          context.watch<JobSearchCubit>().recentSearches.length,
-                      itemBuilder: (context, index) {
-                        return RecentSearches(
-                          name: context
-                              .watch<JobSearchCubit>()
-                              .recentSearches[index],
-                          onDelete: () {
-                            context.watch()<JobSearchCubit>().removeRecentSearch(
-                                  context
-                                      .read<JobSearchCubit>()
-                                      .recentSearches[index],
-                                );
-                          },
-                        );
-                      },
-                    ),
-                  ],
+                return Center(
+                  child: Text(
+                    'Search result',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
                 );
               },
             ),

@@ -13,6 +13,7 @@ import 'package:jop_finder_app/features/job_apply/view/pages/succefull_Screen.da
 import 'package:jop_finder_app/features/job_post/view/pages/all_applicants_screen.dart';
 import 'package:jop_finder_app/features/job_post/view/pages/job_post.dart';
 import 'package:jop_finder_app/features/job_post/view/pages/my_postedJob.dart';
+import 'package:jop_finder_app/features/job_search/view/pages/recent_searches.dart';
 import 'package:jop_finder_app/features/profile/view/pages/applications.dart';
 import 'package:jop_finder_app/features/profile/view/pages/profile.dart';
 import 'package:jop_finder_app/features/profile/view/pages/proposals.dart';
@@ -23,8 +24,9 @@ import 'package:jop_finder_app/features/profile/viewmodel/profile_cubit.dart';
 import 'package:jop_finder_app/features/splash/view/splash.dart';
 import 'package:jop_finder_app/features/splash/view/splash/OnboardingScreen1.dart';
 
-import '../../features/home/view/pages/bottom_navigation.dart';
 import '../../features/home/view/pages/see_all_page.dart';
+import '../../features/job_search/models/jobs.dart';
+import '../../features/job_search/view/pages/job_list.dart';
 import '../../features/job_search/view/pages/job_search.dart';
 
 class AppRouter {
@@ -47,6 +49,8 @@ class AppRouter {
   static const jobSearchScreen = "/jobSearchScreen";
   static const seeAllPage = "/seeAllPage";
   static const pageViewModel = "/pageViewModel";
+  static const recentSearches = "/recentSearches";
+  static const jobList = "/jobList";
 
   static FireBaseAuthenticationWebServices fireBaseAuthenticationWebServices =
       FireBaseAuthenticationWebServices();
@@ -111,6 +115,22 @@ class AppRouter {
         path: jobSearchScreen,
         name: jobSearchScreen,
         builder: (context, state) => const JobSearchScreen(),
+      ),
+      GoRoute(
+        path: jobList,
+        name: jobList,
+        builder: (context, state) {
+          final Map<String, dynamic> extra = state.extra as Map<String, dynamic>;
+          return JobListScreen(
+            jobTitle: extra['jobTitle'] as String,
+            jobs: extra['jobs'] as List<Job>,
+          );
+        },
+      ),
+      GoRoute(
+        path: recentSearches,
+        name: recentSearches,
+        builder: (context, state) => const RecentSearchesScreen(),
       ),
       GoRoute(
         path: jobApplyScreen,
@@ -193,6 +213,7 @@ class AppRouter {
       //end bodaSayed
     ],
   );
+
   // Slide transition
   static Widget _slideTransition(
       BuildContext context,
