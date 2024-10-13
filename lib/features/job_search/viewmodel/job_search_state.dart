@@ -2,9 +2,14 @@ import 'package:jop_finder_app/features/job_search/models/jobs.dart';
 
 abstract class JobSearchState {}
 
-class JobSearchInitial extends JobSearchState {}
+class JobSearchInitial extends JobSearchState {
 
-class JobSearchLoading extends JobSearchState {}
+
+}
+
+class JobSearchLoading extends JobSearchState {
+
+}
 
 class JobSearchSuccess extends JobSearchState {
   final List<Job> jobs;
@@ -27,3 +32,4 @@ class JobFilterIsSelected extends JobSearchState {
 
   JobFilterIsSelected(this.selectedFilters);
 }
+

@@ -9,10 +9,9 @@ class JobSearchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create:  (context) => JobSearchCubit(),
+      create: (context) => JobSearchCubit(),
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
           title: const Text('Search'),
         ),
         body: const JobSearchBody(),

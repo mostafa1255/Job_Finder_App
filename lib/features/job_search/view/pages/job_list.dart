@@ -17,7 +17,6 @@ class JobListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
         title: Text(jobTitle),
         actions: [
           IconButton(
@@ -26,25 +25,29 @@ class JobListScreen extends StatelessWidget {
               showModalBottomSheet(
                 context: context,
                 builder: (context) {
-                  return  const FilterBottomSheet();
-                  
+                  return const FilterBottomSheet();
                 },
               );
             },
           ),
-        ],      ),
-      body: ListView.builder(
-        itemCount: jobs.length,
-        itemBuilder: (context, index) {
-          final job = jobs[index];
-          return JobsCard(
-            jobTitle: job.jobTitle ?? 'Unknown Title',
-            salary: job.salary?? 'Unknown Title',
-            companyName: job.companyName?? 'Unknown Title',
-            location: job.location?? 'Unknown Title',
-            imageUrl: job.imageUrl?? 'Unknown Title',
-          );
-        },
+        ],
+      ),
+      body:
+      Padding(
+        padding: const EdgeInsets.all(16),
+        child: ListView.builder(
+          itemCount: jobs.length,
+          itemBuilder: (context, index) {
+            final job = jobs[index];
+            return JobsCard(
+              jobTitle: job.jobTitle ?? 'Unknown Title',
+              salary: job.salary ?? 'Unknown Title',
+              companyName: job.companyName ?? 'Unknown Title',
+              location: job.location ?? 'Unknown Title',
+              imageUrl: job.imageUrl ?? 'Unknown Title',
+            );
+          },
+        ),
       ),
     );
   }

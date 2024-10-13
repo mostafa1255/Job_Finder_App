@@ -6,11 +6,12 @@ class SearchFilterWidget extends StatelessWidget {
     super.key,
     required this.searchController,
     required this.onClickFilter,
-    required this.onChangedTextField,
+    required this.onChangedTextField, required this.onFieldSubmitted,
   });
   final TextEditingController searchController;
   final Function() onClickFilter;
   final Function(String) onChangedTextField;
+  final Function(String) onFieldSubmitted;
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +22,10 @@ class SearchFilterWidget extends StatelessWidget {
           key: _formKey,
           child: Expanded(
             child: TextFormField(
+
               onChanged: onChangedTextField,
               controller: searchController,
+              onFieldSubmitted: onFieldSubmitted,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(12)),
@@ -34,6 +37,7 @@ class SearchFilterWidget extends StatelessWidget {
                 prefixIcon: Icon(Icons.search),
                 labelText: 'Search',
                 hintText: 'Search for jobs',
+
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {

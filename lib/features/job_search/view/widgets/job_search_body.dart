@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jop_finder_app/features/job_search/view/pages/job_list.dart';
 import 'package:jop_finder_app/features/job_search/view/widgets/filter_widget/filter_bottom_sheet.dart';
+import 'package:jop_finder_app/features/job_search/view/widgets/recent_searches.dart';
 import 'package:jop_finder_app/features/job_search/view/widgets/search_filter.dart';
 import 'package:jop_finder_app/features/job_search/viewmodel/job_search_state.dart';
 
@@ -13,7 +14,7 @@ class JobSearchBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.all(16),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,6 +31,25 @@ class JobSearchBody extends StatelessWidget {
               },
               onChangedTextField: (val) {
                 context.read<JobSearchCubit>().searchJob(val);
+              },
+              onFieldSubmitted: (value) async {
+                await context.read<JobSearchCubit>().searchJob(value);
+                await context.read<JobSearchCubit>().addRecentSearch(value);
+                final state = context.read<JobSearchCubit>().state;
+
+                if (state is JobSearchSuccess) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return JobListScreen(
+                          jobTitle: value,
+                          jobs: state.jobs,
+                        );
+                      },
+                    ),
+                  );
+                } else if (state is JobSearchNoResult) {}
               },
             ),
             const SizedBox(height: 10),
@@ -52,21 +72,22 @@ class JobSearchBody extends StatelessWidget {
                                   .where(
                                       (job) => job.jobTitle == selectedJobTitle)
                                   .toList();
-
+                              context
+                                  .read<JobSearchCubit>()
+                                  .addRecentSearch(selectedJobTitle.toString());
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) {
                                     return JobListScreen(
-                                      jobTitle: selectedJobTitle??'',
+                                      jobTitle: selectedJobTitle ?? '',
                                       jobs: filteredJobs,
                                     );
                                   },
                                 ),
                               );
-                              print(state.jobs);
                             },
-                            icon: Text(state.uniqueJobTitles[index]??''),
+                            icon: Text(state.uniqueJobTitles[index] ?? ''),
                           );
                         },
                       ),
@@ -79,17 +100,33 @@ class JobSearchBody extends StatelessWidget {
                 } else if (state is JobSearchError) {
                   return Text(state.message);
                 }
-                return const Column(
+                return Column(
                   children: [
-                    Center(
-                      child: Text(
-                        'Search for jobs',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    )
+                    const SizedBox(height: 20),
+                    Text(
+                      'Recent search',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    const SizedBox(height: 10),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount:
+                          context.watch<JobSearchCubit>().recentSearches.length,
+                      itemBuilder: (context, index) {
+                        return RecentSearches(
+                          name: context
+                              .watch<JobSearchCubit>()
+                              .recentSearches[index],
+                          onDelete: () {
+                            context.watch()<JobSearchCubit>().removeRecentSearch(
+                                  context
+                                      .read<JobSearchCubit>()
+                                      .recentSearches[index],
+                                );
+                          },
+                        );
+                      },
+                    ),
                   ],
                 );
               },
