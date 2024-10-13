@@ -262,8 +262,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             IconButton(
               onPressed: () {
-                GoRouter.of(context).pushNamed('/applicationsScreen');
-                // GoRouter.of(context).pushNamed('/settingsScreen');
+                // GoRouter.of(context).pushNamed('/applicationsScreen');
+                GoRouter.of(context).pushNamed('/settingsScreen');
               },
               icon: Icon(
                 Icons.settings,
