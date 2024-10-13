@@ -37,7 +37,7 @@ class CustomBottomSheet extends StatelessWidget {
           StyledButton(
             onPressed: () {
               // Implement the logic to save updates, e.g., to Firebase
-             
+
               // Example: Save newName, newPhoneNumber, and newEmail to Firebase
             },
             text:
@@ -48,4 +48,3 @@ class CustomBottomSheet extends StatelessWidget {
     );
   }
 }
-

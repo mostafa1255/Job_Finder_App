@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
+import 'package:jop_finder_app/core/constants/app_colors.dart';
 import 'package:jop_finder_app/core/constants/strings.dart';
 import 'package:jop_finder_app/features/profile/view/widgets/change_email_bottomsheet.dart';
 import 'package:jop_finder_app/features/profile/view/widgets/change_password_bottomsheet.dart';
@@ -38,9 +38,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           return buildSettingsScreen();
         } else if (state is ProfileError) {
           return Center(child: Text(state.errorMessage));
-        } else if (state is AccountDeleted) {
-          GoRouter.of(context).pushReplacementNamed('/login');
-          return Center();
+        } else if (state is PasswordChanged) {
+          return Center(child: Text('Password changed successfully'));
         } else {
           return Center(child: Text('Error occurred'));
         }
@@ -50,31 +49,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+    return SafeArea(
+      child: Scaffold(
+          appBar: AppBar(
+            elevation: 0,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            title: Text(
+              "Settings",
+            ),
           ),
-          title: Text(
-            "Settings",
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-          ),
-        ),
-        body: buildBlock());
+          body: buildBlock()),
+    );
   }
 
   Widget buildSettingsScreen() {
     return ListView(
-      padding: EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
+      padding: EdgeInsets.symmetric(vertical: 24.0, horizontal: 12.0),
       children: [
         buildSectionTitle('Applications'),
-        buildListItem(Icons.visibility_outlined, 'Profile Status', onTap: () {
+        buildListItem(Icons.visibility, 'Profile Status', onTap: () {
           showModalBottomSheet(
             context: context,
             builder: (context) =>
@@ -82,36 +80,54 @@ class _SettingsScreenState extends State<SettingsScreen> {
           );
         }),
         // buildListItem(Icons.color_lens_outlined, 'Notifications'),
-        buildListItem(Icons.lock_outline, 'Change Password', onTap: () {
-          showModalBottomSheet(
+        buildListItem(Icons.lock, 'Change Password', onTap: () {
+          showDialog(
             context: context,
-            builder: (context) => ChangePasswordBottomSheet(profileCubit!),
+            builder: (context) => ChangePasswordDialog(profileCubit!),
           );
         }),
-        buildListItem(Icons.email_outlined, 'Change E-mail', onTap: () {
-          showModalBottomSheet(
+        buildListItem(Icons.email, 'Change E-mail', onTap: () {
+          showDialog(
             context: context,
-            builder: (context) => ChangeEmailBottomSheet(profileCubit!),
+            builder: (context) => ChangeEmailDialog(profileCubit!),
+          );
+        }),
+        buildListItem(Icons.logout, 'Logout', onTap: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return CustomAlertDialog(
+                title: 'Logout',
+                body: 'Are you sure you want to logout ?',
+                actionButtonTitle: 'Logout',
+                onActionButtonPressed: () {
+                  Navigator.of(context).pop();
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    // Assuming profileCubit.signOut() triggers navigation or state update
+                    profileCubit!.signOut();
+                  });
+                },
+              );
+            },
           );
         }),
         // buildListItem(Icons.color_lens_outlined, 'Theme'),
-        buildListItem(Icons.delete_outline, 'Delete Account', color: Colors.red,
+        buildListItem(Icons.delete, 'Delete Account', color: Colors.red,
             onTap: () {
-          showModalBottomSheet(
+          showDialog(
             context: context,
-            builder: (context) => DeleteAccountBottomSheet(profileCubit!),
+            builder: (context) => DeleteAccountDialog(profileCubit!),
           );
         }),
         SizedBox(height: 20),
         buildSectionTitle('About'),
-        buildListItem(Icons.privacy_tip_outlined, 'Privacy', onTap: () {
+        buildListItem(Icons.privacy_tip, 'Privacy', onTap: () {
           showPrivacyDialog(context);
         }),
-        buildListItem(Icons.description_outlined, 'Terms and conditions',
-            onTap: () {
+        buildListItem(Icons.description, 'Terms and conditions', onTap: () {
           showTermsDialog(context);
         }),
-        buildListItem(Icons.info_outline, 'About', onTap: () {
+        buildListItem(Icons.info, 'About', onTap: () {
           showAboutDialog(context);
         }),
       ],
@@ -120,24 +136,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget buildSectionTitle(String title) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 18),
+      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16),
       child: Text(
         title,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          color: Colors.grey,
-        ),
+        style: Theme.of(context).textTheme.displayLarge,
       ),
     );
   }
 
   ListTile buildListItem(IconData icon, String title,
-      {Color color = Colors.black, required Function onTap}) {
+      {Color color = AppColors.primaryBlue, required Function onTap}) {
     return ListTile(
       leading: Icon(icon, color: color),
       title: Text(
         title,
-        style: TextStyle(color: color),
+        style: (title == 'Delete Account')
+            ? TextStyle(color: color)
+            : (Theme.of(context).textTheme.displayMedium),
       ),
       onTap: () {
         onTap();
@@ -152,6 +167,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
         title: 'Privacy',
         body: AppStrings.privacyPolicy,
         actionButtonTitle: 'Done',
+        onActionButtonPressed: () {
+          Navigator.of(context).pop();
+        },
       ),
     );
   }
@@ -163,6 +181,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
         title: 'Terms and Conditions',
         body: AppStrings.termsAndConditions,
         actionButtonTitle: 'Done',
+        onActionButtonPressed: () {
+          Navigator.of(context).pop();
+        },
       ),
     );
   }
@@ -174,6 +195,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
         title: 'About',
         body: AppStrings.about,
         actionButtonTitle: 'Done',
+        onActionButtonPressed: () {
+          Navigator.of(context).pop();
+        },
       ),
     );
   }

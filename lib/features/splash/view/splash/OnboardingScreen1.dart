@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:jop_finder_app/core/constants/app_colors.dart';
 import 'package:jop_finder_app/core/utils/app_router.dart';
 import 'package:jop_finder_app/features/splash/view/splash/OnboardingScreen3.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -31,6 +32,7 @@ class _OnBoardingScreen1State extends State<OnBoardingScreen1> {
   void dispose() {
     _controller.dispose();
     super.dispose();
+    print('');
   }
 
   void _goToNextPage() {
@@ -47,82 +49,115 @@ class _OnBoardingScreen1State extends State<OnBoardingScreen1> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          PageView(
-            controller: _controller,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildFirstPage(),
-              buildSecondPage(),
-              ThirdScreen(),
-              const FourthScreen(),
+              const Expanded(child: SizedBox()),
+              SizedBox(
+                width: 430,
+                height: 500,
+                child: PageView(
+                  controller: _controller,
+                  children: [
+                    _buildFirstPage(),
+                    buildSecondPage(),
+                    const ThirdScreen(),
+                    const FourthScreen(),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 40),
+              SmoothPageIndicator(
+                controller: _controller,
+                count: 4,
+                effect: const ExpandingDotsEffect(
+                  spacing: 4,
+                  radius: 8,
+                  dotWidth: 12,
+                  dotHeight: 8,
+                  paintStyle: PaintingStyle.fill,
+                  dotColor: Colors.grey,
+                  activeDotColor: Color.fromARGB(255, 53, 104, 153),
+                ),
+              ),
+              const Expanded(child: SizedBox()),
+              const Expanded(child: SizedBox()),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Skip',
+                      style: TextStyle(fontSize: 18, color: Colors.grey),
+                    ),
+                    ElevatedButton(
+                      onPressed: _goToNextPage,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 50, vertical: 15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        backgroundColor: AppColors.primaryBlue,
+                      ),
+                      child: Text(
+                        _currentPage == 3 ? 'Explore' : 'Next',
+                        style:
+                            const TextStyle(fontSize: 18, color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 40),
             ],
           ),
-          Positioned(
-            bottom: 60,
-            left: 0,
-            right: 0,
-            child: Column(
-              children: [
-                ElevatedButton(
-                  onPressed: _goToNextPage,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 50, vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    backgroundColor: Color.fromARGB(255, 53, 104, 153),
-                  ),
-                  child: Text(
-                    _currentPage == 3 ? 'Explore' : 'Next',
-                    style: const TextStyle(fontSize: 18, color: Colors.white),
-                  ),
-                ),
-                const SizedBox(height: 50),
-                SmoothPageIndicator(
-                  controller: _controller,
-                  count: 4,
-                  effect: const ExpandingDotsEffect(
-                    spacing: 4,
-                    radius: 8,
-                    dotWidth: 18,
-                    dotHeight: 14,
-                    paintStyle: PaintingStyle.fill,
-                    dotColor: Colors.grey,
-                    activeDotColor: Color.fromARGB(255, 53, 104, 153),
-                  ),
-                ),
-                const SizedBox(height: 20),
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
 
   Widget _buildFirstPage() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 80.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Image.asset('assets/images/Job hunt-amico 1.png'),
-          const Text(
-            'Search your job',
-            style: TextStyle(fontSize: 35, color: Colors.black),
-          ),
-          Container(
-            margin: const EdgeInsets.all(20),
-            child: const Text(
-              'Figure out your top five priorities whether it is company culture, salary.',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 15),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: ClipRect(
+            child: Align(
+              alignment: Alignment
+                  .topCenter, // Aligns the part of the image you want to show
+              heightFactor:
+                  0.8, // Adjust this to control how much of the image is shown
+              child: Image.asset(
+                'assets/images/Job hunt-amico 1.png',
+                width: 430,
+                height: 430,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
-        ],
-      ),
+        ),
+        const Text(
+          'Search your job',
+          style: TextStyle(
+              fontSize: 28, color: Colors.black, fontWeight: FontWeight.w600),
+        ),
+        Container(
+          margin: const EdgeInsets.all(15),
+          child: const Text(
+            'Figure out your top five priorities whether it is company culture, salary.',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 15),
+          ),
+        ),
+      ],
     );
   }
 }

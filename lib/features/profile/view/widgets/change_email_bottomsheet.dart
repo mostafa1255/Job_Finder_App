@@ -5,10 +5,12 @@ import 'package:jop_finder_app/features/auth/view/screens/shared/styled_button.d
 import 'package:jop_finder_app/features/auth/view/screens/shared/styled_textField.dart';
 import 'package:jop_finder_app/features/profile/viewmodel/profile_cubit.dart';
 
-class ChangeEmailBottomSheet extends StatelessWidget {
-  final TextEditingController emailController = TextEditingController();
+class ChangeEmailDialog extends StatelessWidget {
+  final TextEditingController currentEmailController = TextEditingController();
+  final TextEditingController currentPasswordController = TextEditingController();
+  final TextEditingController newEmailController = TextEditingController();
   final ProfileCubit profileCubit;
-  ChangeEmailBottomSheet(this.profileCubit, {super.key});
+  ChangeEmailDialog(this.profileCubit, {super.key});
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool validation() {
@@ -20,44 +22,62 @@ class ChangeEmailBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ),
-        ),
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            StyledTextField(
-              icon: Icons.email,
-              controller: emailController,
-              hint: "E-mail",
-            ),
-            const SizedBox(height: 16),
-            Container(
-              width: double.infinity,
-              child: StyledButton(
-                text: "Save Changes",
-                onPressed: () {
-                  if (validation()) {
-                   profileCubit.updateEmailIfVerified(emailController.text);
-                    Navigator.of(context).pop();
-                   ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Verification email sent"),
-                      ),
-                    );
-                  }
-                },
+    return Dialog(
+      child: Form(
+        key: _formKey,
+        child: Container(
+
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              StyledTextField(
+                icon: Icons.email,
+                controller: currentEmailController,
+                hint: "E-mail",
               ),
-            ),
-          ],
+              const SizedBox(height: 16),
+              StyledTextField(
+                icon: Icons.lock,
+                controller: currentPasswordController,
+                hint: "Password",
+                isPassword: true, // Assuming StyledTextField supports a isPassword flag
+              ),
+              const SizedBox(height: 16),
+               const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                 children: [
+                   Divider( color: Colors.grey,),
+                    Text("New Email", style: TextStyle(color: Colors.grey,fontSize: 12),),
+                    Divider( color: Colors.grey,),
+                 ],
+               ),
+               const SizedBox(height: 16),
+              StyledTextField(
+                icon: Icons.email,
+                controller: newEmailController,
+                hint: "E-mail",
+              ),
+              const SizedBox(height: 16),
+              Container(
+                width: double.infinity,
+                child: StyledButton(
+                  text: "Save Changes",
+                  onPressed: () {
+                    if (validation()) {
+                     profileCubit.updateEmail(currentEmailController.text, currentPasswordController.text, newEmailController.text);
+                      Navigator.of(context).pop();
+                     ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Email updated successfully"),
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

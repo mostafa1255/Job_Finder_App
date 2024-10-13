@@ -15,19 +15,16 @@ import 'package:jop_finder_app/features/auth/data/web_services/firebase_authenti
 class FirebaseProfileWebServices {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FireBaseAuthenticationWebServices _authenticationWebServices;
-
   FirebaseProfileWebServices(this._authenticationWebServices);
 
   // Get the current user's ID from FirebaseAuth
   String? getCurrentUserId() {
-    return   "nwrmkmITTuOuL76MvGAa" ;
+    return FirebaseAuth.instance.currentUser!.uid;
   }
-  
 
   // Fetch user information from Firestore
   Future<UserModel?> getUserInfo() async {
     String? userId = getCurrentUserId();
-    if (userId == null) return null;
     try {
       DocumentSnapshot userDoc =
           await _firestore.collection('users').doc(userId).get();
@@ -40,8 +37,6 @@ class FirebaseProfileWebServices {
       return null;
     }
   }
-
-  // Update user information in Firestore
 
   //  pickImage method
   Future<File?> pickImage() async {
@@ -65,6 +60,19 @@ class FirebaseProfileWebServices {
     String? userId = getCurrentUserId();
     if (userId == null) return false;
     try {
+      DocumentSnapshot userDoc =
+          await _firestore.collection('users').doc(userId).get();
+      String? currentImageUrl = userDoc['profileImageUrl'];
+
+      // Delete the current image from Firebase Storage if it exists
+      if (currentImageUrl != null && currentImageUrl.isNotEmpty) {
+        String currentImageFileName =
+            Uri.parse(currentImageUrl).pathSegments.last;
+        await FirebaseStorage.instance
+            .ref()
+            .child(currentImageFileName)
+            .delete();
+      }
       // Upload image to Firebase Storage
       String fileName = DateTime.now().millisecondsSinceEpoch.toString();
       Reference ref =
@@ -75,7 +83,7 @@ class FirebaseProfileWebServices {
 
       // Update user's imageUrl in Firestore
       await _firestore.collection('users').doc(userId).update({
-        'imageUrl': imageUrl,
+        'profileImageUrl': imageUrl,
       });
       return true;
     } catch (e) {
@@ -84,36 +92,40 @@ class FirebaseProfileWebServices {
     }
   }
 
+//  pickFile method
   Future<bool?> uploadFileAndUpdateUser(FilePickerResult cvPdf) async {
     String? userId = getCurrentUserId();
     if (userId == null) return false;
     try {
-      // Ensure the file name retains the .pdf extension
+      DocumentSnapshot userDoc =
+          await _firestore.collection('users').doc(userId).get();
+      String? currentCvUrl = userDoc['cvUrl'];
+      // Delete the current CV from Firebase Storage if it exists
+      if (currentCvUrl != null && currentCvUrl.isNotEmpty) {
+        String currentCvFileName = Uri.parse(currentCvUrl).pathSegments.last;
+        await FirebaseStorage.instance.ref().child(currentCvFileName).delete();
+      }
       String fileName =
           "${DateTime.now().millisecondsSinceEpoch.toString()}.pdf";
-      Reference ref = FirebaseStorage.instance.ref().child('CVs/$fileName');
+      Reference ref =
+          FirebaseStorage.instance.ref().child('CVs/$userId/$fileName');
       UploadTask uploadTask;
       // Check if running on web
       if (kIsWeb) {
-        // Use bytes for uploading if on web
         final bytes = cvPdf.files.first.bytes;
         if (bytes == null) throw Exception("File bytes are null");
         uploadTask = ref.putData(
             bytes, SettableMetadata(contentType: 'application/pdf'));
       } else {
-        // Use the file path for uploading if not on web
         File file = File(cvPdf.files.single.path!);
         uploadTask =
             ref.putFile(file, SettableMetadata(contentType: 'application/pdf'));
       }
-      final snapshot = await uploadTask.whenComplete(() {
-        // Perform any actions after the file is uploaded
-      });
+      final snapshot = await uploadTask.whenComplete(() {});
       final cvUrl = await snapshot.ref.getDownloadURL();
       await _firestore.collection('users').doc(userId).update({
         'cvUrl': cvUrl,
       });
-      // Update the user's document with the CV URL
       return true;
     } catch (e) {
       print(e.toString());
@@ -121,6 +133,7 @@ class FirebaseProfileWebServices {
     }
   }
 
+//  openPdf method
   Future<void> openPdf(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
@@ -129,14 +142,12 @@ class FirebaseProfileWebServices {
     }
   }
 
-  //i want to make a method to update the bio in the firestore
+//update the bio in the firestore
   Future<bool> updateBio(String bio) async {
     String? userId = getCurrentUserId();
     if (userId == null) return false;
-
     try {
       await _firestore.collection('users').doc(userId).update({
-        // Update the bio in the user's document that in the userprofile map field in the firestore and not to update the whole userprofile map field but just the bio field
         'profile.bio': bio,
       });
       return true;
@@ -146,7 +157,7 @@ class FirebaseProfileWebServices {
     }
   }
 
-  //i want to make a method to update the name and the email and the phone number in the firestore that in the user's document
+//update cv ,email and phone number in the firestore
   Future<bool> customUpdateToFirebase(String key, String value) async {
     String? userId = getCurrentUserId();
     if (userId == null) return false;
@@ -160,12 +171,13 @@ class FirebaseProfileWebServices {
       return false;
     }
   }
+
+//update the status and and job title in the firestore
   Future<bool> customUpdateToFirebaseProfile(String key, String value) async {
     String? userId = getCurrentUserId();
     if (userId == null) return false;
     try {
       await _firestore.collection('users').doc(userId).update({
-        // Update the bio in the user's document that in the userprofile map field in the firestore and not to update the whole userprofile map field but just the bio field
         'profile.$key': value,
       });
       return true;
@@ -175,13 +187,12 @@ class FirebaseProfileWebServices {
     }
   }
 
-  //the previous method to update the education in the firestore but i want it not to update the whole userprofile map field but just the education field and not to update i need it to add a new education to the list of educations in the education field
+//add an education 
   Future<bool> addEducation(Education education) async {
     String? userId = getCurrentUserId();
     if (userId == null) return false;
     try {
       await _firestore.collection('users').doc(userId).update({
-        // Add the new education to the list of educations in the user's document that in the userprofile map field in the firestore
         'profile.education': FieldValue.arrayUnion([education.toMap()]),
       });
       return true;
@@ -191,12 +202,12 @@ class FirebaseProfileWebServices {
     }
   }
 
+//remove an education
   Future<bool> removeEducation(Education education) async {
     String? userId = getCurrentUserId();
     if (userId == null) return false;
     try {
       await _firestore.collection('users').doc(userId).update({
-        // Remove the specified education from the list of educations in the user's document
         'profile.education': FieldValue.arrayRemove([education.toMap()]),
       });
       return true;
@@ -206,156 +217,89 @@ class FirebaseProfileWebServices {
     }
   }
 
-
-
-  // i need to add a function to change the password of the authenticated user by sending an email to the user to reset the password
-  Future<bool> changeUserPassword(String newPassword) async {
+//change the user password
+  Future<bool> changeUserPassword(
+      String currentEmail, String currentPassword, String newPassword) async {
     try {
-      // Get the current user
       User? user = FirebaseAuth.instance.currentUser;
-      // Update the password
-      await user!.updatePassword(newPassword);
+      AuthCredential credential = EmailAuthProvider.credential(
+          email: currentEmail, password: currentPassword);
+      await user!.reauthenticateWithCredential(credential);
+      await user.updatePassword(newPassword);
       return true;
     } catch (e) {
       print(e.toString());
       return false;
     }
   }
-  Future<bool> updateEmailIfVerified(String newEmail) async {
-  try {
-    User? user = FirebaseAuth.instance.currentUser;
-    await user!.reload(); // Refresh user data to get the latest emailVerified status
-    if (user.emailVerified) {
-  final uid = user.uid;
 
-      // Proceed with updating the email if the current email is verified
-      await user.verifyBeforeUpdateEmail(newEmail);
-      // Optionally, send a verification email for the new email
-      await user.sendEmailVerification();
+//update the user email
+  Future<bool> updateEmail(
+      String currentEmail, String currentPassword, String newEmail) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      final uid = user!.uid;
+      AuthCredential credential = EmailAuthProvider.credential(
+          email: currentEmail, password: currentPassword);
+      await user.reauthenticateWithCredential(credential);
+      await user.updateEmail(newEmail);
       await _firestore.collection('users').doc(uid).update({
         'email': newEmail,
       });
       return true;
-    } else {
-      print("Email is not verified. Cannot update email.");
+    } catch (e) {
+      print(e.toString());
       return false;
     }
-  } catch (e) {
-    print(e.toString());
-    return false;
-  }
-}
-
-
-
-Future<bool> reauthenticateAndDeleteUser(String email, String password) async {
-  User? user = FirebaseAuth.instance.currentUser;
-  if (user == null) {
-    print("No user signed in.");
-    return false;
-  }
-  final uid = user.uid;
-  // Create credential
-  AuthCredential credential = EmailAuthProvider.credential(email: email, password: password);
-  try {
-    // Re-authenticate
-    await user.reauthenticateWithCredential(credential);
-    await FirebaseFirestore.instance.collection('users').doc(uid).delete();
-    // If re-authentication is successful, proceed to delete the user
-    await user.delete();
-    print("User account deleted successfully.");
-    return true;
-  } on FirebaseAuthException catch (e) {
-    // Handle different errors here (e.g., wrong password)
-    print("Error during re-authentication: ${e.code}");
-    return false;
-  }
-}
-
-
-
-
-
-}
-
-
-
-
-
-/*
-***************************important ***********************
-
-
-  String? getCurrentUserId() {
-    return _authenticationWebServices.getCurrentUser()?.uid;
   }
 
-  or
-  String userId = FirebaseAuth.instance.currentUser!.uid;
-
-
-  
-***************************important ***********************
-
-*/
-
-
-/*
-
-Future<UserProfile?> getUserProfile(String userId) async {
-  try {
-    DocumentSnapshot userDoc = await _firestore.collection('users').doc(userId).get();
-    if (userDoc.exists && userDoc.data().containsKey('profile')) {
-      return UserProfile.fromMap(userDoc.data()['profile']);
+//sign out the user
+  Future<bool> signOut() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
     }
-    return null;
-  } catch (e) {
-    print(e.toString());
-    return null;
+  }
+
+//delete the user account
+  Future<bool> reauthenticateAndDeleteUser(
+      String email, String password) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      print("No user signed in.");
+      return false;
+    }
+    final uid = user.uid;
+    AuthCredential credential =
+        EmailAuthProvider.credential(email: email, password: password);
+    try {
+      await user.reauthenticateWithCredential(credential);
+      await FirebaseFirestore.instance.collection('users').doc(uid).delete();
+      await user.delete();
+      print("User account deleted successfully.");
+      return true;
+    } on FirebaseAuthException catch (e) {
+      print("Error during re-authentication: ${e.code}");
+      return false;
+    }
+  }
+
+//update the user profile (for null value)
+  Future<bool> updateUserProfile(UserProfile profile) async {
+    String? userId = getCurrentUserId();
+    if (userId == null) return false;
+
+    try {
+      await _firestore.collection('users').doc(userId).update({
+        'profile': profile.toMap(),
+      });
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
   }
 }
-
-Future<bool> updateUserProfileDirectly(String userId, UserProfile profile) async {
-  try {
-    await _firestore.collection('users').doc(userId).update({
-      'profile': profile.toMap(),
-    });
-    return true;
-  } catch (e) {
-    print(e.toString());
-    return false;
-  }
-}
-
-//   // Fetch user profile information from Firestore
-//   Future<UserProfile?> getUserProfileInfo() async {
-//   String? userId = getCurrentUserId();
-//   if (userId == null) return null;
-//   try {
-//     DocumentSnapshot userDoc = await _firestore.collection('users').doc(userId).get();
-//     Map<String, dynamic> data = userDoc.data() as Map<String, dynamic>;
-//     // Directly construct and return the UserProfile object without checking if the profile data exists
-//     return UserProfile.fromMap(data['profile']);
-//   } catch (e) {
-//     print(e.toString());
-//     return null;
-//   }
-// }
-
-//   // Update user profile information in Firestore
-//   Future<bool> updateUserProfile(UserProfile profile) async {
-//     String? userId = getCurrentUserId();
-//     if (userId == null) return false;
-
-//     try {
-//       await _firestore.collection('users').doc(userId).update({
-//         'profile': profile.toMap(),
-//       });
-//       return true;
-//     } catch (e) {
-//       print(e.toString());
-//       return false;
-//     }
-//   }
-
- */

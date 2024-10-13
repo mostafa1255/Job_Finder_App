@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:jop_finder_app/core/constants/app_colors.dart';
 import 'package:jop_finder_app/core/utils/app_router.dart';
 
 class StyledTextNavigationToFromSignin extends StatelessWidget {
@@ -21,10 +22,7 @@ class StyledTextNavigationToFromSignin extends StatelessWidget {
           padding: const EdgeInsets.only(right: 5),
           child: Text(
             headText,
-            style: const TextStyle(
-              color: Color.fromARGB(255, 175, 176, 182),
-              fontSize: 13,
-            ),
+            style: Theme.of(context).textTheme.bodySmall,
           ),
         ),
         TextButton(
@@ -44,8 +42,8 @@ class StyledTextNavigationToFromSignin extends StatelessWidget {
           child: Text(
             tailText,
             style: const TextStyle(
-              color: Color.fromARGB(255, 53, 104, 153),
-              fontSize: 13,
+              color: AppColors.mainColor,
+              fontSize: 14,
             ),
           ),
         ),

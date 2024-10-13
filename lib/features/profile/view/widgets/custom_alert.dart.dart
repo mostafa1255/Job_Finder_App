@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:jop_finder_app/core/constants/app_colors.dart';
 
 class CustomAlertDialog extends StatelessWidget {
@@ -8,12 +7,12 @@ class CustomAlertDialog extends StatelessWidget {
       required this.title,
       required this.body,
       required this.actionButtonTitle,
-      this.route});
+      required this.onActionButtonPressed});
 
   final String title;
   final String body;
   final String actionButtonTitle;
-  final String? route;
+  final Function onActionButtonPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +29,7 @@ class CustomAlertDialog extends StatelessWidget {
         child: Text(
           body,
           textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.headlineMedium,
         ),
       ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
@@ -62,10 +62,7 @@ class CustomAlertDialog extends StatelessWidget {
                 ),
                 onPressed: () {
                   // Handle logout logic
-                  Navigator.of(context).pop();
-                  if (route != null) {
-                    GoRouter.of(context).go(route!);
-                  }
+                  onActionButtonPressed();
                 },
               ),
             ),
