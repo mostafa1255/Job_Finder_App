@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jop_finder_app/core/utils/app_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../core/constants/app_colors.dart';
 import 'recommended_jops_card.dart';
 import 'job_card.dart';
 import 'bottom_navigation.dart';
@@ -84,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const Text('John Lucas 👋', //take from fire base
                     style:
-                        TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+                        TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.primaryText)),
                 const SizedBox(height: 16),
                 GestureDetector(
                   onTap: () {
@@ -117,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     const Text('Featured Jobs',
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold)),
+                            fontSize: 20, fontWeight: FontWeight.bold , color: AppColors.primaryText)),
                     GestureDetector(
                       onTap: () {
                         GoRouter.of(context).push(AppRouter.seeAllPage);
@@ -178,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     const Text('Recommended Jobs',
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold)),
+                            fontSize: 20, fontWeight: FontWeight.bold,color: AppColors.primaryText)),
                     GestureDetector(
                       onTap: () {
                         GoRouter.of(context).push(AppRouter.seeAllPage);
