@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:icons_plus/icons_plus.dart';
 
 class RecentSearches extends StatelessWidget {
-  const RecentSearches({super.key, required this.name});
+  const RecentSearches({super.key, required this.name, required this.onDelete});
+
   final String name;
+  final Function() onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +38,10 @@ class RecentSearches extends StatelessWidget {
               width: double.infinity,
             ),
           ),
-          const Icon(
-            FontAwesome.x,
+          IconButton(
             color: Colors.grey,
+            onPressed: onDelete,
+            icon: const Icon(Icons.cancel),
           ),
         ],
       ),
