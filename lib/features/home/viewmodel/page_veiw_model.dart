@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:floating_bottom_bar/animated_bottom_navigation_bar.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jop_finder_app/core/utils/app_router.dart';
+import 'package:jop_finder_app/features/auth/data/web_services/firebase_authentication_web_services.dart';
 import 'package:jop_finder_app/features/job_search/view/pages/job_search.dart';
 import 'package:jop_finder_app/features/profile/view/pages/profile.dart';
 import 'package:jop_finder_app/features/profile/view/pages/settings.dart';
-import 'package:jop_finder_app/features/home/view/pages/home.dart';
-
+import 'package:jop_finder_app/features/profile/viewmodel/firebase_profile_web_services.dart';
+import 'package:jop_finder_app/features/profile/viewmodel/profile_cubit.dart';
 import '../view/pages/home_screen.dart';
 
 class PageViewModel extends StatefulWidget {
@@ -24,8 +26,16 @@ class _PageViewModelState extends State<PageViewModel> {
   final List<Widget> _pages = [
     HomeScreen(),
     JobSearchScreen(),
-    ProfileScreen(),
-    SettingsScreen(),
+    BlocProvider(
+      create: (context) => ProfileCubit(
+          FirebaseProfileWebServices(FireBaseAuthenticationWebServices())),
+      child: ProfileScreen(),
+    ),
+    BlocProvider(
+      create: (context) => ProfileCubit(
+          FirebaseProfileWebServices(FireBaseAuthenticationWebServices())),
+      child: SettingsScreen(),
+    ),
   ];
 
   void _onTabTapped(int index) {
@@ -44,7 +54,8 @@ class _PageViewModelState extends State<PageViewModel> {
         bottomBar: [
           BottomBarItem(
             icon: const Icon(Icons.home, size: 30),
-            iconSelected: const Icon(Icons.home, color: AppColors.cherryRed, size: 30),
+            iconSelected:
+                const Icon(Icons.home, color: AppColors.cherryRed, size: 30),
             title: 'home',
             dotColor: AppColors.cherryRed,
             onTap: (value) {
@@ -53,7 +64,8 @@ class _PageViewModelState extends State<PageViewModel> {
           ),
           BottomBarItem(
             icon: const Icon(Icons.search, size: 30),
-            iconSelected: const Icon(Icons.search, color: AppColors.cherryRed, size: 30),
+            iconSelected:
+                const Icon(Icons.search, color: AppColors.cherryRed, size: 30),
             title: 'search',
             dotColor: AppColors.cherryRed,
             onTap: (value) {
@@ -62,7 +74,8 @@ class _PageViewModelState extends State<PageViewModel> {
           ),
           BottomBarItem(
             icon: const Icon(Icons.person, size: 30),
-            iconSelected: const Icon(Icons.person, color: AppColors.cherryRed, size: 30),
+            iconSelected:
+                const Icon(Icons.person, color: AppColors.cherryRed, size: 30),
             title: 'profile',
             dotColor: AppColors.cherryRed,
             onTap: (value) {
@@ -71,7 +84,8 @@ class _PageViewModelState extends State<PageViewModel> {
           ),
           BottomBarItem(
             icon: const Icon(Icons.settings, size: 30),
-            iconSelected: const Icon(Icons.settings, color: AppColors.cherryRed, size: 30),
+            iconSelected: const Icon(Icons.settings,
+                color: AppColors.cherryRed, size: 30),
             title: 'settings',
             dotColor: AppColors.cherryRed,
             onTap: (value) {

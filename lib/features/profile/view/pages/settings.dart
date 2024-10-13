@@ -2,8 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:jop_finder_app/core/constants/app_colors.dart';
 import 'package:jop_finder_app/core/constants/strings.dart';
+import 'package:jop_finder_app/core/utils/app_router.dart';
 import 'package:jop_finder_app/features/profile/view/widgets/change_email_bottomsheet.dart';
 import 'package:jop_finder_app/features/profile/view/widgets/change_password_bottomsheet.dart';
 import 'package:jop_finder_app/features/profile/view/widgets/change_status_bottomsheet.dart';
@@ -49,22 +51,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-          appBar: AppBar(
-            elevation: 0,
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            title: Text(
-              "Settings",
-            ),
+    return Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () {
+              if (GoRouter.of(context).canPop()) {
+                GoRouter.of(context).pop();
+              } else {
+                GoRouter.of(context)
+                    .pushReplacementNamed(AppRouter.pageViewModel);
+              }
+            },
           ),
-          body: buildBlock()),
-    );
+          title: Text(
+            "Settings",
+          ),
+        ),
+        body: SafeArea(child: buildBlock()));
   }
 
   Widget buildSettingsScreen() {

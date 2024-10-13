@@ -134,10 +134,10 @@ class ApplicantCard extends StatelessWidget {
                     children: [
                       Text(
                         applicant['name'] ?? 'No Name',
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(height: 4),
+                      const SizedBox(height: 4),
                       Text(
                         applicant['email'] ?? 'No Email',
                         style: TextStyle(color: Colors.grey[600]),
@@ -147,12 +147,12 @@ class ApplicantCard extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             const Text(
               'Skills:',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Wrap(
               spacing: 8,
               runSpacing: 8,
@@ -164,27 +164,16 @@ class ApplicantCard extends StatelessWidget {
                       ))
                   .toList(),
             ),
-            SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ElevatedButton(
-                  onPressed: () {},
-                  child: Text('View Profile',
-                      style: TextStyle(color: Colors.white)),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 53, 104, 153),
-                  ),
+            const SizedBox(height: 16),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 53, 104, 153),
                 ),
-                SizedBox(width: 8),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: Text('Contact', style: TextStyle(color: Colors.white)),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 53, 104, 153),
-                  ),
-                ),
-              ],
+                child: const Text('Contact',
+                    style: TextStyle(color: Colors.white)),
+              ),
             ),
           ],
         ),

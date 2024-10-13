@@ -48,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
           body: BlocListener<AuthCubit, AuthState>(
             listener: (context, state) {
               if (state is AuthLoaded) {
-                GoRouter.of(context).pushReplacementNamed(AppRouter.homeScreen);
+                GoRouter.of(context).pushReplacementNamed(AppRouter.pageViewModel);
               }
             },
             child: Form(

@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
       String? userToken = prefs.getString(userTokenKey);
 
       if (userToken != null) {
-        GoRouter.of(context).pushReplacementNamed(AppRouter.homeScreen);
+        GoRouter.of(context).pushReplacementNamed(AppRouter.pageViewModel);
         // GoRouter.of(context).pushReplacementNamed(AppRouter.jobPostScreen);
       } else {
         if (mounted) {
