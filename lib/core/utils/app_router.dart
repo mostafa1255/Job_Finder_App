@@ -48,7 +48,6 @@ class AppRouter {
   static const seeAllPage = "/seeAllPage";
   static const pageViewModel = "/pageViewModel";
 
-
   static FireBaseAuthenticationWebServices fireBaseAuthenticationWebServices =
       FireBaseAuthenticationWebServices();
   static FirebaseProfileWebServices firebaseProfileWebServices =
@@ -79,17 +78,29 @@ class AppRouter {
       GoRoute(
         path: signUp,
         name: signUp,
-        builder: (context, state) => const SignUpScreen(),
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const SignUpScreen(),
+          transitionsBuilder: _fadeTransition, // Slide transition
+        ),
       ),
       GoRoute(
         path: login,
         name: login,
-        builder: (context, state) => const LoginScreen(),
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const LoginScreen(),
+          transitionsBuilder: _slideTransition,
+        ),
       ),
       GoRoute(
         path: forgetPassword,
         name: forgetPassword,
-        builder: (context, state) => ForgetPasswordScreen(),
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const ForgetPasswordScreen(),
+          transitionsBuilder: _slideTransition, // Slide transition
+        ),
       ),
       GoRoute(
         path: homeScreen,
@@ -99,7 +110,7 @@ class AppRouter {
       GoRoute(
         path: jobSearchScreen,
         name: jobSearchScreen,
-        builder: (context, state) =>const JobSearchScreen(),
+        builder: (context, state) => const JobSearchScreen(),
       ),
       GoRoute(
         path: jobApplyScreen,
@@ -129,7 +140,8 @@ class AppRouter {
         name: myPostedJob,
         builder: (context, state) => const MyPostedJob(),
       ),
-      GoRoute(path: pageViewModel,
+      GoRoute(
+          path: pageViewModel,
           name: pageViewModel,
           builder: (context, state) => const PageViewModel()),
       GoRoute(
@@ -181,4 +193,33 @@ class AppRouter {
       //end bodaSayed
     ],
   );
+  // Slide transition
+  static Widget _slideTransition(
+      BuildContext context,
+      Animation<double> animation,
+      Animation<double> secondaryAnimation,
+      Widget child) {
+    const begin = Offset(1.0, 0.0); // Slide from right
+    const end = Offset.zero;
+    const curve = Curves.easeInOut;
+
+    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+    return SlideTransition(
+      position: animation.drive(tween),
+      child: child,
+    );
+  }
+
+  // Fade transition
+  static Widget _fadeTransition(
+      BuildContext context,
+      Animation<double> animation,
+      Animation<double> secondaryAnimation,
+      Widget child) {
+    return FadeTransition(
+      opacity: animation,
+      child: child,
+    );
+  }
 }
