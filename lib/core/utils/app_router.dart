@@ -7,6 +7,7 @@ import 'package:jop_finder_app/features/auth/view/screens/forget_password.dart';
 import 'package:jop_finder_app/features/auth/view/screens/signin.dart';
 import 'package:jop_finder_app/features/auth/view/screens/signup.dart';
 import 'package:jop_finder_app/features/home/view/pages/home_screen.dart';
+import 'package:jop_finder_app/features/home/viewmodel/page_veiw_model.dart';
 import 'package:jop_finder_app/features/job_apply/view/pages/job_apply.dart';
 import 'package:jop_finder_app/features/job_apply/view/pages/succefull_Screen.dart';
 import 'package:jop_finder_app/features/job_post/view/pages/all_applicants_screen.dart';
@@ -22,6 +23,7 @@ import 'package:jop_finder_app/features/profile/viewmodel/profile_cubit.dart';
 import 'package:jop_finder_app/features/splash/view/splash.dart';
 import 'package:jop_finder_app/features/splash/view/splash/OnboardingScreen1.dart';
 
+import '../../features/home/view/pages/bottom_navigation.dart';
 import '../../features/home/view/pages/see_all_page.dart';
 import '../../features/job_search/view/pages/job_search.dart';
 
@@ -44,7 +46,7 @@ class AppRouter {
   static const successScreen = "/successScreen";
   static const jobSearchScreen = "/jobSearchScreen";
   static const seeAllPage = "/seeAllPage";
-
+  static const pageViewModel = "/pageViewModel";
 
 
   static FireBaseAuthenticationWebServices fireBaseAuthenticationWebServices =
@@ -54,7 +56,7 @@ class AppRouter {
   static ProfileCubit profileCubit = ProfileCubit(firebaseProfileWebServices);
 
   static GoRouter router = GoRouter(
-    initialLocation: homeScreen,
+    initialLocation: splash,
     errorPageBuilder: (context, state) => MaterialPage(
       key: state.pageKey,
       child: Scaffold(
@@ -121,11 +123,15 @@ class AppRouter {
         name: seeAllPage,
         builder: (context, state) => SeeAllPage(),
       ),
+
       GoRoute(
         path: myPostedJob,
         name: myPostedJob,
         builder: (context, state) => const MyPostedJob(),
       ),
+      GoRoute(path: pageViewModel,
+          name: pageViewModel,
+          builder: (context, state) => const PageViewModel()),
       GoRoute(
         path: allApplicantsScreen,
         name: allApplicantsScreen,

@@ -1,10 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:floating_bottom_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jop_finder_app/core/utils/app_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../auth/data/model/user_model.dart';
+import '../../../profile/viewmodel/profile_cubit.dart';
 import 'recommended_jops_card.dart';
 import 'job_card.dart';
 import 'bottom_navigation.dart';
@@ -21,7 +25,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
-
+  int index = 0;
+  UserModel? user;
+  PageController _pageController = PageController();
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -46,6 +52,13 @@ class _HomeScreenState extends State<HomeScreen> {
         .toList();
   }
 
+  Future<void> _fetchUserInfo() async {
+    var fetchedUser = await BlocProvider.of<ProfileCubit>(context).getUserInfo();
+    setState(() {
+      user = fetchedUser;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,14 +79,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: () {
                       GoRouter.of(context).push(AppRouter.profileScreen);
                     },
-                    child:const CircleAvatar(
+                    child:CircleAvatar(
                       radius: 20,
+                      backgroundImage: NetworkImage(
+                        user?.profileImageUrl ?? 'https://picsum.photos/200/300',
+                      ),
                     ),
                   ),
                 ],
               ),
-              const Text('John Lucas 👋',//take from fire base
-                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+              Text(
+                  user?.name ??'John Lucas 👋',//take from fire base
+                  style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold)
+              ),
               const SizedBox(height: 16),
               GestureDetector(
                 onTap: () {
@@ -223,27 +241,32 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigation( ),
+      // bottomNavigationBar: BottomNavigation( ),
 
       // bottomNavigationBar: BottomNavigationBar(
       //   items: const <BottomNavigationBarItem>[
       //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.home),
+      //       icon: Icon(Icons.home,color: Colors.black,),
       //       label: 'Home',
       //     ),
       //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.search),
+      //       icon: Icon(Icons.search,color: Colors.black,),
       //       label: 'Search',
       //     ),
       //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.person),
+      //         icon: Icon(Icons.add,color: Colors.black,),
+      //         label: 'Post Job',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.person,color: Colors.black,),
       //       label: 'Profile',
       //     ),
       //   ],
       //   currentIndex: _selectedIndex,
       //   selectedItemColor: Colors.amber[800],
       //   onTap: _onItemTapped,
-      // ), // Custom widget for navigation
+      // ),//Custom widget for navigation
+
     );
   }
 }
