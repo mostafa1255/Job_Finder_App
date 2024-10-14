@@ -60,8 +60,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               if (GoRouter.of(context).canPop()) {
                 GoRouter.of(context).pop();
               } else {
-                GoRouter.of(context)
-                    .pushReplacementNamed(AppRouter.pageViewModel);
+                GoRouter.of(context).pushNamed(AppRouter.pageViewModel);
               }
             },
           ),

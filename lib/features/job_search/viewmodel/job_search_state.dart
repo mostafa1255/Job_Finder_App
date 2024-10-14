@@ -1,18 +1,14 @@
+import 'package:jop_finder_app/features/auth/data/model/PostedJob_model.dart';
 import 'package:jop_finder_app/features/job_search/models/jobs.dart';
 
 abstract class JobSearchState {}
 
-class JobSearchInitial extends JobSearchState {
+class JobSearchInitial extends JobSearchState {}
 
-
-}
-
-class JobSearchLoading extends JobSearchState {
-
-}
+class JobSearchLoading extends JobSearchState {}
 
 class JobSearchSuccess extends JobSearchState {
-  final List<Job> jobs;
+  final List<PostedJob> jobs;
   final List<String?> uniqueJobTitles;
 
   JobSearchSuccess(this.jobs, this.uniqueJobTitles);
@@ -32,4 +28,3 @@ class JobFilterIsSelected extends JobSearchState {
 
   JobFilterIsSelected(this.selectedFilters);
 }
-

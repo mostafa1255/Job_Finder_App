@@ -4,12 +4,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jop_finder_app/core/utils/app_router.dart';
+import 'package:jop_finder_app/features/auth/data/model/PostedJob_model.dart';
 import 'package:jop_finder_app/features/auth/data/web_services/firebase_authentication_web_services.dart';
+import 'package:jop_finder_app/features/job_post/view/pages/my_postedJob.dart';
 import 'package:jop_finder_app/features/job_search/view/pages/job_search.dart';
 import 'package:jop_finder_app/features/profile/view/pages/profile.dart';
 import 'package:jop_finder_app/features/profile/view/pages/settings.dart';
 import 'package:jop_finder_app/features/profile/viewmodel/firebase_profile_web_services.dart';
 import 'package:jop_finder_app/features/profile/viewmodel/profile_cubit.dart';
+import '../../../core/constants/app_colors.dart' as appColor;
 import '../view/pages/home_screen.dart';
 
 class PageViewModel extends StatefulWidget {
@@ -25,7 +28,7 @@ class _PageViewModelState extends State<PageViewModel> {
   // List of pages
   final List<Widget> _pages = [
     HomeScreen(),
-    JobSearchScreen(),
+    MyPostedJob(),
     BlocProvider(
       create: (context) => ProfileCubit(
           FirebaseProfileWebServices(FireBaseAuthenticationWebServices())),
@@ -63,10 +66,10 @@ class _PageViewModelState extends State<PageViewModel> {
             },
           ),
           BottomBarItem(
-            icon: const Icon(Icons.search, size: 30),
+            icon: const Icon(Icons.work, size: 30),
             iconSelected:
-                const Icon(Icons.search, color: AppColors.cherryRed, size: 30),
-            title: 'search',
+                const Icon(Icons.work, color: AppColors.cherryRed, size: 30),
+            title: 'My Jobs',
             dotColor: AppColors.cherryRed,
             onTap: (value) {
               _onTabTapped(1); // Search screen index
@@ -94,7 +97,7 @@ class _PageViewModelState extends State<PageViewModel> {
           ),
         ],
         bottomBarCenterModel: BottomBarCenterModel(
-          centerBackgroundColor: Colors.black,
+          centerBackgroundColor: appColor.AppColors.primaryBlue,
           centerIcon: FloatingCenterButton(
             child: GestureDetector(
               onTap: () {

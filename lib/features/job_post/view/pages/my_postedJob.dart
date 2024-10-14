@@ -4,19 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jop_finder_app/core/utils/app_router.dart';
 import 'package:jop_finder_app/features/auth/data/model/PostedJob_model.dart';
-import 'package:intl/intl.dart';
 import 'package:jop_finder_app/features/job_post/view/widgets/JobCard.dart';
 
 class MyPostedJob extends StatelessWidget {
   const MyPostedJob({super.key});
 
-  Stream<List<PostedJob>> getPostedJobs() {
+  Stream<List<PostedJob>> getAllJobs() {
+    final String userId = FirebaseAuth.instance.currentUser!.uid;
     return FirebaseFirestore.instance
-        .collection('jobs')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection('postedJobs')
-        .snapshots().map((snapshot) =>
-            snapshot.docs.map((doc) => PostedJob.fromMap(doc.data())).toList());
+        .collection('allJobs')
+        .where('postedByUserId', isEqualTo: userId)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) => PostedJob.fromMap(doc.data())).toList();
+    });
   }
 
   @override
@@ -30,13 +31,14 @@ class MyPostedJob extends StatelessWidget {
           'My Posted Jobs',
           style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
         ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+        // leading: IconButton(
+        //   icon: const Icon(Icons.arrow_back, color: Colors.black87),
+        //   onPressed: () => GoRouter.of(context)
+        //       .pushReplacementNamed(AppRouter.pageViewModel),
+        // ),
       ),
       body: StreamBuilder<List<PostedJob>>(
-        stream: getPostedJobs(),
+        stream: getAllJobs(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -47,9 +49,9 @@ class MyPostedJob extends StatelessWidget {
                 children: [
                   Icon(Icons.error_outline, size: 60, color: Colors.red[300]),
                   const SizedBox(height: 16),
-                  const Text(
-                    'Error fetching jobs',
-                    style: TextStyle(fontSize: 18, color: Colors.red),
+                  Text(
+                    'Error: ${snapshot.error}',
+                    style: const TextStyle(fontSize: 18, color: Colors.red),
                   ),
                 ],
               ),
@@ -68,26 +70,26 @@ class MyPostedJob extends StatelessWidget {
                 ],
               ),
             );
+          } else {
+            final allJobs = snapshot.data!;
+            return ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: allJobs.length,
+              itemBuilder: (context, index) {
+                final job = allJobs[index];
+                return JobCard(job: job);
+              },
+            );
           }
-
-          final jobs = snapshot.data!;
-          return ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: jobs.length,
-            itemBuilder: (context, index) {
-              final job = jobs[index];
-              return JobCard(job: job);
-            },
-          );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          GoRouter.of(context).push(AppRouter.jobPostScreen);
-        },
-        child: const Icon(Icons.add),
-        backgroundColor: Colors.blue,
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     GoRouter.of(context).push(AppRouter.jobPostScreen);
+      //   },
+      //   backgroundColor: Colors.blue,
+      //   child: const Icon(Icons.add),
+      // ),
     );
   }
 }

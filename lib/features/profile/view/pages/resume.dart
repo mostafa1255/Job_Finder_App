@@ -1,5 +1,4 @@
-// ignore_for_file: prefer_const_constructors
-
+import 'package:permission_handler/permission_handler.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,10 +38,15 @@ class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
   }
 
   // Method to pick a PDF file
-  Future<FilePickerResult?> pickPDF() async {
+
+Future<FilePickerResult?> pickPDF() async {
+  // Check and request storage permission
+  PermissionStatus permissionStatus = await Permission.storage.request();
+  if (permissionStatus.isGranted) {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.any,
+        type: FileType.custom,
+        allowedExtensions: ['pdf'],  // Only allow picking PDFs
         allowMultiple: false,
       );
       if (result != null) {
@@ -58,7 +62,12 @@ class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
       print(e.toString());
       return null;
     }
+  } else {
+    // Permission was denied, handle accordingly
+    print('Permission denied');
+    return null;
   }
+}
 
   Widget buildBlock() {
     return BlocBuilder<ProfileCubit, ProfileState>(

@@ -9,7 +9,7 @@ class AllApplicantsScreen extends StatelessWidget {
 
   Future<List<Map<String, dynamic>>> _fetchApplicants() async {
     DocumentSnapshot jobSnapshot =
-        await FirebaseFirestore.instance.collection('jobs').doc(jobId).get();
+        await FirebaseFirestore.instance.collection('allJobs').doc(jobId).get();
 
     if (!jobSnapshot.exists) {
       print('Job document does not exist!');
@@ -148,9 +148,9 @@ class ApplicantCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Skills:',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            Text(
+              applicant['skills'] == null ? '' : 'Skills:',
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Wrap(
@@ -167,7 +167,35 @@ class ApplicantCard extends StatelessWidget {
             const SizedBox(height: 16),
             Center(
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Contact Information'),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                'Email: ${applicant['email'] ?? 'Not provided'}'),
+                            SizedBox(height: 8),
+                            Text(
+                                'Phone: ${applicant['phone'] ?? 'Not provided'}'),
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                            child: Text('Close'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromARGB(255, 53, 104, 153),
                 ),

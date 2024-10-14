@@ -2,15 +2,16 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:jop_finder_app/features/auth/data/model/PostedJob_model.dart';
 import 'package:jop_finder_app/features/job_search/models/jobs.dart';
 import 'package:jop_finder_app/features/job_search/viewmodel/job_search_state.dart';
 
 class JobSearchCubit extends Cubit<JobSearchState> {
-  JobSearchCubit() : super(JobSearchInitial()){}
+  JobSearchCubit() : super(JobSearchInitial()) {}
   final Set<String> _selectedFilters = {};
   Timer? _debounce;
   Set<String> _filters = {};
-   List<String> _recentSearches = [];
+  List<String> _recentSearches = [];
 
   String? get _userId => FirebaseAuth.instance.currentUser?.uid;
 
@@ -19,7 +20,6 @@ class JobSearchCubit extends Cubit<JobSearchState> {
     emit(JobFilterIsSelected(_filters));
     print('initial filters: $_filters');
   }
-
 
   bool isFilterSelected(String filter) {
     return _selectedFilters.contains(filter);
@@ -67,7 +67,6 @@ class JobSearchCubit extends Cubit<JobSearchState> {
     }
   }
 
-
   Future<void> fetchRecentSearches() async {
     emit(JobSearchLoading());
     if (_userId != null) {
@@ -78,9 +77,8 @@ class JobSearchCubit extends Cubit<JobSearchState> {
           .orderBy('timestamp', descending: true)
           .get();
 
-      List<String> recentSearches = snapshot.docs
-          .map((doc) => doc['searchTerm'] as String)
-          .toList();
+      List<String> recentSearches =
+          snapshot.docs.map((doc) => doc['searchTerm'] as String).toList();
 
       _recentSearches = recentSearches;
 
@@ -89,7 +87,6 @@ class JobSearchCubit extends Cubit<JobSearchState> {
       emit(JobSearchNoResult());
     }
   }
-
 
   List<String> get recentSearches => _recentSearches;
 
@@ -103,15 +100,15 @@ class JobSearchCubit extends Cubit<JobSearchState> {
       }
 
       QuerySnapshot snapshot =
-          await FirebaseFirestore.instance.collection('jobs').get();
+          await FirebaseFirestore.instance.collection('allJobs').get();
 
-      List<Job> allJobs = snapshot.docs
-          .map((doc) => Job.fromMap(doc.data() as Map<String, dynamic>))
+      List<PostedJob> allJobs = snapshot.docs
+          .map((doc) => PostedJob.fromMap(doc.data() as Map<String, dynamic>))
           .toList();
 
       String normalizedQuery = query.trim().toLowerCase().replaceAll(' ', '');
 
-      List<Job> result = allJobs.where((job) {
+      List<PostedJob> result = allJobs.where((job) {
         String normalizedJobTitle =
             job.jobTitle!.toLowerCase().replaceAll(' ', '');
         return normalizedJobTitle.startsWith(normalizedQuery);
@@ -119,10 +116,11 @@ class JobSearchCubit extends Cubit<JobSearchState> {
       print('filters:$_filters');
       if (_filters.isNotEmpty) {
         result = result.where((job) {
-          bool matchesLocation = _filters.contains(job.location?.toLowerCase().trim() ?? "");
-          bool matchesCompany = _filters.contains(job.companyName?.toLowerCase().trim() ?? "");
+          bool matchesLocation =
+              _filters.contains(job.location?.toLowerCase().trim() ?? "");
+          bool matchesCompany =
+              _filters.contains(job.companyName?.toLowerCase().trim() ?? "");
           return matchesCompany || matchesLocation;
-
         }).toList();
         print('filters:$_filters');
       }

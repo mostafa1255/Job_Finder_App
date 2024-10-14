@@ -31,7 +31,7 @@ class _SeeAllPage extends State<SeeAllPage> {
 
   Future<List<PostedJob>> fetchJobs() async {
     QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('jobs').get();
+        await FirebaseFirestore.instance.collection('allJobs').get();
     return querySnapshot.docs
         .map((doc) => PostedJob.fromMap(doc.data() as Map<String, dynamic>))
         .toList();

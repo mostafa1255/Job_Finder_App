@@ -10,24 +10,21 @@ class JobSearchScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return
+    return Scaffold(
+      
+      appBar: AppBar(
+        title: const Text('Search'),
+        actions: [
+          IconButton(
+            onPressed: () {
 
-      Scaffold(
-        appBar: AppBar(
-          title: const Text('Search'),
-          actions: [
-            IconButton(
-              onPressed: () {
-
-                GoRouter.of(context).push(AppRouter.recentSearches);
-
-              },
-              icon: const Icon(Icons.history),
-            ),
-          ],
-        ),
-        body: const JobSearchBody(),
-      );
-
+              GoRouter.of(context).push(AppRouter.recentSearches);
+            },
+            icon: const Icon(Icons.history),
+          ),
+        ],
+      ),
+      body: const JobSearchBody(),
+    );
   }
 }

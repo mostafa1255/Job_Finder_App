@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -99,18 +100,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
             alignment: Alignment.bottomRight,
             children: [
               CircleAvatar(
-                radius: 60.sp,
-                backgroundImage: NetworkImage(
-                    user!.profileImageUrl ??
-                        'https://avatars.githubusercontent.com/u/953478?v=4?s=400',
-                    scale: 1.0),
-                // Replace with actual image URL
+                radius: 60,
+                backgroundColor: Colors.grey.shade200,
+                child: ClipOval(
+                  child: Uri.parse(user?.profileImageUrl ?? "").hasAbsolutePath
+                      ? CachedNetworkImage(
+                          imageUrl: user!.profileImageUrl!,
+                          fit: BoxFit.cover,
+                          width: 120.w,
+                          height: 120.h,
+                          progressIndicatorBuilder: (context, url, progress) =>
+                              Center(
+                            child: CircularProgressIndicator(
+                              value: progress.progress,
+                            ),
+                          ),
+                          errorWidget: (context, url, error) => const Center(
+                            child: Icon(Icons.error),
+                          ),
+                        )
+                      : const Icon(Icons.person),
+                ),
               ),
               Positioned(
                 // Adjust this value to position the icon on the frame
                 right:
                     7.sp, // Adjust this value to position the icon on the frame
                 child: Container(
+                  width: 30.w,
+                  height: 30.h,
                   padding: EdgeInsets.all(5), // Adjust padding if necessary
                   decoration: BoxDecoration(
                     color: AppColors.primaryBlue,
