@@ -205,7 +205,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 text: user!.phoneNumber ?? 'No phone number',
                 icon: Icons.phone_android),
             onTap: () {
-              profileCubit!.callPhoneNumber(user!.phoneNumber!);
+              (user!.phoneNumber != null)
+                  ? profileCubit!.callPhoneNumber(user!.phoneNumber!)
+                  : {};
             },
           ),
           SizedBox(height: 24),
