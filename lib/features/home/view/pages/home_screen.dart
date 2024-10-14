@@ -8,7 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/constants/app_colors.dart';
 import 'recommended_jops_card.dart';
 import 'job_card.dart';
-import 'bottom_navigation.dart';
 import 'package:jop_finder_app/features/auth/data/model/PostedJob_model.dart';
 
 const String userTokenKey = 'userToken';
@@ -59,33 +58,47 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      //SAFE AREA
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 30.h, horizontal: 15.w),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Welcome Back!', style: TextStyle(fontSize: 24)),
+                    const Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Welcome Back!',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Color.fromRGBO(149, 150, 157, 1),
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        Text('John Lucas 👋', //take from fire base
+                            style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.primaryText)),
+                      ],
+                    ),
                     GestureDetector(
                       onTap: () {
                         GoRouter.of(context).push(AppRouter.profileScreen);
                       },
                       child: const CircleAvatar(
-                        radius: 20,
+                        radius: 27,
                       ),
                     ),
                   ],
                 ),
-                const Text('John Lucas 👋', //take from fire base
-                    style:
-                        TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.primaryText)),
                 const SizedBox(height: 16),
                 GestureDetector(
                   onTap: () {
@@ -118,7 +131,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     const Text('Featured Jobs',
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold , color: AppColors.primaryText)),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.primaryText)),
                     GestureDetector(
                       onTap: () {
                         GoRouter.of(context).push(AppRouter.seeAllPage);
@@ -126,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text(
                         'See all',
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 13,
                           color: Colors.grey,
                         ),
                       ),
@@ -179,15 +194,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     const Text('Recommended Jobs',
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold,color: AppColors.primaryText)),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.primaryText)),
                     GestureDetector(
                       onTap: () {
                         GoRouter.of(context).push(AppRouter.seeAllPage);
                       },
-                      child: Text(
+                      child: const Text(
                         'See all',
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 13,
                           color: Colors.grey,
                         ),
                       ),
@@ -237,27 +254,27 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-      ),
 
-      // bottomNavigationBar: BottomNavigationBar(
-      //   items: const <BottomNavigationBarItem>[
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.home),
-      //       label: 'Home',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.search),
-      //       label: 'Search',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.person),
-      //       label: 'Profile',
-      //     ),
-      //   ],
-      //   currentIndex: _selectedIndex,
-      //   selectedItemColor: Colors.amber[800],
-      //   onTap: _onItemTapped,
-      // ), // Custom widget for navigation
+        // bottomNavigationBar: BottomNavigationBar(
+        //   items: const <BottomNavigationBarItem>[
+        //     BottomNavigationBarItem(
+        //       icon: Icon(Icons.home),
+        //       label: 'Home',
+        //     ),
+        //     BottomNavigationBarItem(
+        //       icon: Icon(Icons.search),
+        //       label: 'Search',
+        //     ),
+        //     BottomNavigationBarItem(
+        //       icon: Icon(Icons.person),
+        //       label: 'Profile',
+        //     ),
+        //   ],
+        //   currentIndex: _selectedIndex,
+        //   selectedItemColor: Colors.amber[800],
+        //   onTap: _onItemTapped,
+        // ), // Custom widget for navigation
+      ),
     );
   }
 }

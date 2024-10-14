@@ -94,7 +94,7 @@ class AppRouter {
         pageBuilder: (context, state) => CustomTransitionPage(
           key: state.pageKey,
           child: const LoginScreen(),
-          transitionsBuilder: _slideTransition,
+          transitionsBuilder: _fadeTransition,
         ),
       ),
       GoRoute(
@@ -120,7 +120,8 @@ class AppRouter {
         path: jobList,
         name: jobList,
         builder: (context, state) {
-          final Map<String, dynamic> extra = state.extra as Map<String, dynamic>;
+          final Map<String, dynamic> extra =
+              state.extra as Map<String, dynamic>;
           return JobListScreen(
             jobTitle: extra['jobTitle'] as String,
             jobs: extra['jobs'] as List<Job>,
