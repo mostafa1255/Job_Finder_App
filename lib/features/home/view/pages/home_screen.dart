@@ -1,18 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jop_finder_app/core/utils/app_router.dart';
-import 'package:jop_finder_app/features/auth/data/model/user_model.dart';
-import 'package:jop_finder_app/features/profile/viewmodel/profile_cubit.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../../../../core/constants/app_colors.dart';
-import 'recommended_jops_card.dart';
-import 'job_card.dart';
 import 'package:jop_finder_app/features/auth/data/model/PostedJob_model.dart';
+import 'package:jop_finder_app/features/auth/data/model/user_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../../core/constants/app_colors.dart';
+import 'job_card.dart';
+import 'recommended_jops_card.dart';
 
 const String userTokenKey = 'userToken';
 
@@ -90,18 +89,31 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Column(
+                    Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+<<<<<<< HEAD
                         Text(
                           'Welcome Back! 👋',
+=======
+                        const Text(
+                          'Welcome Back!',
+>>>>>>> 04bb0c29da68465165ddfd5035ff06f29a5a9014
                           style: TextStyle(
                             fontSize: 14,
                             color: Color.fromRGBO(149, 150, 157, 1),
                             fontWeight: FontWeight.w400,
                           ),
                         ),
+<<<<<<< HEAD
+=======
+                        Text("${user?.name}👋" ?? 'John Lucas 👋',
+                            style: const TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.primaryText)),
+>>>>>>> 04bb0c29da68465165ddfd5035ff06f29a5a9014
                       ],
                     ),
                     GestureDetector(
@@ -136,11 +148,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
-                Text(user?.name ?? 'John Lucas 👋',
-                    style: const TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primaryText)),
                 const SizedBox(height: 16),
                 GestureDetector(
                   onTap: () {

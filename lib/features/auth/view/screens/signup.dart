@@ -8,6 +8,7 @@ import 'package:jop_finder_app/features/auth/view/screens/shared/google_facebook
 import 'package:jop_finder_app/features/auth/view/screens/shared/styled_button.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/styled_textField.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/styled_text_navigation_to_from_signin.dart';
+import 'package:jop_finder_app/features/auth/view/screens/shared/terms.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/text_between_divider.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/welcome_text.dart';
 import 'package:jop_finder_app/features/auth/viewmodel/cubit/auth_cubit.dart';
@@ -51,7 +52,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               if (state is AuthLoaded) {
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                     content: Text("User signed up successfully")));
-                GoRouter.of(context).pushReplacementNamed(AppRouter.pageViewModel);
+                GoRouter.of(context)
+                    .pushReplacementNamed(AppRouter.pageViewModel);
               }
             },
             child: Form(
@@ -95,6 +97,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         controller: _confirmPasswordController,
                         password: _passwordController,
                       ),
+                      const SizedBox(height: 25),
+                      const Terms(),
                       const SizedBox(height: 15),
 
                       //cubit
@@ -156,7 +160,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         },
                       ),
 
-                      const SizedBox(height: 30),
+                      const SizedBox(height: 15),
+                      const SizedBox(height: 15),
 
                       //Text between two lines
                       const TextBetweenDivider(text: "Or continue with"),
