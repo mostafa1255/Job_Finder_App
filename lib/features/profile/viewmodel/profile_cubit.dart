@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,6 +40,19 @@ class ProfileCubit extends Cubit<ProfileState> {
       return UserModel(
           id: "", name: "", email: ""); // Add return statement here
     }
+  }
+  
+  Future<int> getAppliedJobsCount() async {
+    final userId =  _profileWebServices.getCurrentUserId();
+    if (userId == null) {
+      return 0;
+    }
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('appliedJobs')
+        .get();
+    return querySnapshot.docs.length;
   }
 
 //pick image and update user

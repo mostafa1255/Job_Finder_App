@@ -14,7 +14,7 @@ import 'package:jop_finder_app/features/profile/view/widgets/edit_bio_dialog.dar
 import 'package:jop_finder_app/features/profile/view/widgets/education_add_dialog.dart';
 import 'package:jop_finder_app/features/profile/view/widgets/info_display.dart';
 import 'package:jop_finder_app/features/profile/viewmodel/profile_cubit.dart';
- 
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
   @override
@@ -39,7 +39,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // Fetch user information from Firestore using the cubit method
     var fetchedUser =
         await BlocProvider.of<ProfileCubit>(context).getUserInfo();
-        // Check if user profile is null and update it with default values
+    // Check if user profile is null and update it with default values
     if (fetchedUser.profile == null) {
       UserProfile userProfile = UserProfile(
         bio: 'No bio added',
@@ -56,7 +56,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       });
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           )
         ],
       ),
-      body:  SafeArea(child: buildBlock()),
+      body: SafeArea(child: buildBlock()),
     );
   }
 
@@ -99,7 +98,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       builder: (context, state) {
         if (state is ProfileLoading) {
           return Center(child: CircularProgressIndicator());
-        } else if (state is UserLoaded ) {
+        } else if (state is UserLoaded) {
           user = state.user;
           return buildProfileScreen();
         } else if (state is UserUpdated) {
@@ -148,12 +147,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
               Positioned(
-                right:
-                    7.w, 
+                right: 7.w,
                 child: Container(
                   width: 35,
                   height: 35,
-                  padding: EdgeInsets.all(5), 
+                  padding: EdgeInsets.all(5),
                   decoration: BoxDecoration(
                     color: AppColors.primaryBlue,
                     shape: BoxShape.circle,
@@ -206,13 +204,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 Column(
                   children: [
-                    Text(
-                      user!.appliedJobs!.length.toString(),
-                      style: Theme.of(context).textTheme.displayLarge,
+                    FutureBuilder<int>(
+                      future: profileCubit!
+                          .getAppliedJobsCount(), // Await the Future here
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator(); // Show a loader while waiting
+                        } else if (snapshot.hasError) {
+                          return Text(
+                              'Error: ${snapshot.error}'); // Handle error
+                        } else if (snapshot.hasData) {
+                          return Text(
+                            snapshot.data.toString(),
+                            style: Theme.of(context).textTheme.displayLarge,
+                          ); // Show the count once data is available
+                        } else {
+                          return Text('0',
+                              style: Theme.of(context).textTheme.displayLarge);
+                        }
+                      },
                     ),
-                    Text(
-                      'Applied',
-                    ),
+                    InkWell(child: Text('Applied'), onTap: () {
+                      GoRouter.of(context).pushNamed('/applicationsScreen');
+                    }),
                   ],
                 ),
                 Column(
@@ -269,7 +284,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
-
 
   Widget buildSectionHeader(String title, {required VoidCallback onPressed}) {
     return Row(
@@ -412,13 +426,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 Row(
                   children: [
-                    SizedBox(width: 4), 
+                    SizedBox(width: 4),
                     Icon(
                       Icons.file_present,
                       size: 30,
                       color: AppColors.primaryBlue,
                     ),
-                    SizedBox(width: 12), 
+                    SizedBox(width: 12),
                     InkWell(
                       onTap: () {
                         profileCubit!.openPdf(user!.cvUrl!);
@@ -428,7 +442,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           style: Theme.of(context).textTheme.displayMedium,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis),
-                    ), 
+                    ),
                   ],
                 ),
                 IconButton(

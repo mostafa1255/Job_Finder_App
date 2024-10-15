@@ -172,17 +172,13 @@ class ApplicationCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                        color: appliedJob.status == "Canceled"
-                            ? Colors.red
-                            : Colors.green,
+                        color:getStatusColor( appliedJob.status),
                         width: 1),
                   ),
                   child: Text(
                     appliedJob.status ?? 'no status',
                     style: TextStyle(
-                        color: appliedJob.status == "Canceled"
-                            ? Colors.red
-                            : Colors.green),
+                        color: getStatusColor(appliedJob.status),),
                   ),
                 ),
               ],
@@ -192,4 +188,16 @@ class ApplicationCard extends StatelessWidget {
       ),
     );
   }
+  Color getStatusColor(String? status) {
+  switch (status) {
+    case "Canceled":
+      return Colors.red;
+    case "Pending":
+      return Colors.orange;
+    case "Accepted":
+      return Colors.green;
+    default:
+      return Colors.grey; // Default color if status is unknown
+  }
+}
 }
