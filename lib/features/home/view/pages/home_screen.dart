@@ -90,11 +90,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Column(
+                    Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           'Welcome Back!',
                           style: TextStyle(
                             fontSize: 14,
@@ -102,8 +102,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontWeight: FontWeight.w400,
                           ),
                         ),
-                        Text('John Lucas 👋', //take from fire base
-                            style: TextStyle(
+                        Text("${user?.name}👋" ?? 'John Lucas 👋',
+                            style: const TextStyle(
                                 fontSize: 22,
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.primaryText)),
@@ -141,11 +141,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
-                Text(user?.name ?? 'John Lucas 👋',
-                    style: const TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primaryText)),
                 const SizedBox(height: 16),
                 GestureDetector(
                   onTap: () {

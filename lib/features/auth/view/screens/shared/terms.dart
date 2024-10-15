@@ -26,7 +26,7 @@ class Terms extends StatelessWidget {
       children: [
         const Text(
           "By clicking Register, you agree to our",
-          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+          style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w500),
         ),
         TextButton(
           onPressed: () {
@@ -40,7 +40,7 @@ class Terms extends StatelessWidget {
           child: const Text(
             ' Terms and conditions',
             style: TextStyle(
-              fontSize: 12,
+              fontSize: 11.5,
             ),
           ),
         )
