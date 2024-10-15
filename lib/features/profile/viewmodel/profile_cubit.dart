@@ -71,7 +71,7 @@ class ProfileCubit extends Cubit<ProfileState> {
           }
         } else {
           emit(ProfileError("Failed to upload image "));
-          await Future.delayed(const Duration(seconds: 5));
+          await Future.delayed(const Duration(seconds: 3));
           final user = await _profileWebServices.getUserInfo();
           if (user != null) {
             emit(UserUpdated(user));
@@ -106,6 +106,8 @@ class ProfileCubit extends Cubit<ProfileState> {
         }
       } else {
         emit(ProfileError("Failed to upload CV and update user"));
+          await Future.delayed(const Duration(seconds: 3));
+
       }
     } catch (e) {
       emit(ProfileError(e.toString()));
@@ -124,7 +126,9 @@ class ProfileCubit extends Cubit<ProfileState> {
       }
     } else {
       emit(ProfileError(
-          "Could not launch URL")); // Emit error state if URL cannot be launched
+          "Could not launch URL"));
+          await Future.delayed(const Duration(seconds: 3));
+           // Emit error state if URL cannot be launched
     }
   }
 
@@ -229,6 +233,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       emit(ProfileError(e.toString()));
     }
   }
+
 //change user password
   Future<void> changeUserPassword(String currentEmail,String currentPassword,String newPassword) async {
     emit(ProfileLoading());
@@ -270,8 +275,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         }
       } else {
         emit(ProfileError("Failed to update email Please check your email and password and try again "));
-        Future.delayed(const Duration(seconds: 5), () {
-        });
+          await Future.delayed(const Duration(seconds: 3));
         UserModel? user = await _profileWebServices.getUserInfo();
         if (user != null) {
           emit(UserUpdated(user));
@@ -289,13 +293,18 @@ class ProfileCubit extends Cubit<ProfileState> {
     try {
       final success = await _profileWebServices.reauthenticateAndDeleteUser(
           email, password);
+      if (success == true) {
       final prefs = await SharedPreferences.getInstance();
       prefs.remove('userToken');
-      if (success == true) {
         emit(AccountDeleted());
         return true;
       } else {
-        emit(ProfileError("Failed to delete user"));
+        emit(ProfileError("Failed to delete user "));
+          await Future.delayed(const Duration(seconds: 3));
+        UserModel? user = await _profileWebServices.getUserInfo();
+        if (user != null) {
+          emit(UserUpdated(user));
+        }
         return false;
       }
     } catch (e) {
@@ -308,12 +317,13 @@ class ProfileCubit extends Cubit<ProfileState> {
     emit(ProfileLoading());
     try {
       final success = await _profileWebServices.signOut();
+      if (success == true) {
        final prefs = await SharedPreferences.getInstance();
       prefs.remove('userToken');
-      if (success == true) {
         emit(SignedOut());
       } else {
         emit(ProfileError("Failed to sign out"));
+          await Future.delayed(const Duration(seconds: 3));
       }
     } catch (e) {
       emit(ProfileError(e.toString()));
