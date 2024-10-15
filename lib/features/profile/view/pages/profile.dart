@@ -125,7 +125,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             alignment: Alignment.bottomRight,
             children: [
               CircleAvatar(
-                radius: 60.w,
+                radius: 80,
                 backgroundColor: Colors.grey.shade200,
                 child: ClipOval(
                   child: Uri.parse(user?.profileImageUrl ?? "").hasAbsolutePath
