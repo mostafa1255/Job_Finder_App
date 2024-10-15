@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../viewmodel/job_search_cubit.dart';
 
 class JobListSection extends StatelessWidget {
   final String title;
@@ -32,7 +35,12 @@ class JobListSection extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return ListTile(
                       title: Text(items[index], textAlign: TextAlign.center),
-                      onTap: () => onTapItem(items[index]),
+                      onTap: () {
+                        onTapItem(items[index]);
+                        context
+                            .read<JobSearchCubit>()
+                            .addRecentSearch(items[index]);
+                      },
                     );
                   },
                 ),
