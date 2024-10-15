@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:jop_finder_app/core/constants/app_colors.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AllApplicantsScreen extends StatelessWidget {
   final String jobId;
@@ -9,7 +11,7 @@ class AllApplicantsScreen extends StatelessWidget {
 
   Future<List<Map<String, dynamic>>> _fetchApplicants() async {
     DocumentSnapshot jobSnapshot =
-        await FirebaseFirestore.instance.collection('jobs').doc(jobId).get();
+        await FirebaseFirestore.instance.collection('allJobs').doc(jobId).get();
 
     if (!jobSnapshot.exists) {
       print('Job document does not exist!');
@@ -49,13 +51,13 @@ class AllApplicantsScreen extends StatelessWidget {
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.primaryBlue,
         title: const Text(
           "All Applicants",
-          style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black87),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -148,9 +150,9 @@ class ApplicantCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Skills:',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            Text(
+              applicant['skills'] == null ? '' : 'Skills:',
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Wrap(
@@ -167,9 +169,74 @@ class ApplicantCard extends StatelessWidget {
             const SizedBox(height: 16),
             Center(
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Contact Information'),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                'Email: ${applicant['email'] ?? 'Not provided'}'),
+                            SizedBox(height: 8),
+                            Text(
+                                'Phone: ${applicant['phoneNumber'] ?? 'Not provided'}'),
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                            child: Text('Email'),
+                            onPressed: () async {
+                              final email = applicant['email'];
+                              if (email != null) {
+                                final Uri emailUri = Uri(
+                                  scheme: 'mailto',
+                                  path: email,
+                                );
+                                if (await canLaunch(emailUri.toString())) {
+                                  await launch(emailUri.toString());
+                                } else {
+                                  throw 'Could not launch $emailUri';
+                                }
+                              }
+                            },
+                          ),
+                          TextButton(
+                            child: Text('Call'),
+                            onPressed: () async {
+                              final phoneNumber = applicant['phoneNumber'];
+                              if (phoneNumber != null) {
+                                final Uri phoneUri = Uri(
+                                  scheme: 'tel',
+                                  path: phoneNumber,
+                                );
+                                if (await canLaunch(phoneUri.toString())) {
+                                  await launch(phoneUri.toString());
+                                } else {
+                                  throw 'Could not launch $phoneUri';
+                                }
+                              }
+                            },
+                          ),
+                          TextButton(
+                            child: Text(
+                              'Close',
+                              style: TextStyle(color: Colors.red),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 53, 104, 153),
+                  backgroundColor: AppColors.primaryBlue,
                 ),
                 child: const Text('Contact',
                     style: TextStyle(color: Colors.white)),

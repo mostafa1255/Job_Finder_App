@@ -60,7 +60,10 @@ void _applyForJob(BuildContext context, PostedJob job) async {
         .doc(job.jobId)
         .set(appliedJob.toMap());
 
-    await FirebaseFirestore.instance.collection('jobs').doc(job.jobId).update({
+    await FirebaseFirestore.instance
+        .collection('allJobs')
+        .doc(job.jobId)
+        .update({
       'applicantIds': FieldValue.arrayUnion([userId]),
     });
 

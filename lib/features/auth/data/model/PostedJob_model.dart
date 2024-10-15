@@ -13,6 +13,7 @@ class PostedJob {
   final String? imageUrl;
   final String? about;
   final List<String>? requirements;
+  final String? postedByUserId; 
 
   PostedJob({
     this.jobId,
@@ -27,6 +28,7 @@ class PostedJob {
     this.imageUrl,
     this.about,
     this.requirements,
+    this.postedByUserId, 
   });
 
   factory PostedJob.fromMap(Map<String, dynamic> map) {
@@ -43,6 +45,7 @@ class PostedJob {
       imageUrl: map['imageUrl'] as String?,
       about: map['about'] as String?,
       requirements: List<String>.from(map['requirements'] ?? []),
+      postedByUserId: map['postedByUserId'] as String?, // Map new field
     );
   }
 
@@ -60,6 +63,7 @@ class PostedJob {
       'imageUrl': imageUrl,
       'about': about,
       'requirements': requirements,
+      'postedByUserId': postedByUserId, // Include new field in map
     };
   }
 }

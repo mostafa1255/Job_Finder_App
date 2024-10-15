@@ -42,138 +42,142 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => AuthCubit(),
-      child: SafeArea(
-        child: Scaffold(
-          backgroundColor: const Color.fromARGB(255, 250, 250, 253),
-          body: BlocListener<AuthCubit, AuthState>(
-            listener: (context, state) {
-              if (state is AuthLoaded) {
-                GoRouter.of(context).pushReplacementNamed(AppRouter.pageViewModel);
-              }
-            },
-            child: Form(
-              key: _formKey,
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      //First three Rows of Text presentation of the title headline and text
-                      const WelcomeText(
-                          title: "Jôbizz",
-                          headline: "Welcome Back 👋",
-                          text: "Let’s log in. Apply to jobs!"),
-                      const SizedBox(height: 50),
+      child: Container(
+        color: AppColors.primaryBlue,
+        child: SafeArea(
+          child: Scaffold(
+            backgroundColor: AppColors.myWhite,
+            body: BlocListener<AuthCubit, AuthState>(
+              listener: (context, state) {
+                if (state is AuthLoaded) {
+                  GoRouter.of(context)
+                      .pushReplacementNamed(AppRouter.pageViewModel);
+                }
+              },
+              child: Form(
+                key: _formKey,
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 16),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        //First three Rows of Text presentation of the title headline and text
+                        const WelcomeText(
+                            title: "Jôbizz",
+                            headline: "Welcome Back 👋",
+                            text: "Let’s log in. Apply to jobs!"),
+                        const SizedBox(height: 50),
 
-                      //TextFileds for name email password and confirm pass
-                      StyledTextField(
-                          hint: "E-mail",
-                          icon: Icons.mail_outline_outlined,
-                          controller: _emailController),
-                      const SizedBox(height: 16),
-                      StyledTextField(
-                          hint: "Password",
-                          icon: Icons.lock_outlined,
-                          isPassword: true,
-                          controller: _passwordController),
+                        //TextFileds for name email password and confirm pass
+                        StyledTextField(
+                            hint: "E-mail",
+                            icon: Icons.mail_outline_outlined,
+                            controller: _emailController),
+                        const SizedBox(height: 16),
+                        StyledTextField(
+                            hint: "Password",
+                            icon: Icons.lock_outlined,
+                            isPassword: true,
+                            controller: _passwordController),
 
-                      const SizedBox(height: 15),
+                        const SizedBox(height: 15),
 
-                      // cubit builder
-                      BlocBuilder<AuthCubit, AuthState>(
-                        builder: (context, state) {
-                          if (state is AuthLoading) {
-                            return const Center(
-                              child: Padding(
-                                padding: EdgeInsets.only(top: 15.0),
-                                child: Center(
-                                  child: LinearProgressIndicator(
-                                    color: AppColors.primaryBlue,
+                        // cubit builder
+                        BlocBuilder<AuthCubit, AuthState>(
+                          builder: (context, state) {
+                            if (state is AuthLoading) {
+                              return const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.only(top: 15.0),
+                                  child: Center(
+                                    child: LinearProgressIndicator(
+                                      color: AppColors.primaryBlue,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
-                          } else if (state is AuthError) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 20),
-                                  child: Text(
-                                    state.errorMessage.toString(),
-                                    style:
-                                        Theme.of(context).textTheme.bodyLarge,
+                              );
+                            } else if (state is AuthError) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 20),
+                                    child: Text(
+                                      state.errorMessage.toString(),
+                                      style:
+                                          Theme.of(context).textTheme.bodyLarge,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 15),
-                                //Button to Login
-                                StyledButton(
-                                    onPressed: () {
-                                      if (validation()) {
-                                        BlocProvider.of<AuthCubit>(context)
-                                            .signIn(
-                                          email: _emailController.text,
-                                          password: _passwordController.text,
-                                        );
-                                      }
-                                    },
-                                    text: "Login"),
-                              ],
-                            );
-                          } else {
-                            return
-                                //Button to Login
-                                StyledButton(
-                                    onPressed: () {
-                                      if (validation()) {
-                                        BlocProvider.of<AuthCubit>(context)
-                                            .signIn(
-                                          email: _emailController.text,
-                                          password: _passwordController.text,
-                                        );
-                                      }
-                                    },
-                                    text: "Login");
-                          }
-                        },
-                      ),
+                                  const SizedBox(height: 15),
+                                  //Button to Login
+                                  StyledButton(
+                                      onPressed: () {
+                                        if (validation()) {
+                                          BlocProvider.of<AuthCubit>(context)
+                                              .signIn(
+                                            email: _emailController.text,
+                                            password: _passwordController.text,
+                                          );
+                                        }
+                                      },
+                                      text: "Log in"),
+                                ],
+                              );
+                            } else {
+                              return
+                                  //Button to Login
+                                  StyledButton(
+                                      onPressed: () {
+                                        if (validation()) {
+                                          BlocProvider.of<AuthCubit>(context)
+                                              .signIn(
+                                            email: _emailController.text,
+                                            password: _passwordController.text,
+                                          );
+                                        }
+                                      },
+                                      text: "Log in");
+                            }
+                          },
+                        ),
 
-                      const SizedBox(height: 30),
+                        const SizedBox(height: 30),
 
-                      //Forgetpassword Text button
-                      TextButton(
-                        onPressed: () {
-                          GoRouter.of(context)
-                              .pushNamed(AppRouter.forgetPassword);
-                        },
-                        child: const Text(
-                          "Forgot Password?",
-                          style: TextStyle(
-                            color: AppColors.mainColor,
-                            fontSize: 15,
+                        //Forgetpassword Text button
+                        TextButton(
+                          onPressed: () {
+                            GoRouter.of(context)
+                                .pushNamed(AppRouter.forgetPassword);
+                          },
+                          child: const Text(
+                            "Forgot Password?",
+                            style: TextStyle(
+                              color: AppColors.mainColor,
+                              fontSize: 15,
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
+                        const SizedBox(
+                          height: 30,
+                        ),
 
-                      //Text between two lines
-                      const TextBetweenDivider(text: "Or continue with"),
-                      const SizedBox(height: 30),
+                        //Text between two lines
+                        const TextBetweenDivider(text: "Or continue with"),
+                        const SizedBox(height: 30),
 
-                      //Row for the Google and facebook Login
-                      const GoogleFacebookSign(),
-                      const SizedBox(height: 30),
+                        //Row for the Google and facebook Login
+                        const GoogleFacebookSign(),
+                        const SizedBox(height: 30),
 
-                      // Row for Navigating to Sign in Screen contains text and texButton
-                      const StyledTextNavigationToFromSignin(
-                          headText: "Haven't an account?",
-                          tailText: 'Register'),
-                    ],
+                        // Row for Navigating to Sign in Screen contains text and texButton
+                        const StyledTextNavigationToFromSignin(
+                            headText: "Haven't an account?",
+                            tailText: 'Register'),
+                      ],
+                    ),
                   ),
                 ),
               ),

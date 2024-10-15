@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,6 +41,19 @@ class ProfileCubit extends Cubit<ProfileState> {
           id: "", name: "", email: ""); // Add return statement here
     }
   }
+  
+  Future<int> getAppliedJobsCount() async {
+    final userId =  _profileWebServices.getCurrentUserId();
+    if (userId == null) {
+      return 0;
+    }
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('appliedJobs')
+        .get();
+    return querySnapshot.docs.length;
+  }
 
 //pick image and update user
   Future<void> pickImageAndUpdateUser() async {
@@ -57,7 +71,7 @@ class ProfileCubit extends Cubit<ProfileState> {
           }
         } else {
           emit(ProfileError("Failed to upload image "));
-          await Future.delayed(const Duration(seconds: 5));
+          await Future.delayed(const Duration(seconds: 3));
           final user = await _profileWebServices.getUserInfo();
           if (user != null) {
             emit(UserUpdated(user));
@@ -65,6 +79,8 @@ class ProfileCubit extends Cubit<ProfileState> {
         }
       } else {
         emit(ProfileError("Failed to pick image"));
+        Future.delayed(const Duration(seconds: 3), () {
+        });
         final user = await _profileWebServices.getUserInfo();
         if (user != null) {
           emit(UserUpdated(user));
@@ -90,6 +106,8 @@ class ProfileCubit extends Cubit<ProfileState> {
         }
       } else {
         emit(ProfileError("Failed to upload CV and update user"));
+          await Future.delayed(const Duration(seconds: 3));
+
       }
     } catch (e) {
       emit(ProfileError(e.toString()));
@@ -108,35 +126,9 @@ class ProfileCubit extends Cubit<ProfileState> {
       }
     } else {
       emit(ProfileError(
-          "Could not launch URL")); // Emit error state if URL cannot be launched
-    }
-  }
-
-//call phone number
-  Future<void> callPhoneNumber(String phoneNumber) async {
-    emit(ProfileLoading());
-    if (await canLaunch('tel:$phoneNumber')) {
-      await launch('tel:$phoneNumber');
-      final user = await _profileWebServices.getUserInfo();
-      if (user != null) {
-        emit(UserUpdated(user));
-      }
-    } else {
-      emit(ProfileError("Could not call phone number"));
-    }
-  }
-
-//open email
-  Future<void> openEmail(String email) async {
-    emit(ProfileLoading());
-    if (await canLaunch('mailto:$email')) {
-      await launch('mailto:$email');
-      final user = await _profileWebServices.getUserInfo();
-      if (user != null) {
-        emit(UserUpdated(user));
-      }
-    } else {
-      emit(ProfileError("Could not send email"));
+          "Could not launch URL"));
+          await Future.delayed(const Duration(seconds: 3));
+           // Emit error state if URL cannot be launched
     }
   }
 
@@ -241,6 +233,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       emit(ProfileError(e.toString()));
     }
   }
+
 //change user password
   Future<void> changeUserPassword(String currentEmail,String currentPassword,String newPassword) async {
     emit(ProfileLoading());
@@ -248,8 +241,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       final success = await _profileWebServices.changeUserPassword(currentEmail,currentPassword,newPassword);
       if (success == true) {
         emit(PasswordChanged());
-        Future.delayed(const Duration(seconds: 5), () {
-        });
+        await Future.delayed(const Duration(seconds: 3));
         UserModel? user = await _profileWebServices.getUserInfo();
         if (user != null) {
           emit(UserUpdated(user));
@@ -257,9 +249,8 @@ class ProfileCubit extends Cubit<ProfileState> {
           emit(ProfileError("Failed to fetch updated user info"));
         }
       } else {
-        emit(ProfileError("Failed to change password Please check your current password and try again"));
-        Future.delayed(const Duration(seconds: 5), () {
-        });
+        emit(ProfileError("Failed to change password Please check your current Email and password and try again"));
+          await Future.delayed(const Duration(seconds: 3));
         UserModel? user = await _profileWebServices.getUserInfo();
         if (user != null) {
           emit(UserUpdated(user));
@@ -284,8 +275,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         }
       } else {
         emit(ProfileError("Failed to update email Please check your email and password and try again "));
-        Future.delayed(const Duration(seconds: 5), () {
-        });
+          await Future.delayed(const Duration(seconds: 3));
         UserModel? user = await _profileWebServices.getUserInfo();
         if (user != null) {
           emit(UserUpdated(user));
@@ -303,13 +293,18 @@ class ProfileCubit extends Cubit<ProfileState> {
     try {
       final success = await _profileWebServices.reauthenticateAndDeleteUser(
           email, password);
+      if (success == true) {
       final prefs = await SharedPreferences.getInstance();
       prefs.remove('userToken');
-      if (success == true) {
         emit(AccountDeleted());
         return true;
       } else {
-        emit(ProfileError("Failed to delete user"));
+        emit(ProfileError("Failed to delete user "));
+          await Future.delayed(const Duration(seconds: 3));
+        UserModel? user = await _profileWebServices.getUserInfo();
+        if (user != null) {
+          emit(UserUpdated(user));
+        }
         return false;
       }
     } catch (e) {
@@ -322,12 +317,13 @@ class ProfileCubit extends Cubit<ProfileState> {
     emit(ProfileLoading());
     try {
       final success = await _profileWebServices.signOut();
+      if (success == true) {
        final prefs = await SharedPreferences.getInstance();
       prefs.remove('userToken');
-      if (success == true) {
         emit(SignedOut());
       } else {
         emit(ProfileError("Failed to sign out"));
+          await Future.delayed(const Duration(seconds: 3));
       }
     } catch (e) {
       emit(ProfileError(e.toString()));

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:jop_finder_app/core/constants/app_colors.dart';
 import 'package:jop_finder_app/core/utils/app_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'job_card.dart';
@@ -31,7 +32,7 @@ class _SeeAllPage extends State<SeeAllPage> {
 
   Future<List<PostedJob>> fetchJobs() async {
     QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('jobs').get();
+        await FirebaseFirestore.instance.collection('allJobs').get();
     return querySnapshot.docs
         .map((doc) => PostedJob.fromMap(doc.data() as Map<String, dynamic>))
         .toList();
@@ -41,18 +42,7 @@ class _SeeAllPage extends State<SeeAllPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Featured Jobs'),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 0,
-        actions: [
-          IconButton(
-            onPressed: () {
-              GoRouter.of(context).push(AppRouter.profileScreen);
-            },
-            icon: const Icon(Icons.person),
-          ),
-        ],
+        title: const Text("All Jobs"),
       ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -61,34 +51,6 @@ class _SeeAllPage extends State<SeeAllPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SafeArea(child: Container(height: 0.0)),
-              const SizedBox(height: 16),
-              GestureDetector(
-                onTap: () {
-                  GoRouter.of(context).push(AppRouter.jobSearchScreen);
-                },
-                child: Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 12.w, vertical: 15.h),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.search, color: Colors.grey),
-                      SizedBox(width: 10.w),
-                      const Expanded(
-                        child: Text(
-                          'Search for jobs...',
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(height: 40.h),
               FutureBuilder<List<PostedJob>>(
                 future: fetchJobs(),
                 builder: (context, snapshot) {
@@ -101,7 +63,7 @@ class _SeeAllPage extends State<SeeAllPage> {
                   } else {
                     List<PostedJob> jobs = snapshot.data!;
                     return SizedBox(
-                      height: 570.h,
+                      height: 670.h,
                       child: ListView.builder(
                         itemCount: jobs.length,
                         scrollDirection: Axis.vertical,
@@ -119,7 +81,7 @@ class _SeeAllPage extends State<SeeAllPage> {
                               salary: jobs[index].salary ?? '',
                               location: jobs[index].location ?? '',
                               tags: jobs[index].jobTags ?? [],
-                              color: Colors.blue,
+                              color: AppColors.primaryBlue,
                             ),
                           );
                         },

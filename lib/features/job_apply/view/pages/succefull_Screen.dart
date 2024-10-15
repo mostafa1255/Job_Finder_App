@@ -51,7 +51,7 @@ class SuccefullScreen extends StatelessWidget {
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: () {
-                GoRouter.of(context).pushReplacement(AppRouter.homeScreen);
+                GoRouter.of(context).pushReplacement(AppRouter.pageViewModel);
               },
               style: ElevatedButton.styleFrom(
                 padding:

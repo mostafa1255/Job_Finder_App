@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jop_finder_app/core/constants/app_colors.dart';
 
 Widget buildTextField({
   required TextEditingController controller,
@@ -7,6 +8,7 @@ Widget buildTextField({
   int maxLines = 1,
 }) {
   return TextFormField(
+    style: const TextStyle(color: AppColors.primaryText),
     controller: controller,
     decoration: InputDecoration(
       labelText: label,

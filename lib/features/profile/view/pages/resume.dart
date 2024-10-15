@@ -1,5 +1,4 @@
-// ignore_for_file: prefer_const_constructors
-
+import 'package:permission_handler/permission_handler.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,7 +29,6 @@ class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
   }
 
   Future<void> _fetchUserInfo() async {
-    // Fetch user information from Firestore using the cubit method
     var fetchedUser =
         await BlocProvider.of<ProfileCubit>(context).getUserInfo();
     setState(() {
@@ -39,10 +37,14 @@ class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
   }
 
   // Method to pick a PDF file
-  Future<FilePickerResult?> pickPDF() async {
+Future<FilePickerResult?> pickPDF() async {
+  // Check and request storage permission
+  PermissionStatus permissionStatus = await Permission.storage.request();
+  if (permissionStatus.isGranted) {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.any,
+        type: FileType.custom,
+        allowedExtensions: ['pdf'],  // Only allow picking PDFs
         allowMultiple: false,
       );
       if (result != null) {
@@ -58,37 +60,22 @@ class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
       print(e.toString());
       return null;
     }
+  } else {
+    // Permission was denied, handle accordingly
+    print('Permission denied');
+    return null;
   }
-
-  Widget buildBlock() {
-    return BlocBuilder<ProfileCubit, ProfileState>(
-      builder: (context, state) {
-        if (state is ProfileLoading) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (state is UserLoaded) {
-          return uploadPrompt();
-        } else if (state is UserUpdated) {
-          return displayUploadedFile();
-        } else if (state is ProfileError) {
-          return Center(child: Text(state.errorMessage));
-        } else {
-          return Center(child: Text('Error occurred'));
-        }
-      },
-    );
-  }
+}
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Resume'),
+          title: const Text('Resume'),
           centerTitle: true,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back),
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -115,7 +102,7 @@ class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
                 padding: const EdgeInsets.all(16),
                 child: buildBlock(),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 12,
               ),
             ],
@@ -124,14 +111,35 @@ class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
       ),
     );
   }
+  
+
+  Widget buildBlock() {
+    return BlocBuilder<ProfileCubit, ProfileState>(
+      builder: (context, state) {
+        if (state is ProfileLoading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (state is UserLoaded) {
+          return uploadPrompt();
+        } else if (state is UserUpdated) {
+          return displayUploadedFile();
+        } else if (state is ProfileError) {
+          return Center(child: Text(state.errorMessage));
+        } else {
+          return const Center(child: Text('Error occurred'));
+        }
+      },
+    );
+  }
 
   Widget uploadPrompt() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Column(
+        const Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: const [
+          children: [
            SizedBox(height: 16),
             Icon(
               Icons.cloud_upload_outlined,
@@ -146,11 +154,11 @@ class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
             ),
           ],
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         Container(
           width: double.infinity,
-          padding: EdgeInsets.all(12),
-          margin: EdgeInsets.fromLTRB(8, 8, 8, 8),
+          padding: const EdgeInsets.all(12),
+          margin: const EdgeInsets.fromLTRB(8, 8, 8, 8),
           decoration: BoxDecoration(
             color: const Color.fromARGB(255, 250, 250, 250),
             borderRadius: BorderRadius.circular(10),
@@ -173,7 +181,7 @@ class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
             foregroundColor: Colors.white,
-            backgroundColor: Color.fromARGB(255, 53, 104, 153),
+            backgroundColor: const Color.fromARGB(255, 53, 104, 153),
           ),
           onPressed: () {
             pickPDF().then((cvPdf) {
@@ -182,14 +190,14 @@ class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
               }
             });
           }, // add your save function here
-          child: SizedBox(
+          child: const SizedBox(
               width: double.infinity,
               height: 50,
               child: Center(
                   child: Text(
                 'Upload',
                 style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                    TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
               ))),
         ),
       ],
@@ -200,15 +208,15 @@ class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(
+        const Icon(
           Icons.check_circle_outline,
           size: 50,
           color: Colors.green,
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Text(
           'File Uploaded: $fileName',
-          style: TextStyle(fontSize: 16, color: Colors.grey),
+          style: const TextStyle(fontSize: 16, color: Colors.grey),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),

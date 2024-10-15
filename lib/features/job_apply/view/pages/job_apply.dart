@@ -14,14 +14,16 @@ class JobApplyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 4,
-      child: Scaffold(
-        body: Column(
-          children: [
-            buildJobHeader(jobApply: job, context: context),
-            _buildTabBar(),
-            Expanded(child: _buildTabView(job: job)),
-            buildApplyButton(context: context, job: job),
-          ],
+      child: SafeArea(
+        child: Scaffold(
+          body: Column(
+            children: [
+              buildJobHeader(jobApply: job, context: context),
+              _buildTabBar(),
+              Expanded(child: _buildTabView(job: job)),
+              buildApplyButton(context: context, job: job),
+            ],
+          ),
         ),
       ),
     );

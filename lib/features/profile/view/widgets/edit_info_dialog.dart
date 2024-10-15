@@ -53,20 +53,20 @@ class EditInfoDialog extends StatelessWidget {
             EditInfoTextFiled(
               initialText: user!.name,
               controller: nameController,
-              hint: "Full Name", // Corrected from hintText to hint
-              icon: Icons.person, // Example icon, adjust as needed
+              hint: "Full Name", 
+              icon: Icons.person, 
             ),
             EditInfoTextFiled(
               initialText: user!.phoneNumber ?? '',
               controller: phoneNumberController,
-              hint: 'Phone Number', // Corrected from hintText to hint
-              icon: Icons.phone, // Example icon, adjust as needed
+              hint: 'Phone Number', 
+              icon: Icons.phone, 
             ),
             EditInfoTextFiled(
               initialText: user!.profile!.jobTitle ?? '',
               controller: jobTitleController,
-              hint: "Job Title", // Corrected from hintText to hint
-              icon: Icons.title, // Example icon, adjust as needed
+              hint: "Job Title", 
+              icon: Icons.title, 
             ),
             SizedBox(height: 16),
             Container(
@@ -118,7 +118,7 @@ class EditInfoDialog extends StatelessWidget {
                   }
                 },
                 text:
-                    'Save Changes', // Assuming StyledButton requires a text parameter
+                    'Save Changes', 
               ),
             ),
             const SizedBox(height: 16),

@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:jop_finder_app/core/constants/app_colors.dart';
 import 'package:jop_finder_app/features/auth/data/model/PostedJob_model.dart';
+import 'package:jop_finder_app/features/auth/view/screens/shared/styled_textField.dart';
 import 'package:jop_finder_app/features/job_post/view/widgets/buildTextField.dart';
 
 class JobPostScreen extends StatefulWidget {
@@ -32,7 +34,7 @@ class _JobPostScreenState extends State<JobPostScreen> {
         title: const Text('Post a Job', style: TextStyle(color: Colors.white)),
         centerTitle: true,
         elevation: 0,
-        backgroundColor: Colors.indigo,
+        backgroundColor: AppColors.primaryBlue,
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -43,7 +45,7 @@ class _JobPostScreenState extends State<JobPostScreen> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
-            backgroundColor: Colors.indigo,
+            backgroundColor: AppColors.primaryBlue,
           ),
           child: const Text(
             'Post Job',
@@ -107,22 +109,26 @@ class _JobPostScreenState extends State<JobPostScreen> {
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: _requirementControllers.length,
                           itemBuilder: (context, index) {
-                            return Row(
-                              children: [
-                                Expanded(
-                                  child: buildTextField(
-                                    controller: _requirementControllers[index],
-                                    label: 'Requirement ${index + 1}',
-                                    icon: Icons.check,
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: buildTextField(
+                                      controller:
+                                          _requirementControllers[index],
+                                      label: 'Requirement ${index + 1}',
+                                      icon: Icons.check,
+                                    ),
                                   ),
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.remove_circle,
-                                      color: Colors.red),
-                                  onPressed: () =>
-                                      _removeRequirementField(index),
-                                ),
-                              ],
+                                  IconButton(
+                                    icon: const Icon(Icons.remove_circle,
+                                        color: Colors.red),
+                                    onPressed: () =>
+                                        _removeRequirementField(index),
+                                  ),
+                                ],
+                              ),
                             );
                           },
                         ),
@@ -135,7 +141,7 @@ class _JobPostScreenState extends State<JobPostScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            backgroundColor: Colors.indigo,
+                            backgroundColor: AppColors.primaryBlue,
                           ),
                           child: const Text('Add Requirement',
                               style:
@@ -150,7 +156,7 @@ class _JobPostScreenState extends State<JobPostScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            backgroundColor: Colors.indigo,
+                            backgroundColor: AppColors.primaryBlue,
                           ),
                           child: const Text('Pick an Image',
                               style:
@@ -251,18 +257,28 @@ class _JobPostScreenState extends State<JobPostScreen> {
         imageUrl: uploadedImageUrl,
         about: _aboutController.text,
         requirements: requirements,
+        postedByUserId: FirebaseAuth.instance.currentUser!.uid,
       );
 
       try {
-        final docRef = await FirebaseFirestore.instance
-            .collection('jobs')
-            .doc(FirebaseAuth.instance.currentUser!.uid)
-            .collection('postedJobs')
+        final DocumentReference decRefAllJobs = await FirebaseFirestore.instance
+            .collection('allJobs')
             .add(postedJob.toMap());
 
-        final String jobId = docRef.id;
+        final String jobId = decRefAllJobs.id;
 
-        await docRef.update({'jobId': jobId});
+        await decRefAllJobs.update({'jobId': jobId});
+
+        // final DocumentReference docRefUserJobs = FirebaseFirestore.instance
+        //     .collection('userPostedJobs')
+        //     .doc(FirebaseAuth.instance.currentUser!.uid)
+        //     .collection('postedJobs')
+        //     .doc(jobId);
+
+        // await docRefUserJobs.set({
+        //   ...postedJob.toMap(),
+        //   'jobId': jobId,
+        // });
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

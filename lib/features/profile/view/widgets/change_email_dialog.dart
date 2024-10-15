@@ -1,5 +1,3 @@
-//i need to make a custom bottom sheet just have one StyledTextfield from the shared file ine the auth folder and have a hint to "Enter your bio" and a button to save the bio when i click on the button it call the method in the cubit to update the bio in the firestore and close the bottom sheet
-
 import 'package:flutter/material.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/styled_button.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/styled_textField.dart';
@@ -41,7 +39,7 @@ class ChangeEmailDialog extends StatelessWidget {
                 icon: Icons.lock,
                 controller: currentPasswordController,
                 hint: "Password",
-                isPassword: true, // Assuming StyledTextField supports a isPassword flag
+                isPassword: true, 
               ),
               const SizedBox(height: 16),
                const Row(
@@ -59,7 +57,7 @@ class ChangeEmailDialog extends StatelessWidget {
                 hint: "E-mail",
               ),
               const SizedBox(height: 16),
-              Container(
+              SizedBox(
                 width: double.infinity,
                 child: StyledButton(
                   text: "Save Changes",

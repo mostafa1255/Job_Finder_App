@@ -70,9 +70,9 @@ Widget buildJobHeader(
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(jobApply.salary ?? '',
+              Text('${jobApply.salary!}\$ /month',
                   style: const TextStyle(color: Colors.white)),
-              const SizedBox(width: 16),
+              const SizedBox(width: 20),
               Text(jobApply.location ?? '',
                   style: const TextStyle(color: Colors.white)),
             ],

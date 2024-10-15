@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,9 +9,9 @@ import 'package:jop_finder_app/core/utils/app_router.dart';
 import 'package:jop_finder_app/features/auth/data/model/UserProfile_model.dart';
 import 'package:jop_finder_app/features/auth/data/model/user_model.dart';
 import 'package:jop_finder_app/features/profile/view/widgets/custom_alert.dart.dart';
-import 'package:jop_finder_app/features/profile/view/widgets/edit_info_bottom_sheet.dart';
-import 'package:jop_finder_app/features/profile/view/widgets/edit_bio_bottomsheet.dart';
-import 'package:jop_finder_app/features/profile/view/widgets/education_add_bottomsheet.dart';
+import 'package:jop_finder_app/features/profile/view/widgets/edit_info_dialog.dart';
+import 'package:jop_finder_app/features/profile/view/widgets/edit_bio_dialog.dart';
+import 'package:jop_finder_app/features/profile/view/widgets/education_add_dialog.dart';
 import 'package:jop_finder_app/features/profile/view/widgets/info_display.dart';
 import 'package:jop_finder_app/features/profile/viewmodel/profile_cubit.dart';
 
@@ -38,6 +39,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // Fetch user information from Firestore using the cubit method
     var fetchedUser =
         await BlocProvider.of<ProfileCubit>(context).getUserInfo();
+    // Check if user profile is null and update it with default values
     if (fetchedUser.profile == null) {
       UserProfile userProfile = UserProfile(
         bio: 'No bio added',
@@ -47,11 +49,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
       );
       BlocProvider.of<ProfileCubit>(context).updateUserProfile(userProfile);
     }
+    // Update the user state with the fetched user information
     if (mounted) {
       setState(() {
         user = fetchedUser;
       });
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        title: const Text('Profile'),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => EditInfoDialog(profileCubit!, user!),
+              );
+            },
+            icon: Icon(
+              Icons.edit,
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              // GoRouter.of(context).pushNamed('/applicationsScreen');
+              GoRouter.of(context).pushNamed('/settingsScreen');
+            },
+            icon: Icon(
+              Icons.settings,
+            ),
+          )
+        ],
+      ),
+      body: SafeArea(child: buildBlock()),
+    );
   }
 
   Widget buildBlock() {
@@ -77,17 +114,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget logOutLis() {
-    if (profileCubit == null) {
-      return Center(child: Text('ProfileCubit is null'));
-    }
-    return BlocListener<ProfileCubit, ProfileState>(listener: (context, state) {
-      if (state is SignedOut) {
-        GoRouter.of(context).pushReplacementNamed(AppRouter.login);
-      }
-    });
-  }
-
   Widget buildProfileScreen() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -99,19 +125,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
             alignment: Alignment.bottomRight,
             children: [
               CircleAvatar(
-                radius: 60.sp,
-                backgroundImage: NetworkImage(
-                    user!.profileImageUrl ??
-                        'https://avatars.githubusercontent.com/u/953478?v=4?s=400',
-                    scale: 1.0),
-                // Replace with actual image URL
+                radius: 80,
+                backgroundColor: Colors.grey.shade200,
+                child: ClipOval(
+                  child: Uri.parse(user?.profileImageUrl ?? "").hasAbsolutePath
+                      ? CachedNetworkImage(
+                          imageUrl: user!.profileImageUrl!,
+                          fit: BoxFit.cover,
+                          width: 120.w,
+                          height: 120.h,
+                          progressIndicatorBuilder: (context, url, progress) =>
+                              Center(
+                            child: CircularProgressIndicator(
+                              value: progress.progress,
+                            ),
+                          ),
+                          errorWidget: (context, url, error) => const Center(
+                            child: Icon(Icons.error),
+                          ),
+                        )
+                      : const Icon(Icons.person),
+                ),
               ),
               Positioned(
-                // Adjust this value to position the icon on the frame
-                right:
-                    7.sp, // Adjust this value to position the icon on the frame
+                right: 7.w,
                 child: Container(
-                  padding: EdgeInsets.all(5), // Adjust padding if necessary
+                  width: 35,
+                  height: 35,
+                  padding: EdgeInsets.all(5),
                   decoration: BoxDecoration(
                     color: AppColors.primaryBlue,
                     shape: BoxShape.circle,
@@ -121,7 +162,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       profileCubit!.pickImageAndUpdateUser();
                     },
                     icon: Icon(Icons.edit, color: Colors.white),
-                    iconSize: 15.sp, // Adjust icon size if necessary
                     padding: EdgeInsets
                         .zero, // Reduce padding inside IconButton to minimize size
                     constraints:
@@ -165,13 +205,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 Column(
                   children: [
-                    Text(
-                      user!.appliedJobs!.length.toString(),
-                      style: Theme.of(context).textTheme.displayLarge,
+                    FutureBuilder<int>(
+                      future: profileCubit!
+                          .getAppliedJobsCount(), // Await the Future here
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator(); // Show a loader while waiting
+                        } else if (snapshot.hasError) {
+                          return Text(
+                              'Error: ${snapshot.error}'); // Handle error
+                        } else if (snapshot.hasData) {
+                          return InkWell(
+                            child: Text(
+                              snapshot.data.toString(),
+                              style: Theme.of(context).textTheme.displayLarge,
+                            ),
+                            onTap: () {
+                              GoRouter.of(context)
+                                  .pushNamed('/applicationsScreen');
+                            },
+                          ); // Show the count once data is available
+                        } else {
+                          return Text('0',
+                              style: Theme.of(context).textTheme.displayLarge);
+                        }
+                      },
                     ),
-                    Text(
-                      'Applied',
-                    ),
+                    InkWell(
+                        child: Text('Applied'),
+                        onTap: () {
+                          GoRouter.of(context).pushNamed('/applicationsScreen');
+                        }),
                   ],
                 ),
                 Column(
@@ -194,20 +259,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             style: Theme.of(context).textTheme.displayLarge,
           ),
           SizedBox(height: 10),
-          InkWell(
-              child: CustomInfoDisplay(text: user!.email, icon: Icons.email),
-              onTap: () {
-                profileCubit!.openEmail(user!.email);
-              }),
-          SizedBox(width: 10.w), // Adjust spacing based on your layout
-          InkWell(
-            child: CustomInfoDisplay(
-                text: user!.phoneNumber ?? 'No phone number',
-                icon: Icons.phone_android),
-            onTap: () {
-              profileCubit!.callPhoneNumber(user!.phoneNumber!);
-            },
-          ),
+          CustomInfoDisplay(text: user!.email, icon: Icons.email),
+          SizedBox(width: 10.w), // Adjust spacing based on your layout width
+          CustomInfoDisplay(
+              text: user!.phoneNumber ?? 'No phone number',
+              icon: Icons.phone_android),
           SizedBox(height: 24),
           buildBioHeader('Bio', onPressed: () {
             showDialog(
@@ -234,57 +290,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           resumeDisplay(),
           SizedBox(height: 32),
         ],
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            if (GoRouter.of(context).canPop()) {
-              GoRouter.of(context).pop();
-            } else {
-              GoRouter.of(context)
-                  .pushReplacementNamed(AppRouter.pageViewModel);
-            }
-          },
-        ),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) => EditInfoDialog(profileCubit!, user!),
-              );
-            },
-            icon: Icon(
-              Icons.edit,
-            ),
-          ),
-          IconButton(
-            onPressed: () {
-              // GoRouter.of(context).pushNamed('/applicationsScreen');
-              GoRouter.of(context).pushNamed('/settingsScreen');
-            },
-            icon: Icon(
-              Icons.settings,
-            ),
-          )
-        ],
-      ),
-      body: BlocListener<ProfileCubit, ProfileState>(
-        listener: (context, state) {
-          if (state is SignedOut || state is AccountDeleted) {
-            GoRouter.of(context).pushReplacementNamed(AppRouter.login);
-          }
-        },
-        child: SafeArea(child: buildBlock()),
       ),
     );
   }
@@ -430,13 +435,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 Row(
                   children: [
-                    SizedBox(width: 4), // Spacing between icon and text
+                    SizedBox(width: 4),
                     Icon(
                       Icons.file_present,
                       size: 30,
                       color: AppColors.primaryBlue,
-                    ), // File icon
-                    SizedBox(width: 12), // Spacing between icon and text
+                    ),
+                    SizedBox(width: 12),
                     InkWell(
                       onTap: () {
                         profileCubit!.openPdf(user!.cvUrl!);
@@ -446,7 +451,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           style: Theme.of(context).textTheme.displayMedium,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis),
-                    ), // Displaying the file name extracted from the URL
+                    ),
                   ],
                 ),
                 IconButton(

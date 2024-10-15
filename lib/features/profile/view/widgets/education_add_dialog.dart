@@ -18,15 +18,10 @@ class EducationAddDialog extends StatefulWidget {
 
 class _EducationAddDialogState extends State<EducationAddDialog> {
   final TextEditingController institutionController = TextEditingController();
-
   final TextEditingController degreeController = TextEditingController();
-
   final TextEditingController fieldOfStudyController = TextEditingController();
-
   final TextEditingController startDateController = TextEditingController();
-
   final TextEditingController endDateController = TextEditingController();
-
   final _formKey = GlobalKey<FormState>();
 
   DateTime? startDate;

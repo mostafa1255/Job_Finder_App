@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class JobCard extends StatelessWidget {
   final String company;
@@ -21,76 +22,129 @@ class JobCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(right: 16.0,bottom: 16.0),
+      padding: EdgeInsets.only(right: 16.w, bottom: 16.h),
       child: Container(
-        height: 150,
-        width: 300,
+        height: 170.h,
+        width: 300.w,
         decoration: BoxDecoration(
-          // Setting the card background with opacity
-          color: color, // Adjust the background opacity here
-          borderRadius: BorderRadius.circular(20),
+          color: color.withOpacity(0.9),
+          borderRadius: BorderRadius.circular(20.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            ),
+          ],
         ),
-        child: Padding(
-          padding: const EdgeInsets.only(top: 15.0, left: 15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Company Name
-              Text(
-                company,
-                style: const TextStyle(color: Colors.white, fontSize: 18),
+        child: Stack(
+          children: [
+            Positioned(
+              top: -30.h,
+              right: -30.w,
+              child: CircleAvatar(
+                radius: 50.r,
+                backgroundColor: Colors.white.withOpacity(0.1),
               ),
-              const SizedBox(height: 2),
-
-              // Job Title
-              Text(
-                title,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 2),
-
-              // Tags (now wrapped to avoid overflow)
-              Wrap(
-                spacing: 4.0, // Space between tags
-                children: tags.map((tag) {
-                  return Opacity(
-                    opacity: 1.0,
-                    child: Card(
-                      color: Colors.white24.withOpacity(
-                          0.3), // Semi-transparent background for the tags
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Text(
-                          tag,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 13,
-                          ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(15.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              company,
+                              style: TextStyle(
+                                  color: Colors.white.withOpacity(0.8),
+                                  fontSize: 14.sp),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(height: 4.h),
+                            Text(
+                              title,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
                       ),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 8.w, vertical: 4.h),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        child: Text(
+                          '$salary\$/m',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 12.h),
+                  Expanded(
+                    child: Wrap(
+                      spacing: 6.w,
+                      runSpacing: 6.h,
+                      children: tags.map((tag) {
+                        return Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 8.w, vertical: 4.h),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          child: Text(
+                            tag,
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 11.sp),
+                          ),
+                        );
+                      }).toList(),
                     ),
-                  );
-                }).toList(),
+                  ),
+                  SizedBox(height: 8.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.location_on,
+                              color: Colors.white, size: 16.sp),
+                          SizedBox(width: 4.w),
+                          Text(
+                            location,
+                            style: TextStyle(
+                                color: Colors.white.withOpacity(0.8),
+                                fontSize: 12.sp),
+                          ),
+                        ],
+                      ),
+                      Icon(Icons.arrow_forward,
+                          color: Colors.white, size: 20.sp),
+                    ],
+                  ),
+                ],
               ),
-              const SizedBox(height: 10),
-
-              // Salary
-              Text(
-                salary,
-                style: const TextStyle(color: Colors.white, fontSize: 16),
-              ),
-
-              // Location
-              Text(
-                location,
-                style: const TextStyle(color: Colors.white, fontSize: 16),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
