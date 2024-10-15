@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:jop_finder_app/core/constants/app_colors.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AllApplicantsScreen extends StatelessWidget {
   final String jobId;
@@ -49,13 +51,13 @@ class AllApplicantsScreen extends StatelessWidget {
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.primaryBlue,
         title: const Text(
           "All Applicants",
-          style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black87),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -181,12 +183,49 @@ class ApplicantCard extends StatelessWidget {
                                 'Email: ${applicant['email'] ?? 'Not provided'}'),
                             SizedBox(height: 8),
                             Text(
-                                'Phone: ${applicant['phone'] ?? 'Not provided'}'),
+                                'Phone: ${applicant['phoneNumber'] ?? 'Not provided'}'),
                           ],
                         ),
                         actions: [
                           TextButton(
-                            child: Text('Close'),
+                            child: Text('Email'),
+                            onPressed: () async {
+                              final email = applicant['email'];
+                              if (email != null) {
+                                final Uri emailUri = Uri(
+                                  scheme: 'mailto',
+                                  path: email,
+                                );
+                                if (await canLaunch(emailUri.toString())) {
+                                  await launch(emailUri.toString());
+                                } else {
+                                  throw 'Could not launch $emailUri';
+                                }
+                              }
+                            },
+                          ),
+                          TextButton(
+                            child: Text('Call'),
+                            onPressed: () async {
+                              final phoneNumber = applicant['phoneNumber'];
+                              if (phoneNumber != null) {
+                                final Uri phoneUri = Uri(
+                                  scheme: 'tel',
+                                  path: phoneNumber,
+                                );
+                                if (await canLaunch(phoneUri.toString())) {
+                                  await launch(phoneUri.toString());
+                                } else {
+                                  throw 'Could not launch $phoneUri';
+                                }
+                              }
+                            },
+                          ),
+                          TextButton(
+                            child: Text(
+                              'Close',
+                              style: TextStyle(color: Colors.red),
+                            ),
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
@@ -197,7 +236,7 @@ class ApplicantCard extends StatelessWidget {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 53, 104, 153),
+                  backgroundColor: AppColors.primaryBlue,
                 ),
                 child: const Text('Contact',
                     style: TextStyle(color: Colors.white)),

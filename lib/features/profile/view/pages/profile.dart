@@ -62,6 +62,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
+        title: const Text('Profile'),
         centerTitle: true,
         actions: [
           IconButton(
@@ -124,7 +125,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             alignment: Alignment.bottomRight,
             children: [
               CircleAvatar(
-                radius: 80,
+                radius: 60.w,
                 backgroundColor: Colors.grey.shade200,
                 child: ClipOval(
                   child: Uri.parse(user?.profileImageUrl ?? "").hasAbsolutePath
@@ -221,7 +222,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               style: Theme.of(context).textTheme.displayLarge,
                             ),
                             onTap: () {
-                              GoRouter.of(context).pushNamed('/applicationsScreen');
+                              GoRouter.of(context)
+                                  .pushNamed('/applicationsScreen');
                             },
                           ); // Show the count once data is available
                         } else {
@@ -230,9 +232,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         }
                       },
                     ),
-                    InkWell(child: Text('Applied'), onTap: () {
-                      GoRouter.of(context).pushNamed('/applicationsScreen');
-                    }),
+                    InkWell(
+                        child: Text('Applied'),
+                        onTap: () {
+                          GoRouter.of(context).pushNamed('/applicationsScreen');
+                        }),
                   ],
                 ),
                 Column(

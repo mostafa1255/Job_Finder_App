@@ -95,18 +95,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Welcome Back!',
+                          'Welcome Back! 👋',
                           style: TextStyle(
                             fontSize: 14,
                             color: Color.fromRGBO(149, 150, 157, 1),
                             fontWeight: FontWeight.w400,
                           ),
                         ),
-                        Text('John Lucas 👋', //take from fire base
-                            style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.primaryText)),
                       ],
                     ),
                     GestureDetector(
@@ -233,7 +228,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   tags: jobs[index].jobTags ?? [],
                                   color: Colors.blue,
                                 )
-                              : RecommendedJopsCard(
+                              : RecommendedJobsCard(
                                   company: jobs[index].companyName ?? '',
                                   title: jobs[index].jobTitle ?? '',
                                   salary: jobs[index].salary ?? '',

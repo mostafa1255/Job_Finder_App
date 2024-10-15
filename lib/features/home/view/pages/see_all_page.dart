@@ -40,20 +40,6 @@ class _SeeAllPage extends State<SeeAllPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Featured Jobs'),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 0,
-        actions: [
-          IconButton(
-            onPressed: () {
-              GoRouter.of(context).push(AppRouter.profileScreen);
-            },
-            icon: const Icon(Icons.person),
-          ),
-        ],
-      ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
@@ -61,34 +47,6 @@ class _SeeAllPage extends State<SeeAllPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SafeArea(child: Container(height: 0.0)),
-              const SizedBox(height: 16),
-              GestureDetector(
-                onTap: () {
-                  GoRouter.of(context).push(AppRouter.jobSearchScreen);
-                },
-                child: Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 12.w, vertical: 15.h),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.search, color: Colors.grey),
-                      SizedBox(width: 10.w),
-                      const Expanded(
-                        child: Text(
-                          'Search for jobs...',
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(height: 40.h),
               FutureBuilder<List<PostedJob>>(
                 future: fetchJobs(),
                 builder: (context, snapshot) {

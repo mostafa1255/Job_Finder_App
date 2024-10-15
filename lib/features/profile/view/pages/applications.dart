@@ -15,26 +15,28 @@ class ApplicationsScreen extends StatelessWidget {
         .collection("appliedJobs")
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs.map((doc) => AppliedJob.fromMap(doc.data())).toList();
+      return snapshot.docs
+          .map((doc) => AppliedJob.fromMap(doc.data()))
+          .toList();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('Applications'),
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-            ),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Applications'),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
           ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
-        body: StreamBuilder<List<AppliedJob>>(
+      ),
+      body: SafeArea(
+        child: StreamBuilder<List<AppliedJob>>(
           stream: getAppliedJobs(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -143,7 +145,7 @@ class ApplicationCard extends StatelessWidget {
                 SizedBox(height: 20),
                 Container(
                   margin: EdgeInsets.only(left: 4),
-                  child: Text('\$ ${appliedJob.salary?? 'No salary'}' ,
+                  child: Text('\$ ${appliedJob.salary ?? 'No salary'}',
                       style: TextStyle(fontSize: 16)),
                 ),
               ],
@@ -172,13 +174,13 @@ class ApplicationCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                        color:getStatusColor( appliedJob.status),
-                        width: 1),
+                        color: getStatusColor(appliedJob.status), width: 1),
                   ),
                   child: Text(
                     appliedJob.status ?? 'no status',
                     style: TextStyle(
-                        color: getStatusColor(appliedJob.status),),
+                      color: getStatusColor(appliedJob.status),
+                    ),
                   ),
                 ),
               ],
@@ -188,16 +190,17 @@ class ApplicationCard extends StatelessWidget {
       ),
     );
   }
+
   Color getStatusColor(String? status) {
-  switch (status) {
-    case "Canceled":
-      return Colors.red;
-    case "Pending":
-      return Colors.orange;
-    case "Accepted":
-      return Colors.green;
-    default:
-      return Colors.grey; // Default color if status is unknown
+    switch (status) {
+      case "Canceled":
+        return Colors.red;
+      case "Pending":
+        return Colors.orange;
+      case "Accepted":
+        return Colors.green;
+      default:
+        return Colors.grey; // Default color if status is unknown
+    }
   }
-}
 }
