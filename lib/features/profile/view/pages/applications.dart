@@ -1,125 +1,99 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jop_finder_app/features/auth/data/model/AppliedJob_model.dart';
-import 'package:jop_finder_app/features/auth/data/model/user_model.dart';
-import 'package:jop_finder_app/features/profile/viewmodel/profile_cubit.dart';
 
-class ApplicationsScreen extends StatefulWidget {
+class ApplicationsScreen extends StatelessWidget {
   const ApplicationsScreen({super.key});
 
-  @override
-  State<ApplicationsScreen> createState() => _ApplicationsScreenState();
-}
-
-class _ApplicationsScreenState extends State<ApplicationsScreen> {
-  UserModel? user;
-  ProfileCubit? profileCubit;
-
-  @override
-  void initState() {
-    super.initState();
-    profileCubit = BlocProvider.of<ProfileCubit>(context);
-    // Schedule the asynchronous operation to fetch user information
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _fetchUserInfo();
+  Stream<List<AppliedJob>> getAppliedJobs() {
+    final String userId = FirebaseAuth.instance.currentUser!.uid;
+    return FirebaseFirestore.instance
+        .collection("users")
+        .doc(userId)
+        .collection("appliedJobs")
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) => AppliedJob.fromMap(doc.data())).toList();
     });
-  }
-
-  Future<void> _fetchUserInfo() async {
-    var fetchedUser =
-        await BlocProvider.of<ProfileCubit>(context).getUserInfo();
-    if (mounted) {
-      setState(() {
-        user = fetchedUser;
-      });
-    }
-  }
-
-  Widget buildBlock() {
-    return BlocBuilder<ProfileCubit, ProfileState>(
-      builder: (context, state) {
-        if (state is ProfileLoading) {
-          return Center(child: CircularProgressIndicator());
-        } else if (state is UserLoaded) {
-          user = state.user;
-          return buildApplicationsScreen();
-        } else if (state is ProfileError) {
-          return Center(child: Text(state.errorMessage));
-        } else {
-          return Center(child: Text('Error occurred'));
-        }
-      },
-    );
-  }
-  
-
-  Widget buildApplicationsScreen() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'You have \n${user?.appliedJobs?.length ?? 0} Applications',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          SizedBox(height: 16),
-          Expanded(
-
-            child: ListView.builder(
-              itemCount: user!.appliedJobs!.length,
-              itemBuilder: (context, index) {
-                return ApplicationCard(appliedJob: user!.appliedJobs![index]);
-              },
-            ),
-          ),
-        ],
-      ),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          appBar: AppBar(
-            title: Text('Applications'),
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back, ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+        appBar: AppBar(
+          title: Text('Applications'),
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
             ),
-            actions: [
-              if (user != null)
-                CircleAvatar(
-                  backgroundImage: NetworkImage(
-                    user!.profileImageUrl??'https://avatars.githubusercontent.com/u/953478?v=4?s=400'),
-                ),
-              SizedBox(width: 10),
-            ],
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
           ),
-          body: buildBlock()),
+        ),
+        body: StreamBuilder<List<AppliedJob>>(
+          stream: getAppliedJobs(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.error_outline, size: 60, color: Colors.red[300]),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Error: ${snapshot.error}',
+                      style: const TextStyle(fontSize: 18, color: Colors.red),
+                    ),
+                  ],
+                ),
+              );
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.work_off, size: 60, color: Colors.grey[400]),
+                    const SizedBox(height: 16),
+                    Text(
+                      'No jobs Applied yet',
+                      style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+                    ),
+                  ],
+                ),
+              );
+            } else {
+              final appliedJobs = snapshot.data!;
+              return ListView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: appliedJobs.length,
+                itemBuilder: (context, index) {
+                  return ApplicationCard(appliedJob: appliedJobs[index]);
+                },
+              );
+            }
+          },
+        ),
+      ),
     );
   }
-
 }
-
 
 class ApplicationCard extends StatelessWidget {
   final AppliedJob appliedJob;
   const ApplicationCard({super.key, required this.appliedJob});
 
-
   @override
   Widget build(BuildContext context) {
     return Card(
-      surfaceTintColor: Theme.of(context).cardTheme.surfaceTintColor,
-      color:Theme.of(context).cardTheme.color,
-      shape: Theme.of(context).cardTheme.shape,
-      margin: Theme.of(context).cardTheme.margin,
+      color: Colors.white,
+      elevation: 5,
+      margin: const EdgeInsets.only(bottom: 16),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
@@ -131,23 +105,22 @@ class ApplicationCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    if(appliedJob.companyImageURL != null)
-                    CircleAvatar(
-                      radius: 35,
-                      foregroundImage: NetworkImage(
-                        appliedJob.companyImageURL! 
-                      ),
-                    )
+                    if (appliedJob.companyImageURL != null)
+                      CircleAvatar(
+                        radius: 35,
+                        foregroundImage:
+                            NetworkImage(appliedJob.companyImageURL!),
+                      )
                     else
-                     Container(
-                      width: 70,
-                      height: 70,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(8),
+                      Container(
+                        width: 70,
+                        height: 70,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Icon(Icons.work, color: Colors.grey),
                       ),
-                      child: const Icon(Icons.work, color: Colors.grey),
-                    ),
                     SizedBox(width: 14),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -170,7 +143,7 @@ class ApplicationCard extends StatelessWidget {
                 SizedBox(height: 20),
                 Container(
                   margin: EdgeInsets.only(left: 4),
-                  child: Text(appliedJob.salary ?? 'No salary',
+                  child: Text('\$ ${appliedJob.salary?? 'No salary'}' ,
                       style: TextStyle(fontSize: 16)),
                 ),
               ],
