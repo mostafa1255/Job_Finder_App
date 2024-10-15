@@ -61,7 +61,9 @@ class JobCard extends StatelessWidget {
                           children: [
                             Text(
                               company,
-                              style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 14.sp),
+                              style: TextStyle(
+                                  color: Colors.white.withOpacity(0.8),
+                                  fontSize: 14.sp),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -80,14 +82,18 @@ class JobCard extends StatelessWidget {
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 8.w, vertical: 4.h),
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(12.r),
                         ),
                         child: Text(
                           '$salary\$/m',
-                          style: TextStyle(color: Colors.white, fontSize: 12.sp, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
@@ -99,14 +105,16 @@ class JobCard extends StatelessWidget {
                       runSpacing: 6.h,
                       children: tags.map((tag) {
                         return Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 8.w, vertical: 4.h),
                           decoration: BoxDecoration(
                             color: Colors.white.withOpacity(0.15),
                             borderRadius: BorderRadius.circular(12.r),
                           ),
                           child: Text(
                             tag,
-                            style: TextStyle(color: Colors.white, fontSize: 11.sp),
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 11.sp),
                           ),
                         );
                       }).toList(),
@@ -118,15 +126,19 @@ class JobCard extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.location_on, color: Colors.white, size: 16.sp),
+                          Icon(Icons.location_on,
+                              color: Colors.white, size: 16.sp),
                           SizedBox(width: 4.w),
                           Text(
                             location,
-                            style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 12.sp),
+                            style: TextStyle(
+                                color: Colors.white.withOpacity(0.8),
+                                fontSize: 12.sp),
                           ),
                         ],
                       ),
-                      Icon(Icons.arrow_forward, color: Colors.white, size: 20.sp),
+                      Icon(Icons.arrow_forward,
+                          color: Colors.white, size: 20.sp),
                     ],
                   ),
                 ],

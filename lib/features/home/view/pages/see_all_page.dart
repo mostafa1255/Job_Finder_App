@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:jop_finder_app/core/constants/app_colors.dart';
 import 'package:jop_finder_app/core/utils/app_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'job_card.dart';
@@ -40,6 +41,9 @@ class _SeeAllPage extends State<SeeAllPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("All Jobs"),
+      ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
@@ -59,7 +63,7 @@ class _SeeAllPage extends State<SeeAllPage> {
                   } else {
                     List<PostedJob> jobs = snapshot.data!;
                     return SizedBox(
-                      height: 570.h,
+                      height: 670.h,
                       child: ListView.builder(
                         itemCount: jobs.length,
                         scrollDirection: Axis.vertical,
@@ -77,7 +81,7 @@ class _SeeAllPage extends State<SeeAllPage> {
                               salary: jobs[index].salary ?? '',
                               location: jobs[index].location ?? '',
                               tags: jobs[index].jobTags ?? [],
-                              color: Colors.blue,
+                              color: AppColors.primaryBlue,
                             ),
                           );
                         },
