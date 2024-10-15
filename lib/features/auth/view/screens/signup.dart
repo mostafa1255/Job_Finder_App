@@ -3,8 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:jop_finder_app/core/constants/app_colors.dart';
-import 'package:jop_finder_app/core/constants/strings.dart';
 import 'package:jop_finder_app/core/utils/app_router.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/google_facebook_sign.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/styled_button.dart';
@@ -14,7 +12,6 @@ import 'package:jop_finder_app/features/auth/view/screens/shared/terms.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/text_between_divider.dart';
 import 'package:jop_finder_app/features/auth/view/screens/shared/welcome_text.dart';
 import 'package:jop_finder_app/features/auth/viewmodel/cubit/auth_cubit.dart';
-import 'package:jop_finder_app/features/profile/view/widgets/custom_alert.dart.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
