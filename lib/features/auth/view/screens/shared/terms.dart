@@ -25,8 +25,11 @@ class Terms extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const Text(
-          "By clicking Register, you agree to our",
-          style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w500),
+          "By clicking Register, you agree our",
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w400,
+          ),
         ),
         TextButton(
           onPressed: () {
@@ -40,7 +43,8 @@ class Terms extends StatelessWidget {
           child: const Text(
             ' Terms and conditions',
             style: TextStyle(
-              fontSize: 11.5,
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
             ),
           ),
         )
