@@ -215,9 +215,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           return Text(
                               'Error: ${snapshot.error}'); // Handle error
                         } else if (snapshot.hasData) {
-                          return Text(
-                            snapshot.data.toString(),
-                            style: Theme.of(context).textTheme.displayLarge,
+                          return InkWell(
+                            child: Text(
+                              snapshot.data.toString(),
+                              style: Theme.of(context).textTheme.displayLarge,
+                            ),
+                            onTap: () {
+                              GoRouter.of(context).pushNamed('/applicationsScreen');
+                            },
                           ); // Show the count once data is available
                         } else {
                           return Text('0',
