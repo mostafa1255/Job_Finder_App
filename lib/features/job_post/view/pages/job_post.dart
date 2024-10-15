@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jop_finder_app/core/constants/app_colors.dart';
 import 'package:jop_finder_app/features/auth/data/model/PostedJob_model.dart';
+import 'package:jop_finder_app/features/auth/view/screens/shared/styled_textField.dart';
 import 'package:jop_finder_app/features/job_post/view/widgets/buildTextField.dart';
 
 class JobPostScreen extends StatefulWidget {
@@ -114,7 +115,8 @@ class _JobPostScreenState extends State<JobPostScreen> {
                                 children: [
                                   Expanded(
                                     child: buildTextField(
-                                      controller: _requirementControllers[index],
+                                      controller:
+                                          _requirementControllers[index],
                                       label: 'Requirement ${index + 1}',
                                       icon: Icons.check,
                                     ),

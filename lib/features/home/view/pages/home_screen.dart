@@ -93,7 +93,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                      
                         const Text(
                           'Welcome Back!',
                           style: TextStyle(
@@ -196,9 +195,9 @@ class _HomeScreenState extends State<HomeScreen> {
               onTap: () {
                 GoRouter.of(context).push(AppRouter.seeAllPage);
               },
-              child: Text(
+              child: const Text(
                 'See all',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
+                style: const TextStyle(fontSize: 16, color: Colors.grey),
               ),
             ),
           ],
@@ -226,7 +225,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   salary: jobs[index].salary ?? '',
                                   location: jobs[index].location ?? '',
                                   tags: jobs[index].jobTags ?? [],
-                                  color: Colors.blue,
+                                  color: AppColors.mainColor,
                                 )
                               : RecommendedJobsCard(
                                   company: jobs[index].companyName ?? '',
