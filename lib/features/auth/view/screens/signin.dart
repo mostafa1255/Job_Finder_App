@@ -48,7 +48,8 @@ class _LoginScreenState extends State<LoginScreen> {
           body: BlocListener<AuthCubit, AuthState>(
             listener: (context, state) {
               if (state is AuthLoaded) {
-                GoRouter.of(context).pushReplacementNamed(AppRouter.pageViewModel);
+                GoRouter.of(context)
+                    .pushReplacementNamed(AppRouter.pageViewModel);
               }
             },
             child: Form(
@@ -120,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         );
                                       }
                                     },
-                                    text: "Login"),
+                                    text: "Log in"),
                               ],
                             );
                           } else {
@@ -136,7 +137,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         );
                                       }
                                     },
-                                    text: "Login");
+                                    text: "Log in");
                           }
                         },
                       ),
