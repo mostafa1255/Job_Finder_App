@@ -42,17 +42,16 @@ class FilterBottomSheet extends StatelessWidget {
                   height: 200,
                   child: BlocBuilder<JobSearchCubit, JobSearchState>(
                     builder: (context, state) {
-                        return const TabBarView(
-                          children: [
-                            CompaniesFilterWidget(),
-                            RolesFilterWidget(),
-                            JobTypesFilterWidget(),
-                            ExperienceLevelFilterWidget(),
-                            JobLocationFilterWidget(),
-                            SalaryRangeFilterWidget(),
-                          ],
-                        );
-                      
+                      return const TabBarView(
+                        children: [
+                          CompaniesFilterWidget(),
+                          RolesFilterWidget(),
+                          JobTypesFilterWidget(),
+                          ExperienceLevelFilterWidget(),
+                          JobLocationFilterWidget(),
+                          SalaryRangeFilterWidget(),
+                        ],
+                      );
                     },
                   ),
                 ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jop_finder_app/features/job_search/models/filters.dart';
-import 'package:jop_finder_app/features/job_search/models/mock_data.dart';
+import 'package:jop_finder_app/features/job_search/models/filter_static_data.dart';
 import 'package:jop_finder_app/features/job_search/viewmodel/job_search_cubit.dart';
 
 class JobTypesFilterWidget extends StatelessWidget {

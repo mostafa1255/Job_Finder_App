@@ -11,6 +11,7 @@ class RecentSearchesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Fetch recent searches when the widget is built
     context.read<JobSearchCubit>().fetchRecentSearches();
 
     return Scaffold(

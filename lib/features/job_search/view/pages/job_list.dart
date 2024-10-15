@@ -18,19 +18,19 @@ class JobListScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(jobTitle),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.filter_alt_sharp),
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                builder: (context) {
-                  return const FilterBottomSheet();
-                },
-              );
-            },
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     icon: const Icon(Icons.filter_alt_sharp),
+        //     onPressed: () {
+        //       showModalBottomSheet(
+        //         context: context,
+        //         builder: (context) {
+        //           return const FilterBottomSheet();
+        //         },
+        //       );
+        //     },
+        //   ),
+        // ],
       ),
       body:
       Padding(

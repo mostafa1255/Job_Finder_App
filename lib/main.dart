@@ -1,9 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jop_finder_app/core/constants/app_colors.dart';
 import 'package:jop_finder_app/core/utils/app_router.dart';
 import 'package:jop_finder_app/features/auth/viewmodel/cubit/auth_cubit.dart';
+import 'package:jop_finder_app/features/job_search/models/repo/firebase_search_repository.dart';
+import 'package:jop_finder_app/features/job_search/viewmodel/job_search_cubit.dart';
 import 'package:jop_finder_app/firebase_options.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -13,10 +16,19 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(BlocProvider(
-    create: (context) => AuthCubit(),
-    child: const JopFinderApp(),
-  ));
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => AuthCubit()),
+        BlocProvider(
+          create: (_) => JobSearchCubit(
+            FirebaseSearchRepository(FirebaseFirestore.instance),
+          ),
+        ),
+      ],
+      child: const JopFinderApp(),
+    ),
+  );
 }
 
 class JopFinderApp extends StatelessWidget {

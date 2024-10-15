@@ -1,4 +1,5 @@
 import 'package:jop_finder_app/features/job_search/models/filters.dart';
+
 final List<Filters> allFilters = [
   CompaniesFilter(
     companies: [

@@ -6,8 +6,10 @@ class SearchFilterWidget extends StatelessWidget {
     super.key,
     required this.searchController,
     required this.onClickFilter,
-    required this.onChangedTextField, required this.onFieldSubmitted,
+    required this.onChangedTextField,
+    required this.onFieldSubmitted,
   });
+
   final TextEditingController searchController;
   final Function() onClickFilter;
   final Function(String) onChangedTextField;
@@ -22,11 +24,13 @@ class SearchFilterWidget extends StatelessWidget {
           key: _formKey,
           child: Expanded(
             child: TextFormField(
-
               onChanged: onChangedTextField,
               controller: searchController,
               onFieldSubmitted: onFieldSubmitted,
               decoration: const InputDecoration(
+                focusColor: AppColors.mainColor,
+                labelStyle: TextStyle(color: Colors.grey, fontSize: 14),
+                hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(12)),
                 ),
@@ -37,8 +41,11 @@ class SearchFilterWidget extends StatelessWidget {
                 prefixIcon: Icon(Icons.search),
                 labelText: 'Search',
                 hintText: 'Search for jobs',
-
               ),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(color: Colors.black,),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter some text';
