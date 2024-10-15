@@ -7,7 +7,6 @@ import 'package:jop_finder_app/features/profile/viewmodel/profile_cubit.dart';
 class DeleteAccountDialog extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  // Assuming you have a ProfileCubit or similar for handling the delete action
   final ProfileCubit profileCubit;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -41,7 +40,7 @@ class DeleteAccountDialog extends StatelessWidget {
                 icon: Icons.lock_outline,
                 controller: passwordController,
                 hint: "Password",
-                isPassword: true, // Assuming StyledTextField supports a isPassword flag
+                isPassword: true, 
               ),
               const SizedBox(height: 16),
               ElevatedButton(
@@ -57,7 +56,7 @@ class DeleteAccountDialog extends StatelessWidget {
                 Navigator.pop(context);
               }              
               
-            }, // add your save function here
+            }, 
             child: const SizedBox(
                 width: double.infinity,
                 height: 50,

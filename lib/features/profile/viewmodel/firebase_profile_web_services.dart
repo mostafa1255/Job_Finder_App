@@ -10,12 +10,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:jop_finder_app/features/auth/data/model/user_model.dart';
-import 'package:jop_finder_app/features/auth/data/web_services/firebase_authentication_web_services.dart';
 
 class FirebaseProfileWebServices {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FireBaseAuthenticationWebServices _authenticationWebServices;
-  FirebaseProfileWebServices(this._authenticationWebServices);
 
   // Get the current user's ID from FirebaseAuth
   String? getCurrentUserId() {

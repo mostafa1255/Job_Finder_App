@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jop_finder_app/features/auth/data/model/PostedJob_model.dart';
-import 'package:jop_finder_app/features/auth/data/web_services/firebase_authentication_web_services.dart';
 import 'package:jop_finder_app/features/auth/view/screens/forget_password.dart';
 import 'package:jop_finder_app/features/auth/view/screens/signin.dart';
 import 'package:jop_finder_app/features/auth/view/screens/signup.dart';
@@ -16,7 +15,6 @@ import 'package:jop_finder_app/features/job_post/view/pages/my_postedJob.dart';
 import 'package:jop_finder_app/features/job_search/view/pages/recent_searches.dart';
 import 'package:jop_finder_app/features/profile/view/pages/applications.dart';
 import 'package:jop_finder_app/features/profile/view/pages/profile.dart';
-import 'package:jop_finder_app/features/profile/view/pages/proposals.dart';
 import 'package:jop_finder_app/features/profile/view/pages/resume.dart';
 import 'package:jop_finder_app/features/profile/view/pages/settings.dart';
 import 'package:jop_finder_app/features/profile/viewmodel/firebase_profile_web_services.dart';
@@ -42,7 +40,6 @@ class AppRouter {
   static const resumeUploadScreen = "/resumeUploadScreen";
   static const settingsScreen = "/settingsScreen";
   static const applicationsScreen = "/applicationsScreen";
-  static const proposalsScreen = "/proposalsScreen";
   static const allApplicantsScreen = "/allApplicantsScreen";
   static const myPostedJob = "/myPostedJob";
   static const successScreen = "/successScreen";
@@ -52,10 +49,8 @@ class AppRouter {
   static const recentSearches = "/recentSearches";
   static const jobList = "/jobList";
 
-  static FireBaseAuthenticationWebServices fireBaseAuthenticationWebServices =
-      FireBaseAuthenticationWebServices();
   static FirebaseProfileWebServices firebaseProfileWebServices =
-      FirebaseProfileWebServices(fireBaseAuthenticationWebServices);
+      FirebaseProfileWebServices();
   static ProfileCubit profileCubit = ProfileCubit(firebaseProfileWebServices);
 
   static GoRouter router = GoRouter(
@@ -201,14 +196,6 @@ class AppRouter {
         builder: (context, state) => BlocProvider.value(
           value: profileCubit,
           child: ApplicationsScreen(),
-        ),
-      ),
-      GoRoute(
-        path: proposalsScreen,
-        name: proposalsScreen,
-        builder: (context, state) => BlocProvider.value(
-          value: profileCubit,
-          child: ProposalsScreen(),
         ),
       ),
       //end bodaSayed

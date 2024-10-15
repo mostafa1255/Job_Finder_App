@@ -6,11 +6,13 @@ import 'package:go_router/go_router.dart';
 import 'package:jop_finder_app/core/constants/app_colors.dart';
 import 'package:jop_finder_app/core/constants/strings.dart';
 import 'package:jop_finder_app/core/utils/app_router.dart';
-import 'package:jop_finder_app/features/profile/view/widgets/change_email_bottomsheet.dart';
-import 'package:jop_finder_app/features/profile/view/widgets/change_password_bottomsheet.dart';
+import 'package:jop_finder_app/features/auth/data/model/UserProfile_model.dart';
+import 'package:jop_finder_app/features/auth/data/model/user_model.dart';
+import 'package:jop_finder_app/features/profile/view/widgets/change_email_dialog.dart';
+import 'package:jop_finder_app/features/profile/view/widgets/change_password_dialog.dart';
 import 'package:jop_finder_app/features/profile/view/widgets/change_status_bottomsheet.dart';
 import 'package:jop_finder_app/features/profile/view/widgets/custom_alert.dart.dart';
-import 'package:jop_finder_app/features/profile/view/widgets/delete_acc_bottm_sheet.dart';
+import 'package:jop_finder_app/features/profile/view/widgets/delete_acc_dialog.dart';
 import 'package:jop_finder_app/features/profile/viewmodel/profile_cubit.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -22,11 +24,58 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   ProfileCubit? profileCubit;
+  UserModel? user;
+
 
   @override
   void initState() {
     super.initState();
     profileCubit = BlocProvider.of<ProfileCubit>(context);
+    // Schedule the asynchronous operation to fetch user information
+    WidgetsBinding.instance.addPostFrameCallback((context) {
+      _fetchUserInfo();
+    });
+  }
+
+  Future<void> _fetchUserInfo() async {
+    // Fetch user information from Firestore using the cubit method
+    var fetchedUser =
+        await BlocProvider.of<ProfileCubit>(context).getUserInfo();
+    if (fetchedUser.profile == null) {
+      UserProfile userProfile = UserProfile(
+        bio: 'No bio added',
+        education: [],
+        jobTitle: 'No job title',
+        status: 'No status',
+      );
+      BlocProvider.of<ProfileCubit>(context).updateUserProfile(userProfile);
+    }
+    if (mounted) {
+      setState(() {
+        user = fetchedUser;
+      });
+    }
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          title: Text(
+            "Settings",
+          ),
+        ),
+        body: BlocListener<ProfileCubit, ProfileState>(
+        listener: (context, state) {
+          if (state is SignedOut || state is AccountDeleted) {
+            GoRouter.of(context).pushReplacementNamed(AppRouter.login);
+          }
+        },
+        child: SafeArea(child: buildBlock()),
+      )
+      );
   }
 
   Widget buildBlock() {
@@ -35,7 +84,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         if (state is ProfileLoading) {
           return Center(child: CircularProgressIndicator());
         } else if (state is UserLoaded) {
-          return buildSettingsScreen();
+          return buildSettingsScreen(); 
         } else if (state is UserUpdated) {
           return buildSettingsScreen();
         } else if (state is ProfileError) {
@@ -47,28 +96,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
         }
       },
     );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () {
-              if (GoRouter.of(context).canPop()) {
-                GoRouter.of(context).pop();
-              } else {
-                GoRouter.of(context).pushNamed(AppRouter.pageViewModel);
-              }
-            },
-          ),
-          title: Text(
-            "Settings",
-          ),
-        ),
-        body: SafeArea(child: buildBlock()));
   }
 
   Widget buildSettingsScreen() {
@@ -83,7 +110,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 StatusUpdateBottomSheet(profileCubit: profileCubit!),
           );
         }),
-        // buildListItem(Icons.color_lens_outlined, 'Notifications'),
         buildListItem(Icons.lock, 'Change Password', onTap: () {
           showDialog(
             context: context,
@@ -107,7 +133,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 onActionButtonPressed: () {
                   Navigator.of(context).pop();
                   WidgetsBinding.instance.addPostFrameCallback((_) {
-                    // Assuming profileCubit.signOut() triggers navigation or state update
                     profileCubit!.signOut();
                   });
                 },
@@ -115,7 +140,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
           );
         }),
-        // buildListItem(Icons.color_lens_outlined, 'Theme'),
         buildListItem(Icons.delete, 'Delete Account', color: Colors.red,
             onTap: () {
           showDialog(

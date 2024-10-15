@@ -41,7 +41,7 @@ class ChangePasswordDialog extends StatelessWidget {
                 icon: Icons.lock,
                 controller: currentPasswordController,
                 hint: "Password",
-                isPassword: true, // Assuming StyledTextField supports a isPassword flag
+                isPassword: true, 
               ),
               const SizedBox(height: 16),
                const Row(
@@ -68,7 +68,7 @@ class ChangePasswordDialog extends StatelessWidget {
                 password: newPasswordController,  
               ),
               const SizedBox(height: 16),
-              Container(
+              SizedBox(
                 width: double.infinity,
                 child: StyledButton(
                   text: "Save Changes",
@@ -76,7 +76,6 @@ class ChangePasswordDialog extends StatelessWidget {
                     if (validation()) {
                       profileCubit.changeUserPassword(emailController.text,currentPasswordController.text, newPasswordController.text);
                       Navigator.of(context).pop();
-                      
                     } 
                   },
                 ),

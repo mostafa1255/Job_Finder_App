@@ -65,6 +65,8 @@ class ProfileCubit extends Cubit<ProfileState> {
         }
       } else {
         emit(ProfileError("Failed to pick image"));
+        Future.delayed(const Duration(seconds: 3), () {
+        });
         final user = await _profileWebServices.getUserInfo();
         if (user != null) {
           emit(UserUpdated(user));
@@ -109,34 +111,6 @@ class ProfileCubit extends Cubit<ProfileState> {
     } else {
       emit(ProfileError(
           "Could not launch URL")); // Emit error state if URL cannot be launched
-    }
-  }
-
-//call phone number
-  Future<void> callPhoneNumber(String phoneNumber) async {
-    emit(ProfileLoading());
-    if (await canLaunch('tel:$phoneNumber')) {
-      await launch('tel:$phoneNumber');
-      final user = await _profileWebServices.getUserInfo();
-      if (user != null) {
-        emit(UserUpdated(user));
-      }
-    } else {
-      emit(ProfileError("Could not call phone number"));
-    }
-  }
-
-//open email
-  Future<void> openEmail(String email) async {
-    emit(ProfileLoading());
-    if (await canLaunch('mailto:$email')) {
-      await launch('mailto:$email');
-      final user = await _profileWebServices.getUserInfo();
-      if (user != null) {
-        emit(UserUpdated(user));
-      }
-    } else {
-      emit(ProfileError("Could not send email"));
     }
   }
 
@@ -248,8 +222,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       final success = await _profileWebServices.changeUserPassword(currentEmail,currentPassword,newPassword);
       if (success == true) {
         emit(PasswordChanged());
-        Future.delayed(const Duration(seconds: 5), () {
-        });
+        await Future.delayed(const Duration(seconds: 3));
         UserModel? user = await _profileWebServices.getUserInfo();
         if (user != null) {
           emit(UserUpdated(user));
@@ -257,9 +230,8 @@ class ProfileCubit extends Cubit<ProfileState> {
           emit(ProfileError("Failed to fetch updated user info"));
         }
       } else {
-        emit(ProfileError("Failed to change password Please check your current password and try again"));
-        Future.delayed(const Duration(seconds: 5), () {
-        });
+        emit(ProfileError("Failed to change password Please check your current Email and password and try again"));
+          await Future.delayed(const Duration(seconds: 3));
         UserModel? user = await _profileWebServices.getUserInfo();
         if (user != null) {
           emit(UserUpdated(user));

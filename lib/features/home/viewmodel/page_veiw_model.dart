@@ -30,13 +30,11 @@ class _PageViewModelState extends State<PageViewModel> {
     HomeScreen(),
     MyPostedJob(),
     BlocProvider(
-      create: (context) => ProfileCubit(
-          FirebaseProfileWebServices(FireBaseAuthenticationWebServices())),
+      create: (context) => ProfileCubit(FirebaseProfileWebServices()),
       child: ProfileScreen(),
     ),
     BlocProvider(
-      create: (context) => ProfileCubit(
-          FirebaseProfileWebServices(FireBaseAuthenticationWebServices())),
+      create: (context) => ProfileCubit(FirebaseProfileWebServices()),
       child: SettingsScreen(),
     ),
   ];
