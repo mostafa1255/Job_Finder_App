@@ -93,27 +93,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-<<<<<<< HEAD
-                        Text(
-                          'Welcome Back! 👋',
-=======
+                      
                         const Text(
                           'Welcome Back!',
->>>>>>> 04bb0c29da68465165ddfd5035ff06f29a5a9014
                           style: TextStyle(
                             fontSize: 14,
                             color: Color.fromRGBO(149, 150, 157, 1),
                             fontWeight: FontWeight.w400,
                           ),
                         ),
-<<<<<<< HEAD
-=======
                         Text("${user?.name}👋" ?? 'John Lucas 👋',
                             style: const TextStyle(
                                 fontSize: 22,
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.primaryText)),
->>>>>>> 04bb0c29da68465165ddfd5035ff06f29a5a9014
                       ],
                     ),
                     GestureDetector(
