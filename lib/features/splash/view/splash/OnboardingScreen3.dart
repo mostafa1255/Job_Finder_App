@@ -5,6 +5,8 @@ class ThirdScreen extends StatelessWidget {
   const ThirdScreen({super.key});
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -19,8 +21,8 @@ class ThirdScreen extends StatelessWidget {
                   0.8, // Adjust this to control how much of the image is shown
               child: Image.asset(
                 'assets/images/Resume-amico 1 (2).png',
-                width: 430,
-                height: 430,
+                width: screenWidth * 0.8,
+                height: screenHeight * 0.35,
                 fit: BoxFit.cover,
               ),
             ),

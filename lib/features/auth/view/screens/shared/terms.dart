@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jop_finder_app/core/constants/strings.dart';
+import 'package:jop_finder_app/features/home/view/pages/home_screen.dart';
 import 'package:jop_finder_app/features/profile/view/widgets/custom_alert.dart.dart';
 
 void showTermsDialog(BuildContext context) {
@@ -24,11 +26,15 @@ class Terms extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text(
-          "By clicking Register, you agree our",
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w400,
+        Flexible(
+          child: Text(
+            "By clicking Register, you agree to our",
+            style: TextStyle(
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w400,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
         TextButton(
@@ -47,7 +53,7 @@ class Terms extends StatelessWidget {
               fontWeight: FontWeight.w400,
             ),
           ),
-        )
+        ),
       ],
     );
   }
