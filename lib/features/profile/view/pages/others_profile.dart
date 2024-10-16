@@ -136,69 +136,81 @@ class OthersProfileScreen extends StatelessWidget {
     );
   }
 
-
   Widget buildEducationSection() {
-    if (user[index].profile?.education == null || user[index].profile!.education!.isEmpty) {
-      return Container(
-        padding: EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          color: Colors.white,
-        ),
-        child: Center(
-          child: Text('No education added'.toUpperCase(),
-              style: TextStyle(color: Colors.grey, fontSize: 16)),
-        ),
-      );
-    } else {
-      return ListView.builder(
-        shrinkWrap:
-            true, // This ensures the ListView takes only the necessary height
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: user[index].profile!.education!.length,
-        itemBuilder: (context, index) {
-          return buildEducationItem(
-              education: user[index].profile!.education![index], context: context);
-        },
-      );
-    }
-  }
-
-  Widget buildEducationItem({
-    required Education? education,
-    BuildContext? context,
-  }) {
+  // Check if profile or education list is null or empty
+  if (user[index].profile == null || user[index].profile!.education == null || user[index].profile!.education!.isEmpty) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
-      margin: EdgeInsets.fromLTRB(0, 6, 0, 6),
+      padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
         borderRadius: BorderRadius.circular(12),
+        color: Colors.white,
       ),
-      child: Row(
-        children: [
-          Icon(Icons.school, size: 40, color: AppColors.primaryBlue),
-          SizedBox(width: 16),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                education!.fieldOfStudy ?? 'No Field',
-                style: Theme.of(context!).textTheme.displayMedium,
-              ),
-              const SizedBox(height: 4),
-              Text(
-                education.degree ?? 'No Degree',
-              ),
-              Text(
-                '${education.institution ?? 'no institution'}  • ${education.startDate!.year} - ${education.endDate!.year}',
-              ),
-            ],
-          )
-        ],
+      child: Center(
+        child: Text('No education added'.toUpperCase(),
+            style: TextStyle(color: Colors.grey, fontSize: 16)),
       ),
     );
   }
+
+  // Otherwise, return the ListView
+  return ListView.builder(
+    shrinkWrap: true, // This ensures the ListView takes only the necessary height
+    physics: NeverScrollableScrollPhysics(),
+    itemCount: user[index].profile!.education!.length,
+    itemBuilder: (context, eduIndex) {
+      return buildEducationItem(
+          education: user[index].profile!.education![eduIndex], context: context);
+    },
+  );
+}
+
+Widget buildEducationItem({
+  required Education? education,
+  required BuildContext context,
+}) {
+  if (education == null) {
+    return Container(
+      padding: EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: Colors.white,
+      ),
+      child: Center(
+        child: Text('No education information'.toUpperCase(),
+            style: TextStyle(color: Colors.grey, fontSize: 16)),
+      ),
+    );
+  }
+
+  return Container(
+    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
+    margin: EdgeInsets.fromLTRB(0, 6, 0, 6),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Row(
+      children: [
+        Icon(Icons.school, size: 40, color: AppColors.primaryBlue),
+        SizedBox(width: 16),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              education.fieldOfStudy ?? 'No Field',
+              style: Theme.of(context).textTheme.displayMedium,
+            ),
+            const SizedBox(height: 4),
+            Text(education.degree ?? 'No Degree'),
+            Text(
+              '${education.institution ?? 'no institution'}  • ${education.startDate?.year ?? 'Past'} - ${education.endDate?.year ?? 'Present'}',
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
 
   Widget resumeDisplay( BuildContext context) {
     return Container(
@@ -212,32 +224,29 @@ class OthersProfileScreen extends StatelessWidget {
               child: Text('No CV. '.toUpperCase(),
                   style: TextStyle(color: Colors.grey, fontSize: 16)),
             )
-          : Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(width: 4),
-                Icon(
-                  Icons.file_present,
-                  size: 30,
-                  color: AppColors.primaryBlue,
-                ),
-                SizedBox(width: 12),
-                InkWell(
-                  onTap: () async {
-                     if (await canLaunch(user[index].cvUrl!)) {
-                      await launch(user[index].cvUrl!);
-                    } else {
-                      throw 'Could not launch ${user[index].cvUrl}';
-                    }
-                  },
-                  child: Text(
-                      '${user[index].name}_${user[index].profile!.jobTitle}_CV.pdf',
-                      style: Theme.of(context).textTheme.displayMedium,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis),
-                ),
-              ],
-            ),
+          : Center(
+            child: Row(
+                children: [
+                  SizedBox(width: 4),
+                  Icon(
+                    Icons.file_present,
+                    size: 30,
+                    color: AppColors.primaryBlue,
+                  ),
+                  SizedBox(width: 12),
+                  InkWell(
+                    onTap: ()  {
+                      launch(user[index].cvUrl!);
+                    },
+                    child: Text(
+                        '${user[index].name}_${user[index].profile!.jobTitle}_CV.pdf',
+                        style: Theme.of(context).textTheme.displayMedium,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis),
+                  ),
+                ],
+              ),
+          ),
     );
   }
 }
