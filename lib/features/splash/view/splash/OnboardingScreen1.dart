@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jop_finder_app/core/constants/app_colors.dart';
 import 'package:jop_finder_app/core/utils/app_router.dart';
@@ -64,8 +65,8 @@ class _OnBoardingScreen1State extends State<OnBoardingScreen1> {
                     controller: _controller,
                     children: [
                       _buildFirstPage(screenWidth, screenHeight),
-                      buildSecondPage(),
-                      const ThirdScreen(),
+                      buildSecondPage(context),
+                      const ThirdScreen( ),
                       const FourthScreen(),
                     ],
                   ),
@@ -84,7 +85,7 @@ class _OnBoardingScreen1State extends State<OnBoardingScreen1> {
                     activeDotColor: Color.fromARGB(255, 53, 104, 153),
                   ),
                 ),
-                SizedBox(height: 40),
+                SizedBox(height: 80.h),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
                   child: Row(
