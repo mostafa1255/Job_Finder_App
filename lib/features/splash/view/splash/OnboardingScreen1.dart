@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jop_finder_app/core/constants/app_colors.dart';
 import 'package:jop_finder_app/core/utils/app_router.dart';
-import 'package:jop_finder_app/features/splash/view/splash/OnboardingScreen3.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'OnboardingScreen2.dart';
+import 'OnboardingScreen3.dart';
 import 'OnboardingScreen4.dart';
 
 class OnBoardingScreen1 extends StatefulWidget {
@@ -32,7 +32,6 @@ class _OnBoardingScreen1State extends State<OnBoardingScreen1> {
   void dispose() {
     _controller.dispose();
     super.dispose();
-    print('');
   }
 
   void _goToNextPage() {
@@ -48,101 +47,101 @@ class _OnBoardingScreen1State extends State<OnBoardingScreen1> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Expanded(child: SizedBox()),
-              SizedBox(
-                width: 430,
-                height: 500,
-                child: PageView(
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    return Container(
+      color: AppColors.primaryBlue,
+      child: Scaffold(
+        body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.all(screenWidth * 0.04),
+            child: Column(
+              children: [
+                SizedBox(
+                  width: screenWidth * 0.9,
+                  height: screenHeight * 0.6,
+                  child: PageView(
+                    controller: _controller,
+                    children: [
+                      _buildFirstPage(screenWidth, screenHeight),
+                      buildSecondPage(),
+                      const ThirdScreen(),
+                      const FourthScreen(),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 40),
+                SmoothPageIndicator(
                   controller: _controller,
-                  children: [
-                    _buildFirstPage(),
-                    buildSecondPage(),
-                    const ThirdScreen(),
-                    const FourthScreen(),
-                  ],
+                  count: 4,
+                  effect: const ExpandingDotsEffect(
+                    spacing: 4,
+                    radius: 8,
+                    dotWidth: 12,
+                    dotHeight: 8,
+                    paintStyle: PaintingStyle.fill,
+                    dotColor: Colors.grey,
+                    activeDotColor: Color.fromARGB(255, 53, 104, 153),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 40),
-              SmoothPageIndicator(
-                controller: _controller,
-                count: 4,
-                effect: const ExpandingDotsEffect(
-                  spacing: 4,
-                  radius: 8,
-                  dotWidth: 12,
-                  dotHeight: 8,
-                  paintStyle: PaintingStyle.fill,
-                  dotColor: Colors.grey,
-                  activeDotColor: Color.fromARGB(255, 53, 104, 153),
-                ),
-              ),
-              const Expanded(child: SizedBox()),
-              const Expanded(child: SizedBox()),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      onTap: () => GoRouter.of(context)
-                          .pushReplacementNamed(AppRouter.signUp),
-                      child: const Text(
-                        'Skip',
-                        style: TextStyle(fontSize: 18, color: Colors.grey),
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: _goToNextPage,
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 50, vertical: 15),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                SizedBox(height: 40),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () => GoRouter.of(context)
+                            .pushReplacementNamed(AppRouter.signUp),
+                        child: const Text(
+                          'Skip',
+                          style: TextStyle(fontSize: 18, color: Colors.grey),
                         ),
-                        backgroundColor: AppColors.primaryBlue,
                       ),
-                      child: Text(
-                        _currentPage == 3 ? 'Explore' : 'Next',
-                        style:
-                            const TextStyle(fontSize: 18, color: Colors.white),
+                      ElevatedButton(
+                        onPressed: _goToNextPage,
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: screenWidth * 0.1,
+                              vertical: screenHeight * 0.02),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          backgroundColor: AppColors.primaryBlue,
+                        ),
+                        child: Text(
+                          _currentPage == 3 ? 'Explore' : 'Next',
+                          style: const TextStyle(
+                              fontSize: 18, color: Colors.white),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 40),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildFirstPage() {
+  Widget _buildFirstPage(double screenWidth, double screenHeight) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Padding(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(screenWidth * 0.04),
           child: ClipRect(
             child: Align(
-              alignment: Alignment
-                  .topCenter, // Aligns the part of the image you want to show
-              heightFactor:
-                  0.8, // Adjust this to control how much of the image is shown
+              alignment: Alignment.topCenter,
+              heightFactor: 0.8,
               child: Image.asset(
                 'assets/images/Job hunt-amico 1.png',
-                width: 430,
-                height: 430,
+                width: screenWidth * 0.8,
+                height: screenHeight * 0.35,
                 fit: BoxFit.cover,
               ),
             ),
@@ -154,7 +153,7 @@ class _OnBoardingScreen1State extends State<OnBoardingScreen1> {
               fontSize: 28, color: Colors.black, fontWeight: FontWeight.w600),
         ),
         Container(
-          margin: const EdgeInsets.all(15),
+          margin: EdgeInsets.all(screenWidth * 0.04),
           child: const Text(
             'Figure out your top five priorities whether it is company culture, salary.',
             textAlign: TextAlign.center,
