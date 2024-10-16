@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:jop_finder_app/features/job_search/models/jobs.dart';
 import 'package:jop_finder_app/features/job_search/viewmodel/job_search_state.dart';
 
+import '../../auth/data/model/PostedJob_model.dart';
 import '../../auth/data/model/user_model.dart';
 import '../models/repo/search_repository.dart';
 
@@ -94,18 +94,18 @@ class JobSearchCubit extends Cubit<JobSearchState> {
           return;
         }
 
-        List<Job> allJobs = await _searchRepository.fetchJobs();
+        List<PostedJob> allJobs = await _searchRepository.fetchJobs();
         List<UserModel?> allUsers = await _searchRepository.fetchAllUserNames();
 
         String normalizedQuery = query.trim().toLowerCase().replaceAll(' ', '');
 
-        List<Job> result = allJobs.where((job) {
+        List<PostedJob> result = allJobs.where((job) {
           String normalizedJobTitle =
           job.jobTitle!.toLowerCase().replaceAll(' ', '');
           return normalizedJobTitle.startsWith(normalizedQuery);
         }).toList();
 
-        List<Job> resultCompany = allJobs.where((company) {
+        List<PostedJob> resultCompany = allJobs.where((company) {
           String normalizedCompanyName =
           company.companyName!.toLowerCase().replaceAll(' ', '');
           return normalizedCompanyName.startsWith(normalizedQuery);

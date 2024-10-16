@@ -98,7 +98,13 @@ class JobSearchBody extends StatelessWidget {
                                 profileImageUrl:
                                     state.users[index]?.profileImageUrl ?? '',
                                 onClick: () {
-                                  // GoRouter.of(context).push('/userDetail');
+                                  GoRouter.of(context).push("/othersProfileScreen",
+                                    extra:
+                                      {
+                                        'user': state.users,
+                                        'index': index,
+                                      },
+                                  );
                                 },
                               );
                             },

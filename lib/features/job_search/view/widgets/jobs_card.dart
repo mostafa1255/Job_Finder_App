@@ -7,13 +7,14 @@ class JobsCard extends StatelessWidget {
     required this.salary,
     required this.companyName,
     required this.location,
-    required this.imageUrl,
+    required this.imageUrl, required this.onClick,
   });
   final String jobTitle;
   final String salary;
   final String companyName;
   final String location;
   final String imageUrl;
+  final Function() onClick;
 
   @override
   Widget build(BuildContext context) {
@@ -23,57 +24,61 @@ class JobsCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Row(
-        children: [
-          const SizedBox(
-            width: 16,
-          ),
-          CircleAvatar(
-            radius: 30,
-            backgroundImage: NetworkImage(imageUrl),
-          ),
-          SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 16,
-                ),
-                Row(
-                  children: [
-                    Text(jobTitle),
-                    const Expanded(
-                      child: SizedBox(
-                        width: double.infinity,
-                      ),
-                    ),
-                    Text('$salary\$'),
-                  ],
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                Row(
-                  children: [
-                    Text(companyName),
-                    const Expanded(
-                      child: SizedBox(
-                        width: double.infinity,
-                      ),
-                    ),
-                    Text(location),
-                  ],
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-              ],
+      child:
+      TextButton(
+        onPressed: onClick,
+        child: Row(
+          children: [
+            const SizedBox(
+              width: 16,
             ),
-          ),
-          const SizedBox(
-            width: 16,
-          ),
-        ],
+            CircleAvatar(
+              radius: 30,
+              backgroundImage: NetworkImage(imageUrl),
+            ),
+            SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  Row(
+                    children: [
+                      Text(jobTitle),
+                      const Expanded(
+                        child: SizedBox(
+                          width: double.infinity,
+                        ),
+                      ),
+                      Text('$salary\$'),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  Row(
+                    children: [
+                      Text(companyName),
+                      const Expanded(
+                        child: SizedBox(
+                          width: double.infinity,
+                        ),
+                      ),
+                      Text(location),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              width: 16,
+            ),
+          ],
+        ),
       ),
     );
   }

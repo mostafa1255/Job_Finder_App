@@ -11,15 +11,16 @@ import 'package:url_launcher/url_launcher.dart';
 // ignore: must_be_immutable
 class OthersProfileScreen extends StatelessWidget {
 
-  const OthersProfileScreen({super.key, required this.user});
-  final UserModel user;
-  
+  const OthersProfileScreen({super.key, required this.user, required this.index});
+  final List<UserModel> user;
+  final int index;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title:  Text('${user.name} Profile'),
+        title:  Text('${user[index].name} Profile'),
         centerTitle: true,
       ),
       body: SafeArea(child: buildProfileScreen(context)),
@@ -37,9 +38,9 @@ class OthersProfileScreen extends StatelessWidget {
             radius: 80,
             backgroundColor: Colors.grey.shade200,
             child: ClipOval(
-              child: Uri.parse(user.profileImageUrl ?? "").hasAbsolutePath
+              child: Uri.parse(user[index].profileImageUrl ?? "").hasAbsolutePath
                   ? CachedNetworkImage(
-                      imageUrl: user.profileImageUrl!,
+                      imageUrl: user[index].profileImageUrl!,
                       fit: BoxFit.cover,
                       width: 120.w,
                       height: 120.h,
@@ -61,7 +62,7 @@ class OthersProfileScreen extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  user.name,
+                  user[index].name,
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 SizedBox(height: 4),
@@ -69,7 +70,7 @@ class OthersProfileScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      user.profile!.jobTitle ?? 'No job title',
+                      user[index].profile!.jobTitle ?? 'No job title',
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                     const SizedBox(width: 2),
@@ -88,7 +89,7 @@ class OthersProfileScreen extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  user.profile!.status ?? 'No status',
+                  user[index].profile!.status ?? 'No status',
                   style: Theme.of(context).textTheme.displayLarge,
                 ),
                 Text(
@@ -103,10 +104,10 @@ class OthersProfileScreen extends StatelessWidget {
             style: Theme.of(context).textTheme.displayLarge,
           ),
           SizedBox(height: 10),
-          CustomInfoDisplay(text: user.email, icon: Icons.email),
+          CustomInfoDisplay(text: user[index].email, icon: Icons.email),
           SizedBox(width: 10.w), // Adjust spacing based on your layout width
           CustomInfoDisplay(
-              text: user.phoneNumber ?? 'No phone number',
+              text: user[index].phoneNumber ?? 'No phone number',
               icon: Icons.phone_android),
           SizedBox(height: 24),
           Text(
@@ -114,7 +115,7 @@ class OthersProfileScreen extends StatelessWidget {
             style: Theme.of(context).textTheme.displayLarge,
           ),
           SizedBox(height: 10),
-          CustomBioDisplay(text: user.profile!.bio ?? 'No bio'),
+          CustomBioDisplay(text: user[index].profile!.bio ?? 'No bio'),
           SizedBox(height: 28),
           Text(
             "Education",
@@ -137,7 +138,7 @@ class OthersProfileScreen extends StatelessWidget {
 
 
   Widget buildEducationSection() {
-    if (user.profile?.education == null || user.profile!.education!.isEmpty) {
+    if (user[index].profile?.education == null || user[index].profile!.education!.isEmpty) {
       return Container(
         padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
@@ -154,18 +155,18 @@ class OthersProfileScreen extends StatelessWidget {
         shrinkWrap:
             true, // This ensures the ListView takes only the necessary height
         physics: NeverScrollableScrollPhysics(),
-        itemCount: user.profile!.education!.length,
+        itemCount: user[index].profile!.education!.length,
         itemBuilder: (context, index) {
           return buildEducationItem(
-              education: user.profile!.education![index], context: context);
+              education: user[index].profile!.education![index], context: context);
         },
       );
     }
   }
 
   Widget buildEducationItem({
-    required Education? education, 
-    BuildContext? context, 
+    required Education? education,
+    BuildContext? context,
   }) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
@@ -206,7 +207,7 @@ class OthersProfileScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         color: Colors.white,
       ),
-      child: (user.cvUrl == null || user.cvUrl!.isEmpty)
+      child: (user[index].cvUrl == null || user[index].cvUrl!.isEmpty)
           ? Center(
               child: Text('No CV. '.toUpperCase(),
                   style: TextStyle(color: Colors.grey, fontSize: 16)),
@@ -223,14 +224,14 @@ class OthersProfileScreen extends StatelessWidget {
                 SizedBox(width: 12),
                 InkWell(
                   onTap: () async {
-                     if (await canLaunch(user.cvUrl!)) {
-                      await launch(user.cvUrl!);
+                     if (await canLaunch(user[index].cvUrl!)) {
+                      await launch(user[index].cvUrl!);
                     } else {
-                      throw 'Could not launch ${user.cvUrl}';
+                      throw 'Could not launch ${user[index].cvUrl}';
                     }
                   },
                   child: Text(
-                      '${user.name}_${user.profile!.jobTitle}_CV.pdf',
+                      '${user[index].name}_${user[index].profile!.jobTitle}_CV.pdf',
                       style: Theme.of(context).textTheme.displayMedium,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis),

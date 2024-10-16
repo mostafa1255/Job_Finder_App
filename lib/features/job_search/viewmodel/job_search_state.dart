@@ -1,6 +1,8 @@
 import 'package:jop_finder_app/features/auth/data/model/user_model.dart';
 import 'package:jop_finder_app/features/job_search/models/jobs.dart';
 
+import '../../auth/data/model/PostedJob_model.dart';
+
 abstract class JobSearchState {}
 
 class JobSearchInitial extends JobSearchState {}
@@ -8,9 +10,9 @@ class JobSearchInitial extends JobSearchState {}
 class JobSearchLoading extends JobSearchState {}
 
 class JobSearchSuccess extends JobSearchState {
-  final List<Job> jobs;
+  final List<PostedJob> jobs;
   final List<UserModel?> users;
-  final List<Job> companyNames;
+  final List<PostedJob> companyNames;
   final List<String?> uniqueTitles;
   final List<String?> uniqueUserNames;
   final List<String?> uniqueCompanyNames;

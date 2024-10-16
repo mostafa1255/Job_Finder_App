@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:jop_finder_app/features/auth/data/model/PostedJob_model.dart';
 import 'package:jop_finder_app/features/job_search/models/repo/search_repository.dart';
 
 import '../../../auth/data/model/user_model.dart';
@@ -25,11 +26,11 @@ class FirebaseSearchRepository implements SearchRepository {
   }
 
 
-  Future<List<Job>> fetchJobs() async {
+  Future<List<PostedJob>> fetchJobs() async {
     try {
       QuerySnapshot snapshot = await _firestore.collection('allJobs').get();
       return snapshot.docs
-          .map((doc) => Job.fromMap(doc.data() as Map<String, dynamic>))
+          .map((doc) => PostedJob.fromMap(doc.data() as Map<String, dynamic>))
           .toList();
     } catch (e) {
       throw Exception('Failed to fetch jobs: $e');

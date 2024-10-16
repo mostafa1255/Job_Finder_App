@@ -31,7 +31,13 @@ class UserListScreen extends StatelessWidget {
               userName: user.name ?? 'Unknown Title',
               profileImageUrl: user.profileImageUrl ?? 'Unknown Title',
               onClick:() {
-                // GoRouter.of(context).push('/userDetail');
+                GoRouter.of(context).push("/othersProfileScreen",
+                  extra:
+                    {
+                      'user': users,
+                      'index': index,
+                    },
+                );
               }
             );
           },

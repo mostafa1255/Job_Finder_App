@@ -28,6 +28,7 @@ import '../../features/job_search/models/jobs.dart';
 import '../../features/job_search/view/pages/job_list.dart';
 import '../../features/job_search/view/pages/job_search.dart';
 import '../../features/job_search/view/pages/user_list.dart';
+import '../../features/profile/view/pages/others_profile.dart';
 
 class AppRouter {
   static const splash = "/splash";
@@ -51,6 +52,7 @@ class AppRouter {
   static const recentSearches = "/recentSearches";
   static const jobList = "/jobList";
   static const userList = "/userList";
+  static const othersProfileScreen = "/othersProfileScreen";
 
   static FirebaseProfileWebServices firebaseProfileWebServices =
       FirebaseProfileWebServices();
@@ -122,7 +124,7 @@ class AppRouter {
               state.extra as Map<String, dynamic>;
           return JobListScreen(
             jobTitle: extra['jobTitle'] as String,
-            jobs: extra['jobs'] as List<Job>,
+            jobs: extra['jobs'] as List<PostedJob>,
           );
         },
       ),
@@ -141,6 +143,18 @@ class AppRouter {
         path: recentSearches,
         name: recentSearches,
         builder: (context, state) => const RecentSearchesScreen(),
+      ),
+      GoRoute(
+        path: othersProfileScreen,
+        name: othersProfileScreen,
+        builder: (context, state) {
+          final Map<String, dynamic> extra =
+              state.extra as Map<String, dynamic>;
+          return OthersProfileScreen(
+            user: extra['user']as List<UserModel>,
+            index: extra['index'] as int,
+          );
+        },
       ),
       GoRoute(
         path: jobApplyScreen,
