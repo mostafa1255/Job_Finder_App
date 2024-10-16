@@ -1,10 +1,40 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:jop_finder_app/features/job_search/models/repo/search_repository.dart';
 
+import '../../../auth/data/model/user_model.dart';
+import '../jobs.dart';
+
 class FirebaseSearchRepository implements SearchRepository {
   final FirebaseFirestore _firestore;
 
   FirebaseSearchRepository(this._firestore);
+
+  Future<List<UserModel>> fetchAllUserNames() async {
+    try {
+
+      QuerySnapshot snapshot = await _firestore.collection('users').get();
+
+      List<UserModel> userNames = snapshot.docs
+          .map((doc) => UserModel.fromFirestore(doc) )
+          .toList();
+
+      return userNames;
+    } catch (e) {
+      throw Exception('Failed to fetch user names: $e');
+    }
+  }
+
+
+  Future<List<Job>> fetchJobs() async {
+    try {
+      QuerySnapshot snapshot = await _firestore.collection('allJobs').get();
+      return snapshot.docs
+          .map((doc) => Job.fromMap(doc.data() as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      throw Exception('Failed to fetch jobs: $e');
+    }
+  }
 
   @override
   Future<void> addRecentSearch(String userId, String search) async {
@@ -27,9 +57,7 @@ class FirebaseSearchRepository implements SearchRepository {
         .orderBy('timestamp', descending: true)
         .get();
 
-    return snapshot.docs
-        .map((doc) => doc['searchTerm'] as String)
-        .toList();
+    return snapshot.docs.map((doc) => doc['searchTerm'] as String).toList();
   }
 
   @override

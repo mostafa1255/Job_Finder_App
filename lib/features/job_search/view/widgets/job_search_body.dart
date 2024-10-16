@@ -57,20 +57,26 @@ class JobSearchBody extends StatelessWidget {
                 if (state is JobSearchLoading) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (state is JobSearchSuccess) {
-                  final jobTitles = state.uniqueJobResult['jobTitles'] ?? [];
-                  final companyNames =
-                      state.uniqueJobResult['companyNames'] ?? [];
-                  final locations = state.uniqueJobResult['locations'] ?? [];
 
                   return Column(
                     children: [
                       JobListSection(
+                        title: 'User Names',
+                        items: state.uniqueUserNames,
+                        onTapItem: (userName, index) {
+                          GoRouter.of(context).push(
+                            '/userList',
+                            extra: {
+                              'userName': userName,
+                              'users': state.users,
+                            },
+                          );
+                        },
+                      ),
+                      JobListSection(
                         title: 'Job Titles',
-                        items: jobTitles,
-                        onTapItem: (jobTitle) {
-                          context
-                              .read<JobSearchCubit>()
-                              .filterJobsByTitle(jobTitle);
+                        items: state.uniqueTitles,
+                        onTapItem: (jobTitle, index) {
                           GoRouter.of(context).push(
                             '/jobList',
                             extra: {
@@ -82,40 +88,22 @@ class JobSearchBody extends StatelessWidget {
                       ),
                       JobListSection(
                         title: 'Company Names',
-                        items: companyNames,
-                        onTapItem: (companyName) {
-                          context
-                              .read<JobSearchCubit>()
-                              .filterJobsByCompanyName(companyName);
+                        items:  state.uniqueCompanyNames,
+                        onTapItem: (companyName, index) {
                           GoRouter.of(context).push(
                             '/jobList',
                             extra: {
                               'jobTitle': companyName,
-                              'jobs': state.jobs,
+                              'jobs': state.companyNames,
                             },
                           );
                         },
                       ),
-                      JobListSection(
-                        title: 'Locations',
-                        items: locations,
-                        onTapItem: (location) {
-                          context
-                              .read<JobSearchCubit>()
-                              .filterJobsByLocation(location);
-                          GoRouter.of(context).push(
-                            '/jobList',
-                            extra: {
-                              'jobTitle': location,
-                              'jobs': state.jobs,
-                            },
-                          );
-                        },
-                      ),
+
                     ],
                   );
                 } else if (state is JobSearchNoResult) {
-                  return const Center(child: Text('No jobs found'));
+                  return const Center(child: Text('No search found'));
                 } else if (state is JobSearchError) {
                   return Text(state.message);
                 }

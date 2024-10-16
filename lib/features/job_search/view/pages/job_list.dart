@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:jop_finder_app/features/job_search/models/jobs.dart';
-import 'package:jop_finder_app/features/job_search/view/widgets/filter_widget/filter_bottom_sheet.dart';
 import 'package:jop_finder_app/features/job_search/view/widgets/jobs_card.dart';
 
 class JobListScreen extends StatelessWidget {
@@ -18,19 +17,6 @@ class JobListScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(jobTitle),
-        // actions: [
-        //   IconButton(
-        //     icon: const Icon(Icons.filter_alt_sharp),
-        //     onPressed: () {
-        //       showModalBottomSheet(
-        //         context: context,
-        //         builder: (context) {
-        //           return const FilterBottomSheet();
-        //         },
-        //       );
-        //     },
-        //   ),
-        // ],
       ),
       body:
       Padding(

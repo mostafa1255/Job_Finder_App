@@ -6,8 +6,9 @@ import '../../viewmodel/job_search_cubit.dart';
 
 class JobListSection extends StatelessWidget {
   final String title;
-  final List<String> items;
-  final Function(String) onTapItem;
+  final List<String?> items;
+  final Function(String, int) onTapItem;
+
 
   const JobListSection({
     super.key,
@@ -18,15 +19,19 @@ class JobListSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: items.isNotEmpty
           ? Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                  textAlign: TextAlign.left,
                 ),
                 ListView.builder(
                   shrinkWrap: true,
@@ -34,12 +39,16 @@ class JobListSection extends StatelessWidget {
                   itemCount: items.length,
                   itemBuilder: (context, index) {
                     return ListTile(
-                      title: Text(items[index], textAlign: TextAlign.center),
+                      title: Text(
+                        items[index]!,
+                        style: const TextStyle(fontSize: 14),
+                      ),
                       onTap: () {
-                        onTapItem(items[index]);
+
+                        onTapItem(items[index]!, index);
                         context
                             .read<JobSearchCubit>()
-                            .addRecentSearch(items[index]);
+                            .addRecentSearch(items[index]!);
                       },
                     );
                   },

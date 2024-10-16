@@ -20,6 +20,9 @@ class JobsCard extends StatelessWidget {
     return Card(
       elevation: 0,
       color: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: Row(
         children: [
           const SizedBox(

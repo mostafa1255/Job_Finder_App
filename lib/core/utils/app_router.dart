@@ -22,10 +22,12 @@ import 'package:jop_finder_app/features/profile/viewmodel/profile_cubit.dart';
 import 'package:jop_finder_app/features/splash/view/splash.dart';
 import 'package:jop_finder_app/features/splash/view/splash/OnboardingScreen1.dart';
 
+import '../../features/auth/data/model/user_model.dart';
 import '../../features/home/view/pages/see_all_page.dart';
 import '../../features/job_search/models/jobs.dart';
 import '../../features/job_search/view/pages/job_list.dart';
 import '../../features/job_search/view/pages/job_search.dart';
+import '../../features/job_search/view/pages/user_list.dart';
 
 class AppRouter {
   static const splash = "/splash";
@@ -48,6 +50,7 @@ class AppRouter {
   static const pageViewModel = "/pageViewModel";
   static const recentSearches = "/recentSearches";
   static const jobList = "/jobList";
+  static const userList = "/userList";
 
   static FirebaseProfileWebServices firebaseProfileWebServices =
       FirebaseProfileWebServices();
@@ -123,6 +126,17 @@ class AppRouter {
           );
         },
       ),
+      GoRoute(
+          path: userList,
+          name: userList,
+          builder: (context, state) {
+            final Map<String, dynamic> extra =
+                state.extra as Map<String, dynamic>;
+            return UserListScreen(
+              userName: extra['userName'] as String,
+              users: extra['users'] as List<UserModel>,
+            );
+          }),
       GoRoute(
         path: recentSearches,
         name: recentSearches,

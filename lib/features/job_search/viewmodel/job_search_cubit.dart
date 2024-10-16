@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:jop_finder_app/features/job_search/models/jobs.dart';
 import 'package:jop_finder_app/features/job_search/viewmodel/job_search_state.dart';
 
+import '../../auth/data/model/user_model.dart';
 import '../models/repo/search_repository.dart';
 
 class JobSearchCubit extends Cubit<JobSearchState> {
@@ -51,7 +52,14 @@ class JobSearchCubit extends Cubit<JobSearchState> {
       List<String> recentSearches =
           await _searchRepository.fetchRecentSearches(_userId!);
       _recentSearches = recentSearches;
-      emit(JobSearchSuccess([], {}));
+      emit(JobSearchSuccess(
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+      ));
     } else {
       emit(JobSearchNoResult());
     }
@@ -61,7 +69,14 @@ class JobSearchCubit extends Cubit<JobSearchState> {
     if (_userId != null) {
       await _searchRepository.removeRecentSearch(_userId!, search);
       _recentSearches.remove(search);
-      emit(JobSearchSuccess([], {}));
+      emit(JobSearchSuccess(
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+      ));
     }
   }
 
@@ -76,104 +91,62 @@ class JobSearchCubit extends Cubit<JobSearchState> {
         return;
       }
 
-      QuerySnapshot snapshot =
-          await FirebaseFirestore.instance.collection('allJobs').get();
-
-      List<Job> allJobs = snapshot.docs
-          .map((doc) => Job.fromMap(doc.data() as Map<String, dynamic>))
-          .toList();
+      List<Job> allJobs = await _searchRepository.fetchJobs();
+      List<UserModel?> allUsers = await _searchRepository.fetchAllUserNames();
 
       String normalizedQuery = query.trim().toLowerCase().replaceAll(' ', '');
 
-      Map<String, Set<String>> uniqueJobResult = {
-        'jobTitles': <String>{},
-        'companyNames': <String>{},
-        'locations': <String>{}
-      };
-
       List<Job> result = allJobs.where((job) {
         String normalizedJobTitle =
-            job.jobTitle?.toLowerCase().replaceAll(' ', '') ?? '';
-        String normalizedCompanyName =
-            job.companyName?.toLowerCase().replaceAll(' ', '') ?? '';
-        String normalizedLocation =
-            job.location?.toLowerCase().replaceAll(' ', '') ?? '';
+            job.jobTitle!.toLowerCase().replaceAll(' ', '');
+        return normalizedJobTitle.startsWith(normalizedQuery);
+      }).toList();
 
-        bool matchesTitle = normalizedJobTitle.startsWith(normalizedQuery);
-        bool matchesCompany = normalizedCompanyName.startsWith(normalizedQuery);
-        bool matchesLocation = normalizedLocation.startsWith(normalizedQuery);
+      List<Job> resultCompany = allJobs.where((company) {
+        String normalizedJobTitle =
+            company.companyName!.toLowerCase().replaceAll(' ', '');
+        return normalizedJobTitle.startsWith(normalizedQuery);
+      }).toList();
 
-        if (matchesTitle) {
-          uniqueJobResult['jobTitles']?.add(job.jobTitle!);
-        }
-        if (matchesCompany) {
-          uniqueJobResult['companyNames']?.add(job.companyName!);
-        }
-        if (matchesLocation) {
-          uniqueJobResult['locations']?.add(job.location!);
-        }
-
-        return matchesTitle || matchesCompany || matchesLocation;
+      List<UserModel?> userNames = allUsers.where((user) {
+        String normalizedJobTitle =
+            user!.name.toLowerCase().replaceAll(' ', '');
+        return normalizedJobTitle.startsWith(normalizedQuery);
       }).toList();
 
       if (_filters.isNotEmpty) {
         result = result.where((job) {
-          bool matchesLocation =
-              _filters.contains(job.location?.toLowerCase().trim() ?? "");
-          bool matchesCompany =
-              _filters.contains(job.companyName?.toLowerCase().trim() ?? "");
+          bool matchesCompany = _filters.contains(job.companyName);
+          bool matchesLocation = _filters.contains(job.location);
           return matchesCompany || matchesLocation;
         }).toList();
       }
 
-      final jobTitles = uniqueJobResult['jobTitles']?.toList() ?? [];
-      final companyNames = uniqueJobResult['companyNames']?.toList() ?? [];
-      final locations = uniqueJobResult['locations']?.toList() ?? [];
+      final List<String?> uniqueTitles =
+          result.map((job) => job.jobTitle).toSet().toList();
 
-      if (result.isNotEmpty) {
-        emit(JobSearchSuccess(result, {
-          'jobTitles': jobTitles,
-          'companyNames': companyNames,
-          'locations': locations
-        }));
+      final List<String?> uniqueUserNames =
+          userNames.map((user) => user?.name).toSet().toList();
+
+      final List<String?> uniqueCompanyNames =
+          resultCompany.map((company) => company.companyName).toSet().toList();
+
+      if (result.isNotEmpty ||
+          userNames.isNotEmpty ||
+          resultCompany.isNotEmpty) {
+        emit(JobSearchSuccess(
+          result,
+          userNames,
+          resultCompany,
+          uniqueTitles,
+          uniqueUserNames,
+          uniqueCompanyNames,
+        ));
       } else {
         emit(JobSearchNoResult());
       }
     } catch (e) {
-      emit(JobSearchError("Error occurred while searching for jobs: $e"));
-    }
-  }
-
-  void filterJobsByTitle(String selectedJobTitle) {
-    final currentState = state;
-    if (currentState is JobSearchSuccess) {
-      final filteredJobs = currentState.jobs
-          .where((job) => job.jobTitle == selectedJobTitle)
-          .toList();
-
-      emit(JobSearchSuccess(filteredJobs, currentState.uniqueJobResult));
-    }
-  }
-
-  void filterJobsByLocation(String selectedLocation) {
-    final currentState = state;
-    if (currentState is JobSearchSuccess) {
-      final filteredJobs = currentState.jobs
-          .where((job) => job.location == selectedLocation)
-          .toList();
-
-      emit(JobSearchSuccess(filteredJobs, currentState.uniqueJobResult));
-    }
-  }
-
-  void filterJobsByCompanyName(String selectedCompanyName) {
-    final currentState = state;
-    if (currentState is JobSearchSuccess) {
-      final filteredJobs = currentState.jobs
-          .where((job) => job.companyName == selectedCompanyName)
-          .toList();
-
-      emit(JobSearchSuccess(filteredJobs, currentState.uniqueJobResult));
+      emit(JobSearchError("Error occurred while searching: $e"));
     }
   }
 
