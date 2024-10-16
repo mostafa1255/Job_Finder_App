@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:jop_finder_app/core/utils/app_router.dart';
-import 'package:jop_finder_app/features/job_search/view/pages/job_list.dart';
-import 'package:jop_finder_app/features/job_search/view/pages/job_list.dart';
 import 'package:jop_finder_app/features/job_search/view/widgets/filter_widget/filter_bottom_sheet.dart';
 import 'package:jop_finder_app/features/job_search/view/widgets/search_filter.dart';
+import 'package:jop_finder_app/features/job_search/view/widgets/user_card.dart';
 import 'package:jop_finder_app/features/job_search/viewmodel/job_search_state.dart';
 
 import '../../viewmodel/job_search_cubit.dart';
@@ -28,7 +26,7 @@ class JobSearchBody extends StatelessWidget {
                 showModalBottomSheet(
                   context: context,
                   builder: (context) {
-                    return FilterBottomSheet();
+                    return const FilterBottomSheet();
                   },
                 );
               },
@@ -57,21 +55,55 @@ class JobSearchBody extends StatelessWidget {
                 if (state is JobSearchLoading) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (state is JobSearchSuccess) {
-
                   return Column(
                     children: [
-                      JobListSection(
-                        title: 'User Names',
-                        items: state.uniqueUserNames,
-                        onTapItem: (userName, index) {
-                          GoRouter.of(context).push(
-                            '/userList',
-                            extra: {
-                              'userName': userName,
-                              'users': state.users,
+                      Column(
+                        children: [
+                          (state.users.isNotEmpty)
+                              ? Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      'Users',
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        GoRouter.of(context).push(
+                                          '/userList',
+                                          extra: {
+                                            'userName': '',
+                                            // state.users[index]!.name ?? '',
+                                            'users': state.users,
+                                          },
+                                        );
+                                      },
+                                      child: const Text('see all'),
+                                    )
+                                  ],
+                                )
+                              : const SizedBox.shrink(),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: state.users.length,
+                            itemBuilder: (context, index) {
+                              return UserCard(
+                                userName: state.users[index]?.name ?? '',
+                                profileImageUrl:
+                                    state.users[index]?.profileImageUrl ?? '',
+                                onClick: () {
+                                  // GoRouter.of(context).push('/userDetail');
+                                },
+                              );
                             },
-                          );
-                        },
+                          ),
+                        ],
                       ),
                       JobListSection(
                         title: 'Job Titles',
@@ -88,7 +120,7 @@ class JobSearchBody extends StatelessWidget {
                       ),
                       JobListSection(
                         title: 'Company Names',
-                        items:  state.uniqueCompanyNames,
+                        items: state.uniqueCompanyNames,
                         onTapItem: (companyName, index) {
                           GoRouter.of(context).push(
                             '/jobList',
@@ -99,7 +131,6 @@ class JobSearchBody extends StatelessWidget {
                           );
                         },
                       ),
-
                     ],
                   );
                 } else if (state is JobSearchNoResult) {
